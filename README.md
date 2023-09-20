@@ -10,6 +10,10 @@ The canonical repo for Layer8's original Service Provider: "We've Got Poems"
 <img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/dotenv?filename=backend%2Fpackage.json" />
 <img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/express?filename=backend%2Fpackage.json" />
 <img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/pg?filename=backend%2Fpackage.json" />
+<br />
+<img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/pinia?filename=frontend%2Fpackage.json" />
+<img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/vue?filename=frontend%2Fpackage.json" />
+<img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/vue-router?filename=frontend%2Fpackage.json" />
 </p>
 
 ## How to Contribute
