@@ -11,3 +11,9 @@ The canonical repo for Layer8's original Service Provider: "We've Got Poems"
 <img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/express?filename=backend%2Fpackage.json" />
 <img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/pg?filename=backend%2Fpackage.json" />
 </p>
+
+## How to Contribute
+
+If you want to contribute to the Backend of this project, please read the [Backend README](./backend/README.md).
+
+But if you are more Frontend oriented, please read the [Frontend README](./frontend/README.md).
