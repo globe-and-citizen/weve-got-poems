@@ -21,3 +21,8 @@ The canonical repo for Layer8's original Service Provider: "We've Got Poems"
 If you want to contribute to the Backend of this project, please read the [Backend README](./backend/README.md).
 
 But if you are more Frontend oriented, please read the [Frontend README](./frontend/README.md).
+
+## Production URLs
+
+- Frontend: TBD
+- Backend: https://weve-got-poems-server.onrender.com/
