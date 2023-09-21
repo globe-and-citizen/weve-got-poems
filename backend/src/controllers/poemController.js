@@ -92,7 +92,7 @@ const update = async (req, res) => {
       return res.status(404).json({ error: 'Poem not found' })
     }
 
-    const { title, author, content } = req.body
+    const { title, user_id, content } = req.body
 
     const errors = validationResult(req)
 
@@ -109,9 +109,9 @@ const update = async (req, res) => {
       values.push(sanitizeUserInput(title))
     }
 
-    if (author !== undefined) {
-      updateFields.push('author')
-      values.push(sanitizeUserInput(author))
+    if (user_id !== undefined) {
+      updateFields.push('user_id')
+      values.push(sanitizeUserInput(user_id))
     }
 
     if (content !== undefined) {
@@ -187,7 +187,7 @@ const remove = async (req, res) => {
 module.exports = {
   create: [
     // Use the validateInput middleware to validate the request body
-    validateInput(['title', 'author', 'content']),
+    validateInput(['title', 'user_id', 'content']),
     create
   ],
   read,
