@@ -92,7 +92,7 @@ const update = async (req, res) => {
 
     // If the user with the specified ID doesn't exist, return a 404 error
     if (checkResult.rows.length === 0) {
-      return res.status(404).json({ error: 'user not found' })
+      return res.status(404).json({ error: 'User not found' })
     }
 
     const { name, email } = req.body
@@ -139,7 +139,7 @@ const update = async (req, res) => {
   }
 }
 
-// Route to delete a user from the 'users' table
+// Route to delete a user and all their poems from the 'users' and 'poems' tables
 const remove = async (req, res) => {
   const client = await pool.connect() // Connect to the database
 
@@ -148,35 +148,32 @@ const remove = async (req, res) => {
 
     const { id } = req.params
 
-    // Check if the user with the specified ID exists before deleting it
-    const checkUserQuery = `
-      SELECT id FROM users
-      WHERE id = $1
+    // Query SQL to delete all poems by the user from the 'poems' table
+    const deletePoemsByUserQuery = `
+      DELETE FROM poems
+      WHERE user_id = $1
     `
 
-    const checkResult = await client.query(checkUserQuery, [id])
-
-    // If the user with the specified ID doesn't exist, return a 404 error
-    if (checkResult.rows.length === 0) {
-      return res.status(404).json({ error: 'User not found' })
-    }
+    // Delete all poems by the user
+    await client.query(deletePoemsByUserQuery, [id])
 
     // Query SQL to delete a user from the 'users' table
-    const deleteQuery = `
+    const deleteUserQuery = `
       DELETE FROM users
       WHERE id = $1
     `
 
-    await client.query(deleteQuery, [id])
+    // Delete the user
+    await client.query(deleteUserQuery, [id])
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.json({ message: 'User deleted successfully' })
+    res.json({ message: 'User and associated poems deleted successfully' })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
-    console.error('Error deleting user:', error)
-    res.status(500).json({ error: 'Error deleting user' })
+    console.error('Error deleting user and poems:', error)
+    res.status(500).json({ error: 'Error deleting user and poems' })
   } finally {
     client.release() // Release the connection to the database
   }
