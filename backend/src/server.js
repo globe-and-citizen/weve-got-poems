@@ -15,7 +15,7 @@ const swaggerRoute = require('./routes/swaggerRoute')
 
 app.use('/', swaggerRoute)
 app.use('/v1', poemRoutes)
-app.use('/config', configRoutes)
+app.use('/config', configRoutes) // Uncomment if you want to use the config routes
 
 app.listen(port, () => {
   console.log(`Server is listening on http://localhost:${port}`)
