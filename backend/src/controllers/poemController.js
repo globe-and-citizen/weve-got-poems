@@ -22,21 +22,21 @@ const create = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { title, author, content } = req.body // Get the title, author and content from the request body
+    const { title, user_id, content } = req.body // Get the title, user_id and content from the request body
 
-    // Sanitize the title, author and content to prevent XSS attacks
+    // Sanitize the title, user_id and content to prevent XSS attacks
     const sanitizedTitle = sanitizeUserInput(title)
-    const sanitizedAuthor = sanitizeUserInput(author)
+    const sanitizedUserId = sanitizeUserInput(user_id)
     const sanitizedContent = sanitizeUserInput(content)
 
     // Query SQL to insert a new poem into the 'poems' table
     const insertQuery = `
-      INSERT INTO poems (title, author, content, created_at)
+      INSERT INTO poems (title, user_id, content, created_at)
       VALUES ($1, $2, $3, NOW())
       RETURNING id;
     `
 
-    const result = await client.query(insertQuery, [sanitizedTitle, sanitizedAuthor, sanitizedContent])
+    const result = await client.query(insertQuery, [sanitizedTitle, sanitizedUserId, sanitizedContent])
     const { id } = result.rows[0]
 
     await client.query('COMMIT') // Commit the transaction
