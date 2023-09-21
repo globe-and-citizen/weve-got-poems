@@ -140,6 +140,7 @@ const update = async (req, res) => {
 }
 
 // Route to delete a user and all their poems from the 'users' and 'poems' tables
+// Route to delete a user and all their poems from the 'users' and 'poems' tables
 const remove = async (req, res) => {
   const client = await pool.connect() // Connect to the database
 
@@ -147,6 +148,19 @@ const remove = async (req, res) => {
     await client.query('BEGIN') // Start a transaction
 
     const { id } = req.params
+
+    // Query SQL to check if the user with the specified ID exists
+    const checkUserQuery = `
+      SELECT id FROM users
+      WHERE id = $1
+    `
+
+    const checkResult = await client.query(checkUserQuery, [id])
+
+    // If the user with the specified ID doesn't exist, return a 404 error
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' })
+    }
 
     // Query SQL to delete all poems by the user from the 'poems' table
     const deletePoemsByUserQuery = `
