@@ -54,6 +54,27 @@ const listTables = async (req, res) => {
   }
 }
 
+// Route to add a 'user_id' column to the 'poems' table
+const alterTable = async (req, res) => {
+  try {
+    const client = await pool.connect()
+
+    // Query SQL to add a 'user_id' column to the 'poems' table
+    const alterTableQuery = `
+      ALTER TABLE poems
+      ADD COLUMN IF NOT EXISTS user_id INT;
+    `
+
+    await client.query(alterTableQuery)
+    client.release()
+
+    res.send('"user_id" column added to "poems" table successfully')
+  } catch (error) {
+    console.error('Error adding "user_id" column to "poems" table:', error)
+    res.status(500).send('Error adding "user_id" column to "poems" table')
+  }
+}
+
 const dropTable = async (req, res) => {
   try {
     const client = await pool.connect()
@@ -74,5 +95,6 @@ const dropTable = async (req, res) => {
 module.exports = {
   createTable,
   listTables,
+  alterTable,
   dropTable
 }
