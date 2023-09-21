@@ -36,7 +36,6 @@ erDiagram
     POEMS {
         int id PK
         int user_id FK
-        string author
         text content
         timestamp created_at
         string title
