@@ -18,3 +18,27 @@ npm install
 ```bash
 npm start
 ```
+
+---
+
+## Database Diagram
+
+```mermaid
+erDiagram
+    USERS ||--|{ POEMS : creates
+    USERS {
+        int id PK
+        string name
+        string email UK
+        string password
+        timestamp created_at
+    }
+    POEMS {
+        int id PK
+        int user_id FK
+        string author
+        text content
+        timestamp created_at
+        string title
+    }
+```
