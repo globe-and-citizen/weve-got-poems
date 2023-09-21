@@ -93,7 +93,7 @@ const spec = {
         type: 'object',
         properties: {
           id: { type: 'integer', example: 1 },
-          author: { type: 'string', example: 'CodeVerse Muse' },
+          user_id: { type: 'int', example: 1 },
           content: {
             type: 'string',
             example:
@@ -106,7 +106,7 @@ const spec = {
       PoemInput: {
         type: 'object',
         properties: {
-          author: { type: 'string', example: 'CodeVerse Muse' },
+          user_id: { type: 'int', example: 1 },
           content: {
             type: 'string',
             example:
