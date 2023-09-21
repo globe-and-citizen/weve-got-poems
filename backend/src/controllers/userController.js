@@ -140,7 +140,6 @@ const update = async (req, res) => {
 }
 
 // Route to delete a user and all their poems from the 'users' and 'poems' tables
-// Route to delete a user and all their poems from the 'users' and 'poems' tables
 const remove = async (req, res) => {
   const client = await pool.connect() // Connect to the database
 
