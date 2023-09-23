@@ -85,6 +85,82 @@ const spec = {
           500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
       }
+    },
+    '/user': {
+      post: {
+        tags: ['Users'],
+        summary: 'Create a new user',
+        operationId: 'createUser',
+        requestBody: {
+          description: 'The user to create',
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/UserInput' } } }
+        },
+        responses: {
+          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/UserResponse' } } } },
+          400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
+    },
+    '/users': {
+      get: {
+        tags: ['Users'],
+        summary: 'Get all users from the database',
+        operationId: 'getUsers',
+        responses: {
+          200: {
+            description: 'Success',
+            content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/User' } } } }
+          },
+          500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
+    },
+    '/user/{id}': {
+      put: {
+        tags: ['Users'],
+        summary: 'Update a user in the database',
+        operationId: 'updateUser',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            description: 'The ID of the user to update',
+            required: true,
+            schema: { type: 'integer' }
+          }
+        ],
+        requestBody: {
+          description: 'The user to update',
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/UserInput' } } }
+        },
+        responses: {
+          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/MessageResponse' } } } },
+          404: { $ref: '#/components/responses/NotFound' },
+          500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      },
+      delete: {
+        tags: ['Users'],
+        summary: 'Delete a user and associated poems from the database',
+        operationId: 'deleteUser',
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            description: 'The ID of the user to delete',
+            required: true,
+            schema: { type: 'integer' }
+          }
+        ],
+        responses: {
+          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/MessageResponse' } } } },
+          404: { $ref: '#/components/responses/NotFound' },
+          500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
     }
   },
   components: {
@@ -122,6 +198,30 @@ const spec = {
           message: { type: 'string' }
         }
       },
+      User: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 1 },
+          name: { type: 'string', example: 'John Doe' },
+          email: { type: 'string', example: 'johndoe@example.com' },
+          created_at: { type: 'string', format: 'timestamp', example: '2022-01-01T00:00:00.000Z' }
+        }
+      },
+      UserInput: {
+        type: 'object',
+        properties: {
+          name: { type: 'string', example: 'John Doe' },
+          email: { type: 'string', example: 'johndoe@example.com' },
+          password: { type: 'string', example: 'password123' }
+        }
+      },
+      UserResponse: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          message: { type: 'string' }
+        }
+      },
       MessageResponse: {
         type: 'object',
         properties: {
@@ -139,7 +239,7 @@ const spec = {
       NotFound: { description: 'Not found' }
     }
   },
-  tags: [{ name: 'Poems' }]
+  tags: [{ name: 'Poems' }, { name: 'Users' }]
 }
 
 window.onload = function () {
