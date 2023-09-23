@@ -25,12 +25,10 @@ const create = async (req, res) => {
 
     const { name, email, password } = req.body // Get user data from the request body
 
-    // Hash the user's password before storing it in the database
-    const hashedPassword = await bcrypt.hash(password, 10)
-
     // Sanitize user input
     const sanitizedName = sanitizeUserInput(name)
     const sanitizedEmail = sanitizeUserInput(email)
+    const hashedPassword = await bcrypt.hash(password, 10) // Hash the user's password before storing it in the database
 
     // Query SQL to insert a new user into the 'users' table
     const insertQuery = `
