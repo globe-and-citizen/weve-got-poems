@@ -15,6 +15,7 @@ const spec = {
         tags: ['Poems'],
         summary: 'Add a poem to the database',
         operationId: 'addPoem',
+        security: [{ JWTAuth: [] }],
         requestBody: {
           description: 'The poem to add',
           required: true,
@@ -185,6 +186,13 @@ const spec = {
     }
   },
   components: {
+    securitySchemes: {
+      JWTAuth: {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT'
+      }
+    },
     schemas: {
       Poem: {
         type: 'object',
@@ -203,7 +211,6 @@ const spec = {
       PoemInput: {
         type: 'object',
         properties: {
-          user_id: { type: 'int', example: 1 },
           content: {
             type: 'string',
             example:
