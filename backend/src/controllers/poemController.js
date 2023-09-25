@@ -159,17 +159,32 @@ const remove = async (req, res) => {
 
     const { id } = req.params
 
-    // Check if the poem with the specified ID exists before deleting it
+    // Sanitize the poem ID to prevent potential SQL injection
+    const sanitizedId = parseInt(id)
+
+    const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
+
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Bearer token not provided' })
+    }
+
+    const token = authorizationHeader.split(' ')[1] // Extract the token (remove "Bearer " prefix)
+
+    const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
+
+    const userId = decoded.id // Get the user ID from the decoded JWT token
+
+    // Check if the poem with the specified ID exists before deleting it and if it belongs to the authenticated user
     const checkPoemQuery = `
       SELECT id FROM poems
-      WHERE id = $1
+      WHERE id = $1 AND user_id = $2
     `
 
-    const checkResult = await client.query(checkPoemQuery, [id])
+    const checkResult = await client.query(checkPoemQuery, [sanitizedId, userId])
 
-    // If the poem with the specified ID doesn't exist, return a 404 error
+    // If the poem with the specified ID doesn't exist or doesn't belong to the authenticated user, return a 404 error
     if (checkResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Poem not found' })
+      return res.status(404).json({ error: 'Poem not found or permission denied' })
     }
 
     // Query SQL to delete a poem from the 'poems' table
@@ -178,7 +193,7 @@ const remove = async (req, res) => {
       WHERE id = $1
     `
 
-    await client.query(deleteQuery, [id])
+    await client.query(deleteQuery, [sanitizedId])
 
     await client.query('COMMIT') // Commit the transaction
 

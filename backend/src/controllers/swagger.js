@@ -72,6 +72,7 @@ const spec = {
         tags: ['Poems'],
         summary: 'Delete a poem from the database',
         operationId: 'deletePoem',
+        security: [{ JWTAuth: [] }],
         parameters: [
           {
             name: 'id',
