@@ -10,6 +10,27 @@ const spec = {
     { url: 'http://localhost:5432/v1', description: 'Local server' }
   ],
   paths: {
+    '/login': {
+      post: {
+        tags: ['Authentication'],
+        summary: 'User login',
+        operationId: 'loginUser',
+        requestBody: {
+          description: 'User login credentials',
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginInput' } } }
+        },
+        responses: {
+          200: {
+            description: 'Success',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginResponse' } } }
+          },
+          401: { description: 'Unauthorized', $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
+    },
     '/poem': {
       post: {
         tags: ['Poems'],
@@ -166,27 +187,6 @@ const spec = {
           500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
       }
-    },
-    '/login': {
-      post: {
-        tags: ['Authentication'],
-        summary: 'User login',
-        operationId: 'loginUser',
-        requestBody: {
-          description: 'User login credentials',
-          required: true,
-          content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginInput' } } }
-        },
-        responses: {
-          200: {
-            description: 'Success',
-            content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginResponse' } } }
-          },
-          401: { description: 'Unauthorized', $ref: '#/components/responses/Unauthorized' },
-          404: { $ref: '#/components/responses/NotFound' },
-          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
-        }
-      }
     }
   },
   components: {
@@ -198,6 +198,20 @@ const spec = {
       }
     },
     schemas: {
+      LoginInput: {
+        type: 'object',
+        properties: {
+          email: { type: 'string', example: 'john@doe.com' },
+          password: { type: 'string', example: 'password123' }
+        }
+      },
+      LoginResponse: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', example: 'your_jwt_token_here' },
+          message: { type: 'string', example: 'Login successful' }
+        }
+      },
       Poem: {
         type: 'object',
         properties: {
@@ -254,20 +268,6 @@ const spec = {
           message: { type: 'string' }
         }
       },
-      LoginInput: {
-        type: 'object',
-        properties: {
-          email: { type: 'string', example: 'john@doe.com' },
-          password: { type: 'string', example: 'password123' }
-        }
-      },
-      LoginResponse: {
-        type: 'object',
-        properties: {
-          token: { type: 'string', example: 'your_jwt_token_here' },
-          message: { type: 'string', example: 'Login successful' }
-        }
-      },
       MessageResponse: {
         type: 'object',
         properties: {
@@ -285,7 +285,7 @@ const spec = {
       NotFound: { description: 'Not found' }
     }
   },
-  tags: [{ name: 'Poems' }, { name: 'Users' }]
+  tags: [{ name: 'Authentication' }, { name: 'Poems' }, { name: 'Users' }]
 }
 
 window.onload = function () {
