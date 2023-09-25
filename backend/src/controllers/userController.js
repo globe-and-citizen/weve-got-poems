@@ -81,6 +81,12 @@ const update = async (req, res) => {
   try {
     await client.query('BEGIN') // Start a transaction
 
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+
     const { id } = req.params
 
     // Check if the user with the specified ID exists before updating it
@@ -97,10 +103,19 @@ const update = async (req, res) => {
 
     const { name, email } = req.body
 
-    const errors = validationResult(req)
+    const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
 
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() })
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Bearer token not provided' })
+    }
+
+    const token = authorizationHeader.split(' ')[1] // Extract the token (remove "Bearer " prefix)
+
+    const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
+
+    // Verificar se o usuário autenticado é o mesmo que está tentando fazer a atualização
+    if (decoded.id !== parseInt(id)) {
+      return res.status(403).json({ error: 'Permission denied' })
     }
 
     const updateFields = [] // Array to store fields to be updated

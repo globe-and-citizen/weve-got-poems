@@ -125,6 +125,7 @@ const spec = {
         tags: ['Users'],
         summary: 'Update a user in the database',
         operationId: 'updateUser',
+        security: [{ JWTAuth: [] }],
         parameters: [
           {
             name: 'id',
