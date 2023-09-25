@@ -176,6 +176,21 @@ const remove = async (req, res) => {
       return res.status(404).json({ error: 'User not found' })
     }
 
+    const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
+
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Bearer token not provided' })
+    }
+
+    const token = authorizationHeader.split(' ')[1] // Extract the token (remove "Bearer " prefix)
+
+    const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
+
+    // Verificar se o usuário autenticado é o mesmo que está tentando fazer a exclusão
+    if (decoded.id !== parseInt(id)) {
+      return res.status(403).json({ error: 'Permission denied' })
+    }
+
     // Query SQL to delete all poems by the user from the 'poems' table
     const deletePoemsByUserQuery = `
       DELETE FROM poems
