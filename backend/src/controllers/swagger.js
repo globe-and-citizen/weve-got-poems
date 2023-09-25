@@ -235,7 +235,7 @@ const spec = {
         properties: {
           id: { type: 'integer', example: 1 },
           name: { type: 'string', example: 'John Doe' },
-          email: { type: 'string', example: 'johndoe@example.com' },
+          email: { type: 'string', example: 'john@doe.com' },
           created_at: { type: 'string', format: 'timestamp', example: '2022-01-01T00:00:00.000Z' }
         }
       },
@@ -243,7 +243,7 @@ const spec = {
         type: 'object',
         properties: {
           name: { type: 'string', example: 'John Doe' },
-          email: { type: 'string', example: 'johndoe@example.com' },
+          email: { type: 'string', example: 'john@doe.com' },
           password: { type: 'string', example: 'password123' }
         }
       },
@@ -257,7 +257,7 @@ const spec = {
       LoginInput: {
         type: 'object',
         properties: {
-          email: { type: 'string', example: 'johndoe@example.com' },
+          email: { type: 'string', example: 'john@doe.com' },
           password: { type: 'string', example: 'password123' }
         }
       },
