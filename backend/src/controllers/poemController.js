@@ -1,8 +1,10 @@
 require('dotenv').config()
 const { validationResult } = require('express-validator')
+const jwt = require('jsonwebtoken')
 const { Pool } = require('pg')
 const sanitizeUserInput = require('../utils/sanitizeUserInput')
 const validateInput = require('../middlewares/validateInput')
+const { secret } = require('../middlewares/jwtConfig')
 
 const pool = new Pool({
   connectionString: process.env.EXTERNAL_DB_URL,
@@ -22,33 +24,45 @@ const create = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { title, user_id, content } = req.body // Get the title, user_id and content from the request body
+    const { title, content } = req.body // Get the title and content from the request body
 
-    // Sanitize the title, user_id and content to prevent XSS attacks
+    // Sanitize the title and content to prevent XSS attacks
     const sanitizedTitle = sanitizeUserInput(title)
-    const sanitizedUserId = sanitizeUserInput(user_id)
     const sanitizedContent = sanitizeUserInput(content)
 
-    // Query SQL to insert a new poem into the 'poems' table
+    const token = req.headers.authorization // Get the JWT token from the request headers
+
+    if (!token) {
+      return res.status(401).json({ error: 'Token not provided' })
+    }
+
+    const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
+
+    const userId = decoded.id // Get the user ID from the decoded JWT token
+
     const insertQuery = `
       INSERT INTO poems (title, user_id, content, created_at)
       VALUES ($1, $2, $3, NOW())
       RETURNING id;
     `
 
-    const result = await client.query(insertQuery, [sanitizedTitle, sanitizedUserId, sanitizedContent])
+    const result = await client.query(insertQuery, [sanitizedTitle, userId, sanitizedContent])
     const { id } = result.rows[0]
 
     await client.query('COMMIT') // Commit the transaction
 
     res.json({ id, message: 'Poem added successfully' })
   } catch (error) {
-    await client.query('ROLLBACK') // Rollback the transaction if an error occurred
+    if (client) {
+      await client.query('ROLLBACK') // Rollback the transaction if an error occurred
+    }
 
     console.error('Error adding poem:', error)
     res.status(500).json({ error: 'Error adding poem' })
   } finally {
-    client.release() // Release the connection to the database
+    if (client) {
+      client.release() // Release the connection to the database
+    }
   }
 }
 
@@ -187,7 +201,7 @@ const remove = async (req, res) => {
 module.exports = {
   create: [
     // Use the validateInput middleware to validate the request body
-    validateInput(['title', 'user_id', 'content']),
+    validateInput(['title', 'content']),
     create
   ],
   read,
