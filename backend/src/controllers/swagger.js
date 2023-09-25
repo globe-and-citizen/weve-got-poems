@@ -47,6 +47,7 @@ const spec = {
         tags: ['Poems'],
         summary: 'Update a poem in the database',
         operationId: 'updatePoem',
+        security: [{ JWTAuth: [] }],
         parameters: [
           {
             name: 'id',

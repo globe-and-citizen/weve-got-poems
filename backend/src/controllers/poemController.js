@@ -90,55 +90,52 @@ const update = async (req, res) => {
   try {
     await client.query('BEGIN') // Start a transaction
 
-    const { id } = req.params
-
-    // Check if the poem with the specified ID exists before updating it
-    const checkPoemQuery = `
-      SELECT id FROM poems
-      WHERE id = $1
-    `
-    const checkResult = await client.query(checkPoemQuery, [id])
-
-    // If the poem with the specified ID doesn't exist, return a 404 error
-    if (checkResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Poem not found' })
-    }
-
-    const { title, user_id, content } = req.body
-
     const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const updateFields = [] // Array to store fields to be updated
-    const values = [] // Array to store corresponding values
+    const { id } = req.params // Get the poem ID from the request parameters
+    const { title, content } = req.body // Get the updated title and content from the request body
 
-    // Check if each property is present in the request body and add it to the updateFields and values arrays
-    if (title !== undefined) {
-      updateFields.push('title')
-      values.push(sanitizeUserInput(title))
+    // Sanitize the title and content to prevent XSS attacks
+    const sanitizedTitle = sanitizeUserInput(title)
+    const sanitizedContent = sanitizeUserInput(content)
+
+    const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
+
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Bearer token not provided' })
     }
 
-    if (user_id !== undefined) {
-      updateFields.push('user_id')
-      values.push(sanitizeUserInput(user_id))
-    }
+    const token = authorizationHeader.split(' ')[1] // Extract the token (remove "Bearer " prefix)
 
-    if (content !== undefined) {
-      updateFields.push('content')
-      values.push(sanitizeUserInput(content))
-    }
+    const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
 
-    // Construct the dynamic update query based on the fields provided
-    const updateQuery = `
-      UPDATE poems
-      SET ${updateFields.map((field, index) => `${field} = $${index + 1}`).join(', ')}
-      WHERE id = $${updateFields.length + 1}
+    const userId = decoded.id // Get the user ID from the decoded JWT token
+
+    // Check if the poem with the specified ID exists and belongs to the authenticated user
+    const checkOwnershipQuery = `
+      SELECT id
+      FROM poems
+      WHERE id = $1 AND user_id = $2;
     `
 
-    await client.query(updateQuery, [...values, id])
+    const ownershipCheckResult = await client.query(checkOwnershipQuery, [id, userId])
+
+    if (ownershipCheckResult.rows.length === 0) {
+      return res.status(403).json({ error: 'Permission denied' })
+    }
+
+    // Update the poem with the specified ID
+    const updateQuery = `
+      UPDATE poems
+      SET title = $1, content = $2
+      WHERE id = $3;
+    `
+
+    await client.query(updateQuery, [sanitizedTitle, sanitizedContent, id])
 
     await client.query('COMMIT') // Commit the transaction
 
