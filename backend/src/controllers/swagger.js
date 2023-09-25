@@ -161,6 +161,27 @@ const spec = {
           500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
       }
+    },
+    '/login': {
+      post: {
+        tags: ['Authentication'],
+        summary: 'User login',
+        operationId: 'loginUser',
+        requestBody: {
+          description: 'User login credentials',
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginInput' } } }
+        },
+        responses: {
+          200: {
+            description: 'Success',
+            content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginResponse' } } }
+          },
+          401: { description: 'Unauthorized', $ref: '#/components/responses/Unauthorized' },
+          404: { $ref: '#/components/responses/NotFound' },
+          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
     }
   },
   components: {
@@ -220,6 +241,20 @@ const spec = {
         properties: {
           id: { type: 'integer' },
           message: { type: 'string' }
+        }
+      },
+      LoginInput: {
+        type: 'object',
+        properties: {
+          email: { type: 'string', example: 'johndoe@example.com' },
+          password: { type: 'string', example: 'password123' }
+        }
+      },
+      LoginResponse: {
+        type: 'object',
+        properties: {
+          token: { type: 'string', example: 'your_jwt_token_here' },
+          message: { type: 'string', example: 'Login successful' }
         }
       },
       MessageResponse: {
