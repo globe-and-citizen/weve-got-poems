@@ -30,11 +30,13 @@ const create = async (req, res) => {
     const sanitizedTitle = sanitizeUserInput(title)
     const sanitizedContent = sanitizeUserInput(content)
 
-    const token = req.headers.authorization // Get the JWT token from the request headers
+    const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
 
-    if (!token) {
-      return res.status(401).json({ error: 'Token not provided' })
+    if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Bearer token not provided' })
     }
+
+    const token = authorizationHeader.split(' ')[1] // Extract the token (remove "Bearer " prefix)
 
     const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
 
