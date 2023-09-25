@@ -55,16 +55,12 @@ const create = async (req, res) => {
 
     res.json({ id, message: 'Poem added successfully' })
   } catch (error) {
-    if (client) {
-      await client.query('ROLLBACK') // Rollback the transaction if an error occurred
-    }
+    await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
     console.error('Error adding poem:', error)
     res.status(500).json({ error: 'Error adding poem' })
   } finally {
-    if (client) {
-      client.release() // Release the connection to the database
-    }
+    client.release() // Release the connection to the database
   }
 }
 
