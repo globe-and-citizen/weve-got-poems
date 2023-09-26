@@ -216,7 +216,13 @@ const spec = {
         type: 'object',
         properties: {
           id: { type: 'integer', example: 1 },
-          user_id: { type: 'int', example: 1 },
+          user: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer', example: 1 },
+              name: { type: 'string', example: 'John Doe' }
+            }
+          },
           content: {
             type: 'string',
             example:
