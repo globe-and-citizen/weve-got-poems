@@ -11,8 +11,8 @@ const createTable = async (req, res) => {
   try {
     const client = await pool.connect()
 
-    // Query SQL to create the 'poems' table
-    const createTableQuery = `
+    // Query SQL to create the 'users' table
+    const createUserTableQuery = `
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -20,6 +20,10 @@ const createTable = async (req, res) => {
         password VARCHAR(255) NOT NULL,
         created_at TIMESTAMP NOT NULL
       );
+    `
+
+    // Query SQL to create the 'poems' table
+    const createPoemsTableQuery = `
       CREATE TABLE IF NOT EXISTS poems (
         id SERIAL PRIMARY KEY,
         user_id INT NOT NULL REFERENCES users(id),
@@ -29,13 +33,38 @@ const createTable = async (req, res) => {
       );
     `
 
-    await client.query(createTableQuery)
+    // Query SQL to create the 'likes' table
+    const createLikesTableQuery = `
+      CREATE TABLE IF NOT EXISTS likes (
+        id SERIAL PRIMARY KEY,
+        user_id INT NOT NULL REFERENCES users(id),
+        poem_id INT NOT NULL REFERENCES poems(id),
+        created_at TIMESTAMP NOT NULL,
+        UNIQUE (user_id, poem_id) -- Ensure each user can only give one like to a poem
+      );
+    `
+
+    // Query SQL to create the 'dislikes' table
+    const createDislikesTableQuery = `
+      CREATE TABLE IF NOT EXISTS dislikes (
+        id SERIAL PRIMARY KEY,
+        user_id INT NOT NULL REFERENCES users(id),
+        poem_id INT NOT NULL REFERENCES poems(id),
+        created_at TIMESTAMP NOT NULL,
+        UNIQUE (user_id, poem_id) -- Ensure each user can only give one dislike to a poem
+      );
+    `
+
+    await client.query(createUserTableQuery)
+    await client.query(createPoemsTableQuery)
+    await client.query(createLikesTableQuery)
+    await client.query(createDislikesTableQuery)
     client.release()
 
-    res.send('"poems" table created successfully')
+    res.send('"users", "poems", "likes", and "dislikes" tables created successfully')
   } catch (error) {
-    console.error('Error creating table "poems":', error)
-    res.status(500).send('Error creating table "poems"')
+    console.error('Error creating tables:', error)
+    res.status(500).send('Error creating tables')
   }
 }
 
