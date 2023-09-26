@@ -64,20 +64,28 @@ const create = async (req, res) => {
   }
 }
 
-// Route to get all poems from the 'poems' table
+// Route to get all poems from the 'poems' table with likes and dislikes
 const read = async (req, res) => {
   try {
     const client = await pool.connect()
 
-    // Query SQL to get all poems from the 'poems' table
+    // Query SQL to get all poems from the 'poems' table with likes and dislikes
     const selectQuery = `
-      SELECT poems.id, poems.content, poems.created_at, poems.title, users.id AS user_id, users.name AS user_name
+      SELECT
+        poems.id,
+        poems.content,
+        poems.created_at,
+        poems.title,
+        users.id AS user_id,
+        users.name AS user_name,
+        ( SELECT ARRAY_AGG(user_id) FROM likes WHERE poem_id = poems.id ) AS likes,
+        ( SELECT ARRAY_AGG(user_id) FROM dislikes WHERE poem_id = poems.id ) AS dislikes
       FROM poems
       INNER JOIN users ON poems.user_id = users.id
     `
 
     const result = await client.query(selectQuery)
-    const poemsWithUser = result.rows.map((row) => ({
+    const poems = result.rows.map((row) => ({
       id: row.id,
       author: {
         id: row.user_id,
@@ -85,12 +93,14 @@ const read = async (req, res) => {
       },
       content: row.content,
       created_at: row.created_at,
+      dislikes: row.dislikes || [],
+      likes: row.likes || [],
       title: row.title
     }))
 
     client.release()
 
-    res.json(poemsWithUser)
+    res.json(poems)
   } catch (error) {
     console.error('Error getting poems:', error)
     res.status(500).json({ error: 'Error getting poems' })

@@ -229,6 +229,8 @@ const spec = {
               "In lines of code, we weave our art,\nA digital symphony from mind to chart.\nWith functions, loops, and logic clear,\nWe conquer problems, quelling fear.\n\nIn bytes and bits, our thoughts take flight,\nCreating programs that shine so bright.\nFrom bugs we learn, and errors mend,\nIn the world of code, there's no real end.\n\nSo, let us code with passion and grace,\nCreating software in this boundless space.\nWith every keystroke, we write our story,\nIn the language of machines, we find our glory."
           },
           created_at: { type: 'string', format: 'timestamp', example: '2020-07-01T00:00:00.000Z' },
+          dislikes: { type: 'array', items: { type: 'integer' }, example: [] },
+          likes: { type: 'array', items: { type: 'integer' }, example: [1, 2, 3] },
           title: { type: 'string', example: 'Coding Chronicles' }
         }
       },
