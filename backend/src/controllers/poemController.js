@@ -70,13 +70,27 @@ const read = async (req, res) => {
     const client = await pool.connect()
 
     // Query SQL to get all poems from the 'poems' table
-    const selectQuery = 'SELECT * FROM poems'
+    const selectQuery = `
+      SELECT poems.id, poems.content, poems.created_at, poems.title, users.id AS user_id, users.name AS user_name
+      FROM poems
+      INNER JOIN users ON poems.user_id = users.id
+    `
 
     const result = await client.query(selectQuery)
-    const poems = result.rows
+    const poemsWithUser = result.rows.map((row) => ({
+      id: row.id,
+      user: {
+        id: row.user_id,
+        name: row.user_name
+      },
+      content: row.content,
+      created_at: row.created_at,
+      title: row.title
+    }))
+
     client.release()
 
-    res.json(poems)
+    res.json(poemsWithUser)
   } catch (error) {
     console.error('Error getting poems:', error)
     res.status(500).json({ error: 'Error getting poems' })
