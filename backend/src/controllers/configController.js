@@ -1,10 +1,5 @@
-const { Pool } = require('pg')
+const pool = require('../db')
 require('dotenv').config()
-
-const pool = new Pool({
-  connectionString: process.env.EXTERNAL_DB_URL,
-  ssl: { rejectUnauthorized: false }
-})
 
 // Route to create the 'poems' table
 const createTable = async (req, res) => {

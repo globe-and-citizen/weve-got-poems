@@ -1,15 +1,10 @@
 require('dotenv').config()
 const { validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
-const { Pool } = require('pg')
+const pool = require('../db')
 const sanitizeUserInput = require('../utils/sanitizeUserInput')
 const validateInput = require('../middlewares/validateInput')
 const { secret } = require('../middlewares/jwtConfig')
-
-const pool = new Pool({
-  connectionString: process.env.EXTERNAL_DB_URL,
-  ssl: { rejectUnauthorized: false }
-})
 
 // Route to add a new poem to the 'poems' table
 const create = async (req, res) => {

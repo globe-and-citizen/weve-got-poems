@@ -2,15 +2,10 @@ require('dotenv').config()
 const bcrypt = require('bcrypt')
 const { validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
-const { Pool } = require('pg')
+const pool = require('../db')
 const sanitizeUserInput = require('../utils/sanitizeUserInput')
 const { secret } = require('../middlewares/jwtConfig')
 const validateInput = require('../middlewares/validateInput')
-
-const pool = new Pool({
-  connectionString: process.env.EXTERNAL_DB_URL,
-  ssl: { rejectUnauthorized: false }
-})
 
 // Route to create a new user
 const create = async (req, res) => {
