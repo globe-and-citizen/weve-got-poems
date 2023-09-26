@@ -1,6 +1,7 @@
 <script setup>
 import WelcomeItem from './WelcomeItem.vue'
 import DocumentationIcon from './icons/IconDocumentation.vue'
+import { RouterLink } from 'vue-router'
 
 // get the props
 const props = defineProps({
@@ -17,7 +18,9 @@ const props = defineProps({
     <template #icon>
       <DocumentationIcon />
     </template>
-    <template #heading>{{ item.title }}</template>
+    <template #heading>
+      <RouterLink :to="'/poems/' + item.id">{{ item.title }}</RouterLink>
+    </template>
     {{ item.content }}
     <br>
     <br>

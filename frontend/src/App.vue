@@ -62,6 +62,7 @@ nav a:first-of-type {
 @media (min-width: 1024px) {
     header {
         display: flex;
+        justify-content: space-between;
     }
 
     .logo {

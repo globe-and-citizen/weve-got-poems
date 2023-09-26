@@ -13,6 +13,8 @@ onMounted(async () => {
 
 <template>
   <main>
-    <TheWelcome :data='data'/>
+    <TheWelcome :data='data' v-if='data'/>
+    <p v-else>loading ...</p>
+    // TODO : Pagination Here
   </main>
 </template>
