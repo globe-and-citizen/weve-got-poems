@@ -79,7 +79,7 @@ const read = async (req, res) => {
     const result = await client.query(selectQuery)
     const poemsWithUser = result.rows.map((row) => ({
       id: row.id,
-      user: {
+      author: {
         id: row.user_id,
         name: row.user_name
       },
