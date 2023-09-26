@@ -110,6 +110,47 @@ const spec = {
         }
       }
     },
+    '/like': {
+      post: {
+        tags: ['Likes & Dislikes'],
+        summary: 'Like a poem',
+        operationId: 'likePoem',
+        security: [{ JWTAuth: [] }],
+        requestBody: {
+          description: 'Like a poem',
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeInput' } } }
+        },
+        responses: {
+          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeResponse' } } } },
+          400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          401: { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          404: { $ref: '#/components/responses/NotFound' },
+          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
+    },
+
+    '/dislike': {
+      post: {
+        tags: ['Likes & Dislikes'],
+        summary: 'Dislike a poem',
+        operationId: 'dislikePoem',
+        security: [{ JWTAuth: [] }],
+        requestBody: {
+          description: 'Dislike a poem',
+          required: true,
+          content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeInput' } } }
+        },
+        responses: {
+          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeResponse' } } } },
+          400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          401: { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
+          404: { $ref: '#/components/responses/NotFound' },
+          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
+    },
     '/user': {
       post: {
         tags: ['Users'],
@@ -252,6 +293,32 @@ const spec = {
           message: { type: 'string' }
         }
       },
+      LikeInput: {
+        type: 'object',
+        properties: {
+          poem_id: { type: 'integer', example: 1 }
+        }
+      },
+      LikeResponse: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          message: { type: 'string' }
+        }
+      },
+      DislikeInput: {
+        type: 'object',
+        properties: {
+          poem_id: { type: 'integer', example: 1 }
+        }
+      },
+      DislikeResponse: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          message: { type: 'string' }
+        }
+      },
       User: {
         type: 'object',
         properties: {
@@ -293,7 +360,7 @@ const spec = {
       NotFound: { description: 'Not found' }
     }
   },
-  tags: [{ name: 'Authentication' }, { name: 'Poems' }, { name: 'Users' }]
+  tags: [{ name: 'Authentication' }, { name: 'Poems' }, { name: 'Likes & Dislikes', description: '(Work in Progress)' }, { name: 'Users' }]
 }
 
 window.onload = function () {
