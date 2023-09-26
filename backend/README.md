@@ -26,6 +26,8 @@ npm start
 ```mermaid
 erDiagram
     USERS ||--|{ POEMS : creates
+    USERS ||--o{ LIKES : gives
+    USERS ||--o{ DISLIKES : gives
     USERS {
         int id PK
         string name
@@ -35,9 +37,22 @@ erDiagram
     }
     POEMS {
         int id PK
-        int user_id FK
+        int user_id FK "as author"
         text content
         timestamp created_at
         string title
     }
+    LIKES {
+        int id PK
+        int user_id FK "given by"
+        int poem_id FK "given to"
+        timestamp created_at
+    }
+    DISLIKES {
+        int id PK
+        int user_id FK "given by"
+        int poem_id FK "given to"
+        timestamp created_at
+    }
+
 ```
