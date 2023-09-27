@@ -16,7 +16,7 @@
           account</h2>
       </div>
       <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-        <form class='space-y-6' action='#' method='POST'>
+        <form class='space-y-6' @submit.prevent='submitLogin'>
           <div>
             <label for='email' class='block text-sm font-medium leading-6 text-gray-900'>Email address</label>
             <div class='mt-2'>
@@ -33,7 +33,8 @@
               </div>
             </div>
             <div class='mt-2'>
-              <input id='password' name='password' type='password' autocomplete='current-password' required='' v-model='loginPassword'
+              <input id='password' name='password' type='password' autocomplete='current-password' required=''
+                     v-model='loginPassword'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6' />
             </div>
           </div>
@@ -114,6 +115,7 @@
 <script setup>
 
 import { ref } from 'vue'
+import { useAppStore } from '@/stores/app'
 
 const status = ref(false)
 
@@ -123,7 +125,45 @@ const registerPassword = ref('')
 
 const loginEmail = ref('')
 const loginPassword = ref('')
+
+const loginError = ref()
+const loginData = ref()
+const loginStatus = ref()
+
+const appStore = useAppStore()
+
 const setStatus = (value) => {
   status.value = value
+}
+const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
+
+const submitLogin = async () => {
+  loginStatus.value = 'loading'
+  // send data to backend using fetch api
+  await fetch(endpoint + '/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: loginEmail.value,
+        password: loginPassword.value
+      })
+    }
+  ).then(async (response) => {
+    loginData.value = await response.json()
+    if (loginData.value.token) {
+      appStore.setToken(loginData.value.token)
+    }
+    console.log('response', loginData.value)
+  }).catch((error) => {
+    loginError.value = error
+    console.log(error)
+  })
+  // reset inputs values
+  console.log(loginEmail.value, loginPassword.value)
+  loginEmail.value = ''
+  loginPassword.value = ''
+  loginStatus.value = 'done'
 }
 </script>
