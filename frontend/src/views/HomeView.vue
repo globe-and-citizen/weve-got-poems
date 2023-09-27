@@ -18,11 +18,11 @@ onMounted(async () => {
   <main>
 
     <ac-notification variant="error">
-      Vous n'avez souscrit à aucune offre d'emploi, consulter la liste des offres d'emploi
+      Example of notification +
       <RouterLink
         to="/jobs"
       >
-        ici
+        Example link
       </RouterLink>
     </ac-notification>
     <TheWelcome :data='data' v-if='data' />

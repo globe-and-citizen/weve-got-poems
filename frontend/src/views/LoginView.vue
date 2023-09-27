@@ -1,20 +1,19 @@
 <template>
   <div class='flex  flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
+    <div>
+      <ac-notification variant='error' v-if='loginError'>
+        {{ loginError.message }}
+        <RouterLink
+          to='/jobs'
+        >
+          ici
+        </RouterLink>
+      </ac-notification>
+    </div>
     <div class='flex justify-center space-x-1 rounded-lg p-0.5 bg-slate-50 m-auto'>
       <button class='flex items-center rounded-md py-2 px-12 text-sm font-semibold' :class='{"bg-white shadow": status}'
               @click='setStatus(true)'>Login
       </button>
-
-      <ac-notification variant="error">
-        Vous n'avez souscrit à aucune offre d'emploi, consulter la liste des offres d'emploi
-        <span class="text-cyan-600">
-          <RouterLink
-            to="/jobs"
-          >
-            ici
-          </RouterLink>
-        </span>
-      </ac-notification>
       <button
         class='flex items-center rounded-md py-2 px-12 text-sm font-semibold ' :class='{"bg-white shadow": !status}'
         @click='setStatus(false)'>
