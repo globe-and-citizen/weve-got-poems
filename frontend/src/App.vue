@@ -34,7 +34,7 @@ header {
 
 nav {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     width: 100%;
     font-size: 12px;
     text-align: center;

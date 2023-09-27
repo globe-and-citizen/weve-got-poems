@@ -13,4 +13,4 @@ export const useAppStore = defineStore('app', () => {
   const getToken = computed(() => tokenExpiration > Date.now() ? token.value : '')
 
   return { token, setToken, getToken }
-})
+}, { persist: true })
