@@ -178,6 +178,7 @@ const submitLogin = async () => {
       if (loginData.value.token) {
         appStore.setToken(loginData.value.token)
       }
+      console.log("should notify")
       // setNotification on success
       notification.value = {
         message: 'Welcome to our platform! ',
@@ -188,6 +189,13 @@ const submitLogin = async () => {
       setTimeout(() => {
         router.push('/')
       }, 5000)
+    }else {
+      loginError.value = await response.json()
+      // create notification on error
+      notification.value = {
+        message: 'Unable to login the user \n Message Error: ' + loginError.value.message,
+        status: 'error'
+      }
     }
 
   }).catch((error) => {
