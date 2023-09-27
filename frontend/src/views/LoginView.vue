@@ -6,7 +6,13 @@
         <RouterLink
           to='/jobs'
         >
-          ici
+        </RouterLink>
+      </ac-notification>
+      <ac-notification variant='error' v-if='registerError'>
+        Unable to Register the user {{ registerError.message }}
+        <RouterLink
+          to='/jobs'
+        >
         </RouterLink>
       </ac-notification>
     </div>
@@ -71,7 +77,7 @@
           account</h2>
       </div>
       <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-        <form class='space-y-6' action='#' method='POST'>
+        <form class='space-y-6' @submit.prevent='submitRegister'>
           <div>
             <label for='email' class='block text-sm font-medium leading-6 text-gray-900'>Email address</label>
             <div class='mt-2'>
@@ -82,9 +88,9 @@
           </div>
 
           <div>
-            <label for='email' class='block text-sm font-medium leading-6 text-gray-900'>Name</label>
+            <label for='name' class='block text-sm font-medium leading-6 text-gray-900'>Name</label>
             <div class='mt-2'>
-              <input id='email' name='email' type='email' autocomplete='email' required='' v-model='registerName'
+              <input id='name' name='name' type='text' autocomplete='name' required='' v-model='registerName'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6' />
             </div>
           </div>
@@ -142,6 +148,10 @@ const loginError = ref()
 const loginData = ref()
 const loginStatus = ref()
 
+const registerError = ref()
+const registerData = ref()
+const registerStatus = ref()
+
 const router = useRouter()
 
 const appStore = useAppStore()
@@ -185,5 +195,34 @@ const submitLogin = async () => {
   loginEmail.value = ''
   loginPassword.value = ''
   loginStatus.value = 'done'
+}
+
+const submitRegister = async () => {
+  // send data to backend using fetch api
+  await fetch(endpoint + '/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        email: registerEmail.value,
+        name: registerName.value,
+        password: registerPassword.value
+      })
+    }
+  ).then(async (response) => {
+    registerData.value=await response.json()
+    if (registerData.value.token) {
+      appStore.setToken(registerData.value.token)
+    }
+    // redirect to home page
+    await router.push('/')
+  }).catch((error) => {
+    registerData.value = error
+  })
+  // reset inputs values
+  registerEmail.value = ''
+  registerName.value = ''
+  registerPassword.value = ''
 }
 </script>
