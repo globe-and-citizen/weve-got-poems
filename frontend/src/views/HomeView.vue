@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang='ts'>
 import TheWelcome from '../components/TheWelcome.vue'
 import { onMounted, ref } from 'vue'
-import { useAppStore } from '@/stores/app'
+import { useAppStore } from '../stores/app.js'
+import AcNotification from '../components/ac-notification.vue'
 
 
 const data = ref()
@@ -15,7 +16,16 @@ onMounted(async () => {
 
 <template>
   <main>
-    <TheWelcome :data='data' v-if='data'/>
+
+    <ac-notification variant="error">
+      Vous n'avez souscrit à aucune offre d'emploi, consulter la liste des offres d'emploi
+      <RouterLink
+        to="/jobs"
+      >
+        ici
+      </RouterLink>
+    </ac-notification>
+    <TheWelcome :data='data' v-if='data' />
     <p v-else>loading ...</p>
     // TODO : Pagination Here
   </main>

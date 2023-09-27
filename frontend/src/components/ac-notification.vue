@@ -6,10 +6,11 @@
 
 <script setup lang="ts">
 
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const notify = ref<HTMLDivElement | null>(null)
 onMounted(() => {
+  console.log()
   if (notify.value) {
     const anchors = notify.value.getElementsByTagName('a')
     for (let i = 0; i < anchors.length; i++) {
@@ -31,26 +32,34 @@ const props = withDefaults(defineProps<Props>(), {
 
 const getColor = () => {
   let res = 'blue'
+  let classes= "text-blue-500 border-blue-400  hover:border-blue-500 bg-blue-100"
   switch (props.variant) {
     case 'default':
       res = 'blue'
+      classes= "text-blue-500 border-blue-400  hover:border-blue-500 bg-blue-100"
       break
     case 'error':
       res = 'red'
+      classes= "text-red-500 border-red-400  hover:border-red-500 bg-red-100"
       break
     case 'info':
       res = 'blue'
+      classes= "text-blue-500 border-blue-400  hover:border-blue-500 bg-blue-100"
       break
     case 'success':
       res = 'green'
+      classes= "text-green-500 border-green-400  hover:border-green-500 bg-green-100"
       break
     case 'warning':
+      classes= "text-yellow-500 border-yellow-400  hover:border-yellow-500 bg-yellow-100"
       res = 'yellow'
       break
   }
   return res
 }
 const getClass = () => {
+
+
   return `text-${getColor()}-500 border-${getColor()}-400  hover:border-${getColor()}-500 bg-${getColor()}-100`
 }
 </script>
