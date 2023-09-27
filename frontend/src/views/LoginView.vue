@@ -1,19 +1,8 @@
 <template>
   <div class='flex  flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
     <div>
-      <ac-notification variant='error' v-if='loginError'>
-        {{ loginError.message }}
-        <RouterLink
-          to='/jobs'
-        >
-        </RouterLink>
-      </ac-notification>
-      <ac-notification variant='error' v-if='registerError'>
-        Unable to Register the user {{ registerError.message }}
-        <RouterLink
-          to='/jobs'
-        >
-        </RouterLink>
+      <ac-notification :variant='notification.status' v-if='notification'>
+        {{ notification.message }}
       </ac-notification>
     </div>
     <div class='flex justify-center space-x-1 rounded-lg p-0.5 bg-slate-50 m-auto'>
@@ -57,6 +46,7 @@
 
           <div>
             <button type='submit'
+                    data-test='login-button'
                     class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'>
               Sign in
             </button>
@@ -151,6 +141,7 @@ const loginStatus = ref()
 const registerError = ref()
 const registerData = ref()
 const registerStatus = ref()
+const notification = ref()
 
 const router = useRouter()
 
@@ -159,7 +150,7 @@ if (appStore.getToken) {
   // notify user that he is already logged in
   // timeout before redirection
   setTimeout(() => {
-    router.push('/')
+    // router.push('/')
   }, 5000)
 }
 
@@ -182,14 +173,30 @@ const submitLogin = async () => {
       })
     }
   ).then(async (response) => {
-    loginData.value = await response.json()
-    if (loginData.value.token) {
-      appStore.setToken(loginData.value.token)
+    if (response.status === 200) {
+      loginData.value = await response.json()
+      if (loginData.value.token) {
+        appStore.setToken(loginData.value.token)
+      }
+      // setNotification on success
+      notification.value = {
+        message: 'Welcome to our platform! ',
+        status: 'success'
+      }
+
+      // redirect to home page after timeout
+      setTimeout(() => {
+        router.push('/')
+      }, 5000)
     }
-    // redirect to home page
-    await router.push('/')
+
   }).catch((error) => {
     loginError.value = error
+    // create notification on error
+    notification.value = {
+      message: 'Unable to login the user \n Message Error: ' + error.message,
+      status: 'error'
+    }
   })
   // reset inputs values
   loginEmail.value = ''
@@ -211,14 +218,34 @@ const submitRegister = async () => {
       })
     }
   ).then(async (response) => {
-    registerData.value=await response.json()
-    if (registerData.value.token) {
-      appStore.setToken(registerData.value.token)
+    registerData.value = await response.json()
+    if (response.status === 200) {
+
+      if (registerData.value.token) {
+        appStore.setToken(registerData.value.token)
+      }
+      // Notification message
+      notification.value = {
+        message: 'Welcome to our platform! ',
+        status: 'success'
+      }
+
+      // redirect to home page after timeout
+      setTimeout(() => {
+        router.push('/')
+      }, 5000)
+    } else {
+      notification.value = {
+        message: 'Unable to Register the user \n Message Error: ' + registerData.value.message,
+        status: 'error'
+      }
     }
-    // redirect to home page
-    await router.push('/')
   }).catch((error) => {
     registerData.value = error
+    notification.value = {
+      message: 'Unable to Register the user \n Message Error: ' + error.message,
+      status: 'error'
+    }
   })
   // reset inputs values
   registerEmail.value = ''
