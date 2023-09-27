@@ -4,6 +4,17 @@
       <button class='flex items-center rounded-md py-2 px-12 text-sm font-semibold' :class='{"bg-white shadow": status}'
               @click='setStatus(true)'>Login
       </button>
+
+      <ac-notification variant="error">
+        Vous n'avez souscrit à aucune offre d'emploi, consulter la liste des offres d'emploi
+        <span class="text-cyan-600">
+          <RouterLink
+            to="/jobs"
+          >
+            ici
+          </RouterLink>
+        </span>
+      </ac-notification>
       <button
         class='flex items-center rounded-md py-2 px-12 text-sm font-semibold ' :class='{"bg-white shadow": !status}'
         @click='setStatus(false)'>
@@ -116,8 +127,10 @@
 
 import { ref } from 'vue'
 import { useAppStore } from '@/stores/app'
+import { useRouter } from 'vue-router'
+import AcNotification from '@/components/ac-notification.vue'
 
-const status = ref(false)
+const status = ref(true)
 
 const registerEmail = ref('')
 const registerName = ref('')
@@ -130,7 +143,16 @@ const loginError = ref()
 const loginData = ref()
 const loginStatus = ref()
 
+const router = useRouter()
+
 const appStore = useAppStore()
+if (appStore.getToken) {
+  // notify user that he is already logged in
+  // timeout before redirection
+  setTimeout(() => {
+    router.push('/')
+  }, 5000)
+}
 
 const setStatus = (value) => {
   status.value = value
@@ -155,13 +177,12 @@ const submitLogin = async () => {
     if (loginData.value.token) {
       appStore.setToken(loginData.value.token)
     }
-    console.log('response', loginData.value)
+    // redirect to home page
+    await router.push('/')
   }).catch((error) => {
     loginError.value = error
-    console.log(error)
   })
   // reset inputs values
-  console.log(loginEmail.value, loginPassword.value)
   loginEmail.value = ''
   loginPassword.value = ''
   loginStatus.value = 'done'
