@@ -7,11 +7,11 @@
     </div>
     <div class='flex justify-center space-x-1 rounded-lg p-0.5 bg-slate-50 m-auto'>
       <button class='flex items-center rounded-md py-2 px-12 text-sm font-semibold' :class='{"bg-white shadow": status}'
-              @click='setStatus(true)'>Login
+              @click='setStatus(true)' data-test='login'>Login
       </button>
       <button
         class='flex items-center rounded-md py-2 px-12 text-sm font-semibold ' :class='{"bg-white shadow": !status}'
-        @click='setStatus(false)'>
+        @click='setStatus(false)' data-test='register'>
         Register
       </button>
     </div>
@@ -97,6 +97,7 @@
 
           <div>
             <button type='submit'
+                    data-test='register-button'
                     class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'>
               Register
             </button>
@@ -178,7 +179,7 @@ const submitLogin = async () => {
       if (loginData.value.token) {
         appStore.setToken(loginData.value.token)
       }
-      console.log("should notify")
+      console.log('should notify')
       // setNotification on success
       notification.value = {
         message: 'Welcome to our platform! ',
@@ -189,7 +190,7 @@ const submitLogin = async () => {
       setTimeout(() => {
         router.push('/')
       }, 5000)
-    }else {
+    } else {
       loginError.value = await response.json()
       // create notification on error
       notification.value = {
