@@ -1,6 +1,9 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { useAppStore } from '@/stores/app'
+
+const appStore = useAppStore()
 </script>
 
 <template>
@@ -12,7 +15,10 @@ import HelloWorld from './components/HelloWorld.vue'
 
       <nav>
         <RouterLink to='/'>Home</RouterLink>
-        <RouterLink to='/login'>Login</RouterLink>
+        <RouterLink to='/poems/create' v-if='appStore.getToken'>Create Poem</RouterLink>
+        <RouterLink to='/login' v-if='!appStore.getToken'>Login</RouterLink>
+        <RouterLink to='/logout' v-if='appStore.getToken'>Logout</RouterLink>
+
       </nav>
     </div>
   </header>
