@@ -1,7 +1,6 @@
 const express = require('express')
 const cors = require('cors')
 const layer8 = require('layer8-middleware-wasm')
-const { Pool } = require('pg')
 require('dotenv').config()
 
 const app = express()
