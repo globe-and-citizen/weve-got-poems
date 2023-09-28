@@ -2,6 +2,7 @@ const pool = require('../db')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { secret } = require('../middlewares/jwtConfig')
+const validateInput = require('../middlewares/validateInput')
 
 // Route to create a new like or dislike for a poem
 const create = async (req, res) => {
@@ -66,5 +67,5 @@ const create = async (req, res) => {
 }
 
 module.exports = {
-  create
+  create: [validateInput(['poem_id']), create]
 }
