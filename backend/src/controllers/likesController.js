@@ -16,7 +16,8 @@ const create = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { poem_id, type } = req.body // Get poem_id and type (like or dislike) from the request body
+    const { poem_id } = req.body // Get poem_id from the request body
+    const type = req.path.split('/')[1] // Get type (like or dislike) from the route path (/like or /dislike)
 
     const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
 
@@ -32,33 +33,33 @@ const create = async (req, res) => {
 
     // Check if the user has already liked or disliked the poem
     const checkLikeDislikeQuery = `
-      SELECT id FROM poem_likes
+      SELECT id FROM ${type}s
       WHERE user_id = $1 AND poem_id = $2
     `
 
     const checkResult = await client.query(checkLikeDislikeQuery, [userId, poem_id])
 
     if (checkResult.rows.length > 0) {
-      return res.status(400).json({ error: 'User has already liked or disliked this poem' })
+      return res.status(400).json({ error: `User has already ${type}d this poem` })
     }
 
     const insertQuery = `
-      INSERT INTO poem_likes (user_id, poem_id, type, created_at)
-      VALUES ($1, $2, $3, NOW())
+      INSERT INTO ${type}s (user_id, poem_id, created_at)
+      VALUES ($1, $2, NOW())
       RETURNING id;
     `
 
-    const result = await client.query(insertQuery, [userId, poem_id, type])
+    const result = await client.query(insertQuery, [userId, poem_id])
     const { id } = result.rows[0]
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.json({ id, message: 'Like or dislike added successfully' })
+    res.json({ id, message: `${type} added successfully` })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
-    console.error('Error adding like or dislike:', error)
-    res.status(500).json({ error: 'Error adding like or dislike' })
+    console.error(`Error adding ${type}: `, error)
+    res.status(500).json({ error: `Error adding ${type}` })
   } finally {
     client.release() // Release the connection to the database
   }
