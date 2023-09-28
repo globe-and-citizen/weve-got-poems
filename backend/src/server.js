@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const layer8 = require('layer8-middleware-wasm')
 const { Pool } = require('pg')
 require('dotenv').config()
 
@@ -8,6 +9,7 @@ const port = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json())
+app.use(layer8)
 
 const configRoutes = require('./routes/configRoutes')
 const poemRoutes = require('./routes/poemRoutes')
