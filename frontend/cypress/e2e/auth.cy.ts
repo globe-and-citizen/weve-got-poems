@@ -38,14 +38,14 @@ describe('template spec', () => {
     cy.contains('Sign in to your account')
   })
 
-  it.only('Should register the new user', () => {
+  it('Should register the new user', () => {
     cy.get('[data-test="register"]').click()
     cy.get('#email').type('test@doedd.com')
     cy.get('#password').type('password123')
     cy.get('#name').type('John Doe')
     cy.get('[data-test="register-button"]').click()
 
-    // check login successfull message
+    // check login successfully message
     cy.get('[data-cy="notification"]').contains('Welcome to our platform!')
 
     // check the redirection to the home page
