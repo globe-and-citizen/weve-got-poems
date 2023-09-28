@@ -11,12 +11,13 @@ app.use(express.json())
 app.use(layer8)
 
 const configRoutes = require('./routes/configRoutes')
+const likeRoutes = require('./routes/likeRoutes')
 const poemRoutes = require('./routes/poemRoutes')
 const userRoutes = require('./routes/userRoutes')
 const swaggerRoute = require('./routes/swaggerRoute')
 
 app.use('/', swaggerRoute)
-app.use('/v1', poemRoutes, userRoutes)
+app.use('/v1', likeRoutes, poemRoutes, userRoutes)
 app.use('/config', configRoutes) // Uncomment if you want to use the config routes
 
 app.listen(port, () => {
