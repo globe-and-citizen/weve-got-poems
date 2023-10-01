@@ -151,7 +151,7 @@ if (appStore.getToken) {
   // notify user that he is already logged in
   // timeout before redirection
   setTimeout(() => {
-    // router.push('/')
+    router.push('/')
   }, 5000)
 }
 
@@ -189,7 +189,7 @@ const submitLogin = async () => {
       // redirect to home page after timeout
       setTimeout(() => {
         router.push('/')
-      }, 5000)
+      }, 2000)
     } else {
       loginError.value = await response.json()
       // create notification on error
@@ -228,8 +228,9 @@ const submitRegister = async () => {
     }
   ).then(async (response) => {
     registerData.value = await response.json()
-    if (response.status === 200) {
 
+    // TODO: register should return 201
+    if (response.status === 200) {
       if (registerData.value.token) {
         appStore.setToken(registerData.value.token)
       }
@@ -242,7 +243,7 @@ const submitRegister = async () => {
       // redirect to home page after timeout
       setTimeout(() => {
         router.push('/')
-      }, 5000)
+      }, 2000)
     } else {
       notification.value = {
         message: 'Unable to Register the user \n Message Error: ' + registerData.value.message,
