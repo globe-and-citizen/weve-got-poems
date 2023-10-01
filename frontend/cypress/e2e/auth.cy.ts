@@ -1,5 +1,9 @@
-describe('Login Page', () => {
+// Import fakerjs
+import {faker} from '@faker-js/faker'
 
+describe('Login Page', () => {
+  const randomName = faker.person.fullName() // Rowan Nikolaus
+  const randomEmail = faker.internet.email() // Kassandra.Haley@erich.biz
   beforeEach(() => {
     cy.visit('/login')
   })
@@ -40,9 +44,9 @@ describe('Login Page', () => {
 
   it('Should register the new user', () => {
     cy.get('[data-test="register"]').click()
-    cy.get('#email').type('test@doedd.com')
+    cy.get('#email').type(randomEmail)
     cy.get('#password').type('password123')
-    cy.get('#name').type('John Doe')
+    cy.get('#name').type(randomName)
     cy.get('[data-test="register-button"]').click()
 
     // check login successfully message
@@ -51,7 +55,7 @@ describe('Login Page', () => {
     // check the redirection to the home page
     cy.location('pathname').should('eq', '/')
   })
-  it.only('Should Failed to register the new user', () => {
+  it('Should Failed to register the new user', () => {
     cy.get('[data-test="register"]').click()
     cy.get('#email').type('test@doedd.com')
     cy.get('#password').type('password123')
