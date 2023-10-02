@@ -3,10 +3,12 @@
   "compilerOptions": {
     "baseUrl": ".",
     "isolatedModules": true,
+    "esModuleInterop": true,
     "strict": true,
     "moduleResolution": "node",
-    "target": "es5",
-    "lib": ["es5", "dom"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "dom"],
     "types": ["cypress", "node"],
     "paths": {
       "@/*": ["src/*"]
