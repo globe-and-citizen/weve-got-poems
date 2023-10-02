@@ -1,0 +1,5 @@
+<template>
+  <div class='w-8 h-8 border-4 border-emerald-400 rounded-full animate-spin'
+       style='border-top-color:transparent'></div>
+
+</template>

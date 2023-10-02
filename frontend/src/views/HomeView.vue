@@ -1,7 +1,8 @@
-<script setup lang='ts'>
-import TheWelcome from '../components/TheWelcome.vue'
+<script lang='ts' setup>
+import TheWelcome from '@/components/TheWelcome.vue'
 import { onMounted, ref } from 'vue'
-import { useAppStore } from '../stores/app.js'
+import { useAppStore } from '@/stores/app'
+import Loader from '@/components/Loader.vue'
 
 
 const data = ref()
@@ -18,11 +19,10 @@ onMounted(async () => {
 
 <template>
   <main>
-    <div v-if='loading' class='flex justify-center' data-test='loading'>
-      <div style='border-top-color:transparent'
-           class='w-8 h-8 border-4 border-emerald-400 rounded-full animate-spin'></div>
+    <div class='flex justify-center' data-test='loader'>
+      <Loader v-if='loading' />
     </div>
-    <TheWelcome :data='data' v-if='data' />
+    <TheWelcome v-if='data' :data='data' />
     // TODO : Pagination Here
   </main>
 </template>
