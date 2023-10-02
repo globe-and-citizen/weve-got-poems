@@ -1,6 +1,7 @@
 <script lang='ts' setup>
 
 import { ref } from 'vue'
+import { useAppStore } from '@/stores/app'
 import Loader from '../components/Loader.vue'
 import AcNotification from '../components/ac-notification.vue'
 import { useRouter } from 'vue-router'
@@ -16,13 +17,8 @@ const loading = ref()
 const loaded = ref()
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 
+const appStore = useAppStore()
 const notification = ref()
-const setNotification = (response: Response) => {
-  notification.value = {
-    message: response.status === 201 ? 'Poem created successfully' : 'Error creating poem',
-    type: response.status === 201 ? 'success' : 'error'
-  }
-}
 const submitPoem = async () => {
   console.log('submit poem')
   loading.value = true
@@ -30,7 +26,7 @@ const submitPoem = async () => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + localStorage.getItem('token')
+      'Authorization': 'Bearer ' + appStore.getToken
     },
     body: JSON.stringify({
       title: title.value,
@@ -38,8 +34,12 @@ const submitPoem = async () => {
     })
   })
     .then(response => {
-      if (response.status !== 201) {
+      if (response.status !== 200) {
         throw new Error('Error creating poem')
+      }
+      notification.value={
+        message: 'Poem created successfully',
+        type: 'success'
       }
       return response.json()
     })
