@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang='ts'>
 import { onMounted, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'

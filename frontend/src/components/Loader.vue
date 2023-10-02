@@ -3,3 +3,4 @@
        style='border-top-color:transparent' data-test='loader'></div>
 
 </template>
+<script setup lang='ts'></script>
