@@ -21,7 +21,7 @@ const spec = {
           content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginInput' } } }
         },
         responses: {
-          200: {
+          201: {
             description: 'Success',
             content: { 'application/json': { schema: { $ref: '#/components/schemas/LoginResponse' } } }
           },
@@ -43,7 +43,7 @@ const spec = {
           content: { 'application/json': { schema: { $ref: '#/components/schemas/PoemInput' } } }
         },
         responses: {
-          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/PoemResponse' } } } },
+          201: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/PoemResponse' } } } },
           404: { $ref: '#/components/responses/NotFound' },
           500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
@@ -104,7 +104,7 @@ const spec = {
           }
         ],
         responses: {
-          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/MessageResponse' } } } },
+          204: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/MessageResponse' } } } },
           404: { $ref: '#/components/responses/NotFound' },
           500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
@@ -122,7 +122,7 @@ const spec = {
           content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeInput' } } }
         },
         responses: {
-          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeResponse' } } } },
+          201: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeResponse' } } } },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
           401: { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
           404: { $ref: '#/components/responses/NotFound' },
@@ -130,7 +130,6 @@ const spec = {
         }
       }
     },
-
     '/dislike': {
       post: {
         tags: ['Likes & Dislikes'],
@@ -143,7 +142,7 @@ const spec = {
           content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeInput' } } }
         },
         responses: {
-          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeResponse' } } } },
+          201: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeResponse' } } } },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
           401: { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
           404: { $ref: '#/components/responses/NotFound' },
@@ -162,7 +161,7 @@ const spec = {
           content: { 'application/json': { schema: { $ref: '#/components/schemas/UserInput' } } }
         },
         responses: {
-          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/UserResponse' } } } },
+          201: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/UserResponse' } } } },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
           500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
@@ -223,7 +222,7 @@ const spec = {
           }
         ],
         responses: {
-          200: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/MessageResponse' } } } },
+          204: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/MessageResponse' } } } },
           404: { $ref: '#/components/responses/NotFound' },
           500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }

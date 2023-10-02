@@ -55,7 +55,7 @@ const create = async (req, res) => {
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.json({ id, message: `${type} added successfully` })
+    res.status(201).json({ id, message: `${type} added successfully` })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
@@ -108,7 +108,7 @@ const remove = async (req, res) => {
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.json({ message: `${type} removed successfully` })
+    res.status(204).json({ message: `${type} removed successfully` })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 

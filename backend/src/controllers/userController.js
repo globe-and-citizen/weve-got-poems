@@ -39,7 +39,7 @@ const create = async (req, res) => {
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.json({ token, message: 'User created successfully' })
+    res.status(201).json({ token, message: 'User created successfully' })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
@@ -206,7 +206,7 @@ const remove = async (req, res) => {
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.json({ message: 'User and associated poems deleted successfully' })
+    res.status(204).json({ message: 'User and associated poems deleted successfully' })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
@@ -255,7 +255,7 @@ const login = async (req, res) => {
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.json({ token, message: 'Login successful' })
+    res.status(201).json({ token, message: 'Login successful' })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
