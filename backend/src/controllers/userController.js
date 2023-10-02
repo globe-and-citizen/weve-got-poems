@@ -217,6 +217,7 @@ const remove = async (req, res) => {
   }
 }
 
+// Route to login a user
 const login = async (req, res) => {
   const client = await pool.connect() // Connect to the database
 
@@ -251,7 +252,15 @@ const login = async (req, res) => {
       return res.status(401).json({ error: 'Incorrect password' })
     }
 
-    const token = jwt.sign({ id: user.id }, secret, { expiresIn: '1h' })
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        name: user.name
+      },
+      secret,
+      { expiresIn: '1h' }
+    )
 
     await client.query('COMMIT') // Commit the transaction
 
