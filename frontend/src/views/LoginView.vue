@@ -6,7 +6,8 @@
       </ac-notification>
     </div>
     <div class='flex justify-center space-x-1 rounded-lg p-0.5 bg-slate-50 m-auto'>
-      <button :class='{"bg-white shadow": status}' class='flex items-center rounded-md py-2 px-12 text-sm font-semibold'
+      <button :class='{"bg-white shadow": status}'
+              class='flex items-center rounded-md py-2 px-12 text-sm font-semibold'
               data-test='login' @click='setStatus(true)'>Login
       </button>
       <button
@@ -25,7 +26,9 @@
           <div>
             <label class='block text-sm font-medium leading-6 text-gray-900' for='email'>Email address</label>
             <div class='mt-2'>
-              <input id='email' v-model='loginEmail' autocomplete='email' class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6' name='email' required=''
+              <input id='email' v-model='loginEmail' autocomplete='email'
+                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
+                     name='email' required=''
                      type='email' />
             </div>
           </div>
@@ -38,16 +41,19 @@
               </div>
             </div>
             <div class='mt-2'>
-              <input id='password' v-model='loginPassword' autocomplete='current-password' class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6' name='password'
+              <input id='password' v-model='loginPassword' autocomplete='current-password'
+                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
+                     name='password'
                      required=''
                      type='password' />
             </div>
           </div>
 
           <div>
-            <button class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-                    data-test='login-button'
-                    type='submit'>
+            <button
+              class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
+              data-test='login-button'
+              type='submit'>
               Sign in
             </button>
           </div>
@@ -71,7 +77,9 @@
           <div>
             <label class='block text-sm font-medium leading-6 text-gray-900' for='email'>Email address</label>
             <div class='mt-2'>
-              <input id='email' v-model='registerEmail' autocomplete='email' class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6' name='email'
+              <input id='email' v-model='registerEmail' autocomplete='email'
+                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
+                     name='email'
                      required=''
                      type='email' />
             </div>
@@ -80,7 +88,9 @@
           <div>
             <label class='block text-sm font-medium leading-6 text-gray-900' for='name'>Name</label>
             <div class='mt-2'>
-              <input id='name' v-model='registerName' autocomplete='name' class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6' name='name' required=''
+              <input id='name' v-model='registerName' autocomplete='name'
+                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
+                     name='name' required=''
                      type='text' />
             </div>
           </div>
@@ -89,16 +99,19 @@
               <label class='block text-sm font-medium leading-6 text-gray-900' for='password'>Password</label>
             </div>
             <div class='mt-2'>
-              <input id='password' v-model='registerPassword' autocomplete='current-password' class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6' name='password'
+              <input id='password' v-model='registerPassword' autocomplete='current-password'
+                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
+                     name='password'
                      required=''
                      type='password' />
             </div>
           </div>
 
           <div>
-            <button class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-                    data-test='register-button'
-                    type='submit'>
+            <button
+              class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
+              data-test='register-button'
+              type='submit'>
               Register
             </button>
           </div>
