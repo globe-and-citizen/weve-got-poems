@@ -79,7 +79,7 @@ const remove = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { id: poem_id } = req.params // Get the ID of the like or dislike from the route parameters
+    const { poem_id } = req.body // Get the ID of the like or dislike from the route parameters
     const type = req.path.split('/')[1] // Get type (like or dislike) from the route path (/like or /dislike)
 
     const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
@@ -94,17 +94,25 @@ const remove = async (req, res) => {
 
     const userId = decoded.id // Get the user ID from the decoded JWT token
 
+    // Check if the user has already liked or disliked the poem
+    const checkLikeDislikeQuery = `
+      SELECT id FROM ${type}s
+      WHERE user_id = $1 AND poem_id = $2
+    `
+
+    const checkResult = await client.query(checkLikeDislikeQuery, [userId, poem_id])
+
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({ error: `The ${type} was not found or does not belong to the user` })
+    }
+
     // Delete the like or dislike of the specific user for the poem
     const deleteQuery = `
       DELETE FROM ${type}s
-      WHERE poem_id = $1 AND user_id = $2
+      WHERE user_id = $1 AND poem_id = $2
     `
 
-    const result = await client.query(deleteQuery, [poem_id, userId])
-
-    if (result.rowCount === 0) {
-      return res.status(404).json({ error: `The ${type} was not found or does not belong to the user` })
-    }
+    await client.query(deleteQuery, [userId, poem_id])
 
     await client.query('COMMIT') // Commit the transaction
 
