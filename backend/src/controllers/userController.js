@@ -206,7 +206,7 @@ const remove = async (req, res) => {
 
     await client.query('COMMIT') // Commit the transaction
 
-    res.status(204).json({ message: 'User and associated poems deleted successfully' })
+    res.status(204)
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
