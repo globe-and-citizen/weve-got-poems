@@ -28,7 +28,7 @@
             <div class='mt-2'>
               <input id='email' v-model='loginEmail' autocomplete='email'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                     name='email' required=''
+                     name='email' required
                      type='email' />
             </div>
           </div>
@@ -44,7 +44,7 @@
               <input id='password' v-model='loginPassword' autocomplete='current-password'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
                      name='password'
-                     required=''
+                     required
                      type='password' />
             </div>
           </div>
@@ -80,7 +80,7 @@
               <input id='email' v-model='registerEmail' autocomplete='email'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
                      name='email'
-                     required=''
+                     required
                      type='email' />
             </div>
           </div>
@@ -90,7 +90,7 @@
             <div class='mt-2'>
               <input id='name' v-model='registerName' autocomplete='name'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                     name='name' required=''
+                     name='name' required
                      type='text' />
             </div>
           </div>
@@ -102,7 +102,7 @@
               <input id='password' v-model='registerPassword' autocomplete='current-password'
                      class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
                      name='password'
-                     required=''
+                     required
                      type='password' />
             </div>
           </div>
@@ -151,6 +151,8 @@ const loginPassword = ref('')
 const loginError = ref()
 const loginData = ref()
 const loginStatus = ref()
+const loginLoading = ref()
+const loginLoaded = ref(false)
 
 const registerError = ref()
 const registerData = ref()
@@ -168,15 +170,15 @@ if (appStore.getToken) {
   }, 5000)
 }
 
-const setStatus = (value) => {
+const setStatus = (value: boolean) => {
   status.value = value
 }
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 
 const submitLogin = async () => {
-  loginStatus.value = 'loading'
-  // send data to backend using fetch api
-  await fetch(endpoint + '/login', {
+  try {
+    loginLoading.value = true
+    const response = await fetch(endpoint + '/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -185,41 +187,46 @@ const submitLogin = async () => {
         email: loginEmail.value,
         password: loginPassword.value
       })
-    }
-  ).then(async (response) => {
-    if (response.status === 200) {
+    })
+    if (response.ok) {
+      // Successful response
       loginData.value = await response.json()
       if (loginData.value.token) {
         appStore.setToken(loginData.value.token)
       }
-      console.log('should notify')
-      // setNotification on success
+      // Notification message
       notification.value = {
         message: 'Welcome to our platform! ',
         status: 'success'
       }
-
-      // redirect to home page after timeout
+      // Redirection
       setTimeout(() => {
         router.push('/')
       }, 2000)
-    } else {
-      loginError.value = await response.json()
-      // create notification on error
+    } else if (response.status >= 400 && response.status < 500) {
+      // Client error
       notification.value = {
-        message: 'Unable to login the user \n Message Error: ' + loginError.value.message,
+        message: `Unable to login the user  : Client Error: ${response.status} - ${response.statusText}`,
+        status: 'error'
+      }
+    } else {
+      // Server error
+      notification.value = {
+        message: `Unable to login the user  : Server Error: ${response.status} - ${response.statusText}`,
         status: 'error'
       }
     }
-
-  }).catch((error) => {
-    loginError.value = error
-    // create notification on error
+  } catch (error: any) {
+    // Network error or other unexpected errors
     notification.value = {
-      message: 'Unable to login the user \n Message Error: ' + error.message,
+      message: `Unable to login the user  : Unexpected Error: ${error.message}`,
       status: 'error'
     }
-  })
+    loginError.value = error
+  } finally {
+    loginLoading.value = false
+  }
+
   // reset inputs values
   loginEmail.value = ''
   loginPassword.value = ''
@@ -243,7 +250,7 @@ const submitRegister = async () => {
     registerData.value = await response.json()
 
     // TODO: register should return 201
-    if (response.status === 200) {
+    if (response.status === 201) {
       if (registerData.value.token) {
         appStore.setToken(registerData.value.token)
       }
