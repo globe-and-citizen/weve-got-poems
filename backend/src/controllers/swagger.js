@@ -396,7 +396,7 @@ const spec = {
       NotFound: { description: 'Not found' }
     }
   },
-  tags: [{ name: 'Authentication' }, { name: 'Poems' }, { name: 'Likes & Dislikes', description: '(Work in Progress)' }, { name: 'Users' }]
+  tags: [{ name: 'Authentication' }, { name: 'Poems' }, { name: 'Likes & Dislikes' }, { name: 'Users' }]
 }
 
 window.onload = function () {
