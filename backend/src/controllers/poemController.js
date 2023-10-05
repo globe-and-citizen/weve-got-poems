@@ -120,6 +120,29 @@ const read = async (req, res) => {
   }
 }
 
+// Route to get all authors (users who wrote at least one poem)
+const authors = async (_req, res) => {
+  try {
+    const client = await pool.connect()
+
+    const authorsQuery = `
+      SELECT DISTINCT users.id, users.name
+      FROM users
+      INNER JOIN poems ON users.id = poems.user_id;
+    `
+
+    const result = await client.query(authorsQuery)
+    const authors = result.rows
+
+    client.release()
+
+    res.json(authors)
+  } catch (error) {
+    console.error('Error getting authors:', error)
+    res.status(500).json({ error: 'Error getting authors' })
+  }
+}
+
 // Route to update a poem in the 'poems' table
 const update = async (req, res) => {
   const client = await pool.connect() // Connect to the database
@@ -252,6 +275,7 @@ module.exports = {
     create
   ],
   read,
+  authors,
   update,
   remove
 }

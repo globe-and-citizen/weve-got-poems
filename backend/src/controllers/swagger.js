@@ -115,6 +115,24 @@ const spec = {
         }
       }
     },
+    '/authors': {
+      get: {
+        tags: ['Poems'],
+        summary: 'Get authors from the database',
+        operationId: 'getAuthors',
+        responses: {
+          200: {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: { type: 'array', items: { $ref: '#/components/schemas/Author' } }
+              }
+            }
+          },
+          404: { $ref: '#/components/responses/NotFound' }
+        }
+      }
+    },
     '/poem/{id}': {
       put: {
         tags: ['Poems'],
@@ -361,6 +379,13 @@ const spec = {
           dislikes: { type: 'array', items: { type: 'integer' }, example: [] },
           likes: { type: 'array', items: { type: 'integer' }, example: [1, 2, 3] },
           title: { type: 'string', example: 'Coding Chronicles' }
+        }
+      },
+      Author: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 1 },
+          name: { type: 'string', example: 'John Doe' }
         }
       },
       PoemInput: {

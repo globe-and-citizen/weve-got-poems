@@ -7,4 +7,6 @@ router.get('/poems', poemController.read)
 router.put('/poem/:id', poemController.update)
 router.delete('/poem/:id', poemController.remove)
 
+router.get('/authors', poemController.authors)
+
 module.exports = router
