@@ -75,7 +75,7 @@ const verify = async (req, res) => {
   const siweMessage = new SiweMessage(message)
   try {
     await siweMessage.verify({ signature })
-    res.send(true)
+    res.status(201).send(true)
   } catch {
     res.send(false)
   }

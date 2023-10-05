@@ -74,7 +74,7 @@ const spec = {
           }
         },
         responses: {
-          200: { description: 'Success', content: { 'application/json': { schema: { type: 'boolean' } } } },
+          201: { description: 'Success', content: { 'application/json': { schema: { type: 'boolean' } } } },
           500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
       }
