@@ -5,6 +5,10 @@ const spec = {
     version: '1.0.0',
     title: "We've Got Poems API"
   },
+  externalDocs: {
+    url: 'https://github.com/globe-and-citizen/weve-got-poems',
+    description: 'The canonical repo for Layer8\'s original Service Provider: "We\'ve Got Poems"'
+  },
   servers: [
     { url: 'https://weve-got-poems-server.onrender.com/v1', description: 'Production server' },
     { url: 'http://localhost:5432/v1', description: 'Local server' }
