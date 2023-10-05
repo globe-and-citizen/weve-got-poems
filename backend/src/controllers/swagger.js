@@ -266,7 +266,8 @@ const spec = {
             content: { 'application/json': { schema: { type: 'array', items: { $ref: '#/components/schemas/User' } } } }
           },
           500: { description: 'Internal Server Error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
-        }
+        },
+        deprecated: true
       }
     },
     '/user/{id}': {
