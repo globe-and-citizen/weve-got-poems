@@ -64,8 +64,22 @@ const read = async (req, res) => {
   try {
     const client = await pool.connect()
 
+    // Build the WHERE conditions and the query parameters based on the query string
+    const queryParams = []
+    const whereConditions = []
+
+    if (req.query.title) {
+      queryParams.push(`%${req.query.title}%`)
+      whereConditions.push(`poems.title ILIKE $${queryParams.length}`)
+    }
+
+    if (req.query.author) {
+      queryParams.push(`%${req.query.author}%`)
+      whereConditions.push(`users.name ILIKE $${queryParams.length}`)
+    }
+
     // Query SQL to get all poems from the 'poems' table with likes and dislikes
-    const selectQuery = `
+    let selectQuery = `
       SELECT
         poems.id,
         poems.content,
@@ -73,13 +87,17 @@ const read = async (req, res) => {
         poems.title,
         users.id AS user_id,
         users.name AS user_name,
-        ( SELECT ARRAY_AGG(user_id) FROM likes WHERE poem_id = poems.id ) AS likes,
-        ( SELECT ARRAY_AGG(user_id) FROM dislikes WHERE poem_id = poems.id ) AS dislikes
+        (SELECT ARRAY_AGG(user_id) FROM likes WHERE poem_id = poems.id) AS likes,
+        (SELECT ARRAY_AGG(user_id) FROM dislikes WHERE poem_id = poems.id) AS dislikes
       FROM poems
       INNER JOIN users ON poems.user_id = users.id
     `
 
-    const result = await client.query(selectQuery)
+    if (whereConditions.length > 0) {
+      selectQuery += ' WHERE ' + whereConditions.join(' AND ')
+    }
+
+    const result = await client.query(selectQuery, queryParams)
     const poems = result.rows.map((row) => ({
       id: row.id,
       author: {

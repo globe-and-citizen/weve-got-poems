@@ -100,8 +100,12 @@ const spec = {
     '/poems': {
       get: {
         tags: ['Poems'],
-        summary: 'Get all poems from the database',
+        summary: 'Get poems from the database',
         operationId: 'getPoems',
+        parameters: [
+          { name: 'title', in: 'query', description: 'Search for poems by title (optional)', schema: { type: 'string' } },
+          { name: 'author', in: 'query', description: 'Search for poems by author name (optional)', schema: { type: 'string' } }
+        ],
         responses: {
           200: {
             description: 'Success',
