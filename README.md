@@ -24,5 +24,5 @@ But if you are more Frontend oriented, please read the [Frontend README](./front
 
 ## Production URLs
 
-- Frontend: TBD
+- Frontend: https://weve-got-poems.pages.dev/
 - Backend: https://weve-got-poems-server.onrender.com/
