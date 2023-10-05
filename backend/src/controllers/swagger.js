@@ -31,6 +31,54 @@ const spec = {
         }
       }
     },
+    '/nonce': {
+      get: {
+        tags: ['Authentication'],
+        summary: 'Generate a nonce for Ethereum authentication',
+        operationId: 'generateNonce',
+        responses: {
+          200: { description: 'Success', content: { 'text/plain': { schema: { type: 'string' } } } },
+          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
+    },
+    '/verify': {
+      post: {
+        tags: ['Authentication'],
+        summary: 'Verify Ethereum authentication',
+        operationId: 'verifyAuthentication',
+        requestBody: {
+          description: 'Verify Ethereum authentication',
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    description: 'The message to be signed',
+                    example:
+                      'localhost:8080 wants you to sign in with your Ethereum account:\n0x9D85ca56217D2bb651b00f15e694EB7E713637D4\n\nSign in with Ethereum to the app.\n\nURI: http://localhost:8080\nVersion: 1\nChain ID: 1\nNonce: spAsCWHwxsQzLcMzi\nIssued At: 2022-01-29T03:22:26.716Z'
+                  },
+                  signature: {
+                    type: 'string',
+                    description: 'The Ethereum signature of the message',
+                    example:
+                      '0xe117ad63b517e7b6823e472bf42691c28a4663801c6ad37f7249a1fe56aa54b35bfce93b1e9fa82da7d55bbf0d75ca497843b0702b9dfb7ca9d9c6edb25574c51c'
+                  }
+                },
+                required: ['message', 'signature']
+              }
+            }
+          }
+        },
+        responses: {
+          200: { description: 'Success', content: { 'application/json': { schema: { type: 'boolean' } } } },
+          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
+        }
+      }
+    },
     '/poem': {
       post: {
         tags: ['Poems'],
