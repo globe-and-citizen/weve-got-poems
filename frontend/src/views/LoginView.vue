@@ -176,6 +176,8 @@ const setStatus = (value: boolean) => {
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 
 const submitLogin = async () => {
+
+  // Handle fetch in a try catch
   try {
     loginLoading.value = true
     const response = await fetch(endpoint + '/login', {
