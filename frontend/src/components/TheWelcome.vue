@@ -14,12 +14,12 @@ const props = defineProps({
 </script>
 
 <template>
-  <WelcomeItem v-for='item in data' :key='item.id'>
+  <WelcomeItem v-for='item in data' :key='item.id' data-test='item'>
     <template #icon>
       <DocumentationIcon />
     </template>
     <template #heading>
-      <RouterLink :to="'/poems/' + item.id">{{ item.title }}</RouterLink>
+      <RouterLink :to="'/poems/' + item.id" data-test='item-heading'>{{ item.title }}</RouterLink>
     </template>
     {{ item.content }}
     <br>
