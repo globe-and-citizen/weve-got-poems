@@ -115,7 +115,7 @@ const onDelete = async () => {
         <h1>{{ currentPoem.title }}</h1>
       </template>
       <div class='flex gap-2' v-if='currentPoem.author.id==appStore.getUser.id'>
-        <RouterLink :to="'/poems/' + currentPoem.id+'/edit'">Edit</RouterLink>
+        <RouterLink :to="'/poems/' + currentPoem.id+'/update'">Edit</RouterLink>
         <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
       </div>
       {{ currentPoem.content }}
