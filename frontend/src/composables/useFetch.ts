@@ -8,7 +8,7 @@ interface FetchResult<T> {
   isLoaded: Ref<boolean>;
 }
 
-export async function useFetch<T>(url: string): Promise<FetchResult<T>> {
+export async function useFetch<T>(url: string, option: any = {}): Promise<FetchResult<T>> {
   const data = ref<T | null>(null)
   const error = ref<String | null>(null)
   const loading = ref<boolean>(false)
@@ -16,7 +16,7 @@ export async function useFetch<T>(url: string): Promise<FetchResult<T>> {
 
   try {
     loading.value = true
-    const response = await fetch(url)
+    const response = await fetch(url, option)
     isLoaded.value = true
     if (response.ok) {
       data.value = await response.json()
