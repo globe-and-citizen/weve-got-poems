@@ -8,28 +8,29 @@ interface FetchResult<T> {
   isLoaded: Ref<boolean>;
 }
 
-export async function useFetch<T>(url: string, option: any = {}): Promise<FetchResult<T>> {
+export function useFetch<T>(url: string, option: any = {}): FetchResult<T> {
   const data = ref<T | null>(null)
   const error = ref<String | null>(null)
   const loading = ref<boolean>(false)
   const isLoaded = ref<boolean>(false)
 
-  try {
-    loading.value = true
-    const response = await fetch(url, option)
-    isLoaded.value = true
-    if (response.ok) {
-      data.value = await response.json()
-    } else if (response.status >= 400 && response.status < 500) {
-      error.value = `Client Error: ${response.status} - ${response.statusText}`
-    } else {
-      error.value = `Server Error: ${response.status} - ${response.statusText}`
-    }
-  } catch (err: any) {
+  loading.value = true
+  fetch(url, option)
+    .then(async (response) => {
+      if (response.ok) {
+        data.value = await response.json()
+      } else if (response.status >= 400 && response.status < 500) {
+        error.value = `Client Error: ${response.status} - ${response.statusText}`
+      } else {
+        error.value = `Server Error: ${response.status} - ${response.statusText}`
+      }
+    }).catch((err) => {
     error.value = `Network Error: ${err.message}`
-  } finally {
+  }).finally(() => {
+
+    isLoaded.value = true
     loading.value = false
-  }
+  })
 
   return { data, error, loading, isLoaded }
 }
