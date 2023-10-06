@@ -22,5 +22,19 @@ describe('Create Poem', () => {
     // check redirection
     cy.location('pathname').should('not.eq', '/poems/create')
   })
+  it.only('Should delete A Poem', () => {
+    cy.visit('/')
+    cy.get('[data-test="item"]').get('[data-test="item-heading"]').last().click()
+    // check loading
+    cy.get('[data-test="loader"]').should('not.exist')
+    cy.get('[data-test="remove-poem-button"]').click()
+    cy.window().then((win) => {
+      cy.stub(win, 'confirm').returns(true); // Accept the dialog
+    });
+    // check success message
+    cy.get('[data-cy="notification"]').contains('Poem deleted successfully')
+    // Check the redirection to the homme page
+    cy.location('pathname').should('eq', '/')
+  })
 })
 
