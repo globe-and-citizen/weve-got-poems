@@ -8,13 +8,12 @@ interface FetchResult<T> {
   isLoaded: Ref<boolean>;
 }
 
-export function useFetch<T>(url: string, option: any = {}): FetchResult<T> {
+export function useFetch<T>(url: string, option: RequestInit = {}): FetchResult<T> {
   const data = ref<T | null>(null)
   const error = ref<String | null>(null)
-  const loading = ref<boolean>(false)
+  const loading = ref<boolean>(true)
   const isLoaded = ref<boolean>(false)
 
-  loading.value = true
   fetch(url, option)
     .then(async (response) => {
       if (response.ok) {
@@ -24,13 +23,14 @@ export function useFetch<T>(url: string, option: any = {}): FetchResult<T> {
       } else {
         error.value = `Server Error: ${response.status} - ${response.statusText}`
       }
-    }).catch((err) => {
-    error.value = `Network Error: ${err.message}`
-  }).finally(() => {
-
-    isLoaded.value = true
-    loading.value = false
-  })
+    })
+    .catch((err) => {
+      error.value = `Network Error: ${err.message}`
+    })
+    .finally(() => {
+      isLoaded.value = true
+      loading.value = false
+    })
 
   return { data, error, loading, isLoaded }
 }
