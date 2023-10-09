@@ -1,7 +1,7 @@
 import type { Ref, UnwrapRef } from 'vue'
 import { ref } from 'vue'
 
-interface FetchResult<T> {
+export interface FetchResult<T> {
   data: Ref<UnwrapRef<T | null>>;
   error: Ref<String | null>;
   loading: Ref<boolean>;
