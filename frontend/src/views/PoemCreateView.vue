@@ -20,7 +20,6 @@ const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const appStore = useAppStore()
 const notification = ref()
 const submitPoem = async () => {
-  console.log('submit poem')
   loading.value = true
   await fetch(endpoint + '/poem', {
     method: 'POST',
@@ -33,35 +32,36 @@ const submitPoem = async () => {
       content: content.value
     })
   })
-    .then(response => {
-      if (response.status !== 200) {
-        throw new Error('Error creating poem')
-      }
-      notification.value={
-        message: 'Poem created successfully',
-        type: 'success'
-      }
-      return response.json()
-    })
-    .then((response) => {
-      console.log(response)
-      data.value = response
-      loaded.value = true
-      // Redirect to post page after timeout
-      setTimeout(() => {
-        router.push('/poems/' + data.value.id)
-      }, 2000)
-    })
-    .catch((error) => {
-      console.log(error)
-      notification.value = {
-        message: 'Unable to create poem \n Message Error: ' + error.message,
-        type: 'error'
-      }
-      error.value = error
-    }).finally(() => {
-      loading.value = false
-    })
+      .then(response => {
+        if (response.ok) {
+          notification.value = {
+            message: 'Poem created successfully',
+            type: 'success'
+          }
+          return response.json()
+        } else if (response.status >= 400 && response.status < 500) {
+          throw new Error(`Unable to create the poem : Client Error: ${response.status} - ${response.statusText}`)
+        } else {
+          throw new Error(`Unable to create the poem : Server Error: ${response.status} - ${response.statusText}`)
+        }
+      })
+      .then((response) => {
+        data.value = response
+        loaded.value = true
+        // Redirect to post page after timeout
+        setTimeout(() => {
+          router.push('/poems/' + data.value.id)
+        }, 2000)
+      })
+      .catch((error) => {
+        notification.value = {
+          message: 'Unable to create poem \n Message Error: ' + error.message,
+          type: 'error'
+        }
+        error.value = error
+      }).finally(() => {
+        loading.value = false
+      })
 }
 </script>
 
@@ -102,9 +102,9 @@ const submitPoem = async () => {
 
         <div>
           <button
-            class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-            data-test='save-poem-button'
-            type='submit'>
+              class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
+              data-test='save-poem-button'
+              type='submit'>
             <Loader v-if='loading' class='mr-6' />
             Create Poem
           </button>

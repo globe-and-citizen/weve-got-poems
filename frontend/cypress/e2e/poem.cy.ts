@@ -22,7 +22,7 @@ describe('Create Poem', () => {
     // check redirection
     cy.location('pathname').should('not.eq', '/poems/create')
   })
-  it.only('Should delete A Poem', () => {
+  it('Should delete A Poem', () => {
     cy.visit('/')
     cy.get('[data-test="item"]').get('[data-test="item-heading"]').last().click()
     // check loading
