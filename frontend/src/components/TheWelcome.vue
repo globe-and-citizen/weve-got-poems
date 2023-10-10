@@ -6,7 +6,7 @@ import { RouterLink } from 'vue-router'
 // get the props
 const props = defineProps({
   data: {
-    type: Array,
+    type: Array<any>,
     required: true
   }
 })
