@@ -5,7 +5,7 @@ import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
 import { useAppStore } from '@/stores/app'
 import { useFetch, useFetchDelay } from '@/composables/useFetch'
-import Loader from '@/components/Loader.vue'
+import Loader from '@/components/CustomLoader.vue'
 
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const router = useRouter()
@@ -106,7 +106,7 @@ const onDelete = async () => {
 
 <template>
   <main>
-    <Loader v-if='loading' />
+    <CustomLoader v-if='loading' />
     <WelcomeItem v-if='currentPoem'>
       <template #icon>
         <DocumentationIcon />

@@ -2,7 +2,7 @@
 
 import { computed, ref, watchEffect } from 'vue'
 import { useAppStore } from '@/stores/app'
-import Loader from '../components/Loader.vue'
+import Loader from '../components/CustomLoader.vue'
 import AcNotification from '../components/ac-notification.vue'
 import { useRouter } from 'vue-router'
 import { useFetch } from '@/composables/useFetch'
@@ -129,7 +129,7 @@ const submitPoem = async () => {
         Update a Poem</h2>
     </div>
     <div class='flex justify-center' data-test='loader' v-if='loading'>
-      <Loader />
+      <CustomLoader />
     </div>
     <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm' v-else>
       <form class='space-y-6' @submit.prevent='submitPoem'>

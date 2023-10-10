@@ -2,7 +2,8 @@
 import TheWelcome from '@/components/TheWelcome.vue'
 import { onMounted, ref } from 'vue'
 import { useAppStore } from '@/stores/app'
-import Loader from '@/components/Loader.vue'
+import Loader from '@/components/CustomLoader.vue'
+import CustomLoader from '@/components/CustomLoader.vue'
 
 
 const data = ref()
@@ -20,7 +21,7 @@ onMounted(async () => {
 <template>
   <main>
     <div class='flex justify-center' data-test='loader'>
-      <Loader v-if='loading' />
+      <CustomLoader v-if='loading' />
     </div>
     <TheWelcome v-if='data' :data='data' />
     // TODO : Pagination Here
