@@ -83,7 +83,7 @@ const spec = {
         }
       }
     },
-    '/poem': {
+    '/poems': {
       post: {
         tags: ['Poems'],
         summary: 'Add a poem to the database',
@@ -99,9 +99,7 @@ const spec = {
           404: { $ref: '#/components/responses/NotFound' },
           500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
-      }
-    },
-    '/poems': {
+      },
       get: {
         tags: ['Poems'],
         summary: 'Get poems from the database',
@@ -137,7 +135,7 @@ const spec = {
         }
       }
     },
-    '/poem/{id}': {
+    '/poems/{id}': {
       put: {
         tags: ['Poems'],
         summary: 'Update a poem in the database',
