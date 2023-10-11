@@ -1,30 +1,44 @@
 <script setup lang='ts'>
-import { onMounted, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
 import { useAppStore } from '@/stores/app'
 import { useFetch, useFetchDelay } from '@/composables/useFetch'
 import CustomLoader from '@/components/CustomLoader.vue'
+import AcNotification from '@/components/ac-notification.vue'
 
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const router = useRouter()
 const appStore = useAppStore()
 
-const data = ref()
 const index = ref()
 const nextId = ref()
 const previousId = ref()
 
 const notification = ref()
 
-const { error, data: poems, loading, isLoaded } = useFetch(endpoint + '/poems/')
+interface DataModel {
+  id: number
+  title: string
+  content: string
+  created_at: string
+  dislikes: Array<number>
+  likes: Array<number>
+  user: {
+    id: number
+    name: string
+  }
+}
+
+const { error, data, loading, isLoaded } = useFetch<Array<DataModel>>(endpoint + '/poems/')
 const {
   error: deleteError,
   data: deleteData,
   loading: deleteLoading,
+  isLoaded: deleteIsLoaded,
   execute: executeDelete
-} = useFetchDelay(endpoint + '/poem/' + router.currentRoute.value.params.id, {
+} = useFetchDelay(endpoint + '/poems/' + router.currentRoute.value.params.id, {
   method: 'DELETE',
   headers: {
     'Content-Type': 'application/json',
@@ -36,7 +50,7 @@ const {
 const getCurrentPoem = () => {
   if (!data.value) return
   return data.value.find((poem: any, i: number) => {
-    if (poem.id === parseInt(router.currentRoute.value.params.id as string)) {
+    if (data.value && poem.id === parseInt(router.currentRoute.value.params.id as string)) {
       index.value = i
       if (i === 0) {
         previousId.value = data.value[data.value.length - 1].id
@@ -54,39 +68,30 @@ const getCurrentPoem = () => {
 }
 
 const currentPoem = ref()
-onMounted(async () => {
-  const response = await fetch(endpoint + '/poems')
-  data.value = await response.json()
-})
 
 
-const processDeleteNotification = () => {
-  if (deleteData.value) {
-    notification.value = {
-      message: 'Poem deleted successfully',
-      status: 'success'
-    }
-    // redirect to home page after timeout
-    setTimeout(() => {
-      router.push('/')
-    }, 2000)
-  } else {
-    if (deleteError.value) {
+
+watchEffect(() => {
+  currentPoem.value = getCurrentPoem()
+  if (deleteIsLoaded.value) {
+    // redirect after timeout
+    console.log("1")
+    // if no error and poem is deleted successfully
+    if (!deleteError.value) {
+      console.log("12")
+      notification.value = {
+        message: 'Poem deleted successfully',
+        status: 'success'
+      }
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
+    } else {
+      console.log("123")
       notification.value = {
         message: `Unable to delete poem ${deleteError.value}`,
         status: 'error'
       }
-    }
-  }
-}
-
-watchEffect(() => {
-  processDeleteNotification()
-  currentPoem.value = getCurrentPoem()
-  if (deleteError.value) {
-    notification.value = {
-      message: `Unable to delete poem ${deleteError.value}`,
-      status: 'error'
     }
   }
 })
@@ -112,6 +117,11 @@ const isCurrentPoemAuthor = () => {
 
 <template>
   <main>
+    <div>
+      <ac-notification v-if='notification' :variant='notification.status'>
+        {{ notification.message }}
+      </ac-notification>
+    </div>
     <CustomLoader v-if='loading' />
     <WelcomeItem v-if='currentPoem'>
       <template #icon>
