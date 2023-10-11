@@ -75,10 +75,8 @@ watchEffect(() => {
   currentPoem.value = getCurrentPoem()
   if (deleteIsLoaded.value) {
     // redirect after timeout
-    console.log("1")
     // if no error and poem is deleted successfully
     if (!deleteError.value) {
-      console.log("12")
       notification.value = {
         message: 'Poem deleted successfully',
         status: 'success'
@@ -87,7 +85,6 @@ watchEffect(() => {
         router.push('/')
       }, 2000)
     } else {
-      console.log("123")
       notification.value = {
         message: `Unable to delete poem ${deleteError.value}`,
         status: 'error'
@@ -130,7 +127,7 @@ const isCurrentPoemAuthor = () => {
       <template #heading>
         <h1>{{ currentPoem.title }}</h1>
       </template>
-      <div class='flex gap-2' v-if='isCurrentPoemAuthor'>
+      <div class='flex gap-2' v-if='isCurrentPoemAuthor()'>
         <RouterLink :to="'/poems/' + currentPoem.id+'/update'">Edit</RouterLink>
         <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
       </div>
