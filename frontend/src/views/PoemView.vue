@@ -5,7 +5,7 @@ import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
 import { useAppStore } from '@/stores/app'
 import { useFetch, useFetchDelay } from '@/composables/useFetch'
-import Loader from '@/components/CustomLoader.vue'
+import CustomLoader from '@/components/CustomLoader.vue'
 
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const router = useRouter()
@@ -101,6 +101,12 @@ const onDelete = async () => {
     }
   }
 }
+const isCurrentPoemAuthor = () => {
+  if (currentPoem.value) {
+    return currentPoem.value.author.id === appStore.getUser.id
+  }
+  return false
+}
 
 </script>
 
@@ -114,7 +120,7 @@ const onDelete = async () => {
       <template #heading>
         <h1>{{ currentPoem.title }}</h1>
       </template>
-      <div class='flex gap-2' v-if='currentPoem.author.id==appStore.getUser.id'>
+      <div class='flex gap-2' v-if='isCurrentPoemAuthor'>
         <RouterLink :to="'/poems/' + currentPoem.id+'/update'">Edit</RouterLink>
         <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
       </div>
