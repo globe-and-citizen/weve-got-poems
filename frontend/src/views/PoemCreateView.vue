@@ -21,7 +21,7 @@ const appStore = useAppStore()
 const notification = ref()
 const submitPoem = async () => {
   loading.value = true
-  await fetch(endpoint + '/poem', {
+  await fetch(endpoint + '/poems', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ const submitPoem = async () => {
         if (response.ok) {
           notification.value = {
             message: 'Poem created successfully',
-            type: 'success'
+            status: 'success'
           }
           return response.json()
         } else if (response.status >= 400 && response.status < 500) {
@@ -56,7 +56,7 @@ const submitPoem = async () => {
       .catch((error) => {
         notification.value = {
           message: 'Unable to create poem \n Message Error: ' + error.message,
-          type: 'error'
+          status: 'error'
         }
         error.value = error
       }).finally(() => {
