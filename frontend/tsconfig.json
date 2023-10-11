@@ -1,13 +1,14 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.json",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "isolatedModules": true,
-    "strict": true,
-    "moduleResolution": "node",
-    "target": "es5",
-    "lib": ["es5", "dom"],
-    "types": ["cypress", "node"]
-  },
-  "include": ["**/*.ts"]
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
+    }
+  ]
 }

@@ -1,7 +1,8 @@
-<script setup>
+<script setup lang='ts'>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { useAppStore } from '@/stores/app'
+// import { useAppStore } from '../stores/app'
 
 const appStore = useAppStore()
 </script>

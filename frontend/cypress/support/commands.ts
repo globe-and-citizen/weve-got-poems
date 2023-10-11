@@ -35,3 +35,18 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('login', () => {
+  cy.session('login', () => {
+    cy.visit('/login')
+    cy.get('#email').type('test@doe.com')
+    cy.get('#password').type('password123')
+    cy.get('[data-test="login-button"]').click()
+
+    // check login successfull message
+    cy.get('[data-cy="notification"]', { timeout: 10000 }).contains('Welcome to our platform!')
+
+    // check the redirection to the home page
+    cy.location('pathname').should('eq', '/')
+  })
+})

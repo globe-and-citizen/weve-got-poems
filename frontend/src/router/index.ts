@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PoemView from '../views/PoemView.vue'
 import PoemCreateView from '@/views/PoemCreateView.vue'
+import PoemEditView from '@/views/PoemEditView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,6 +16,11 @@ const router = createRouter({
       path: '/poems/create',
       name: 'create_poem',
       component: PoemCreateView
+    },
+    {
+      path: '/poems/:id/update',
+      name: 'update_poem',
+      component: PoemEditView
     },
     {
       path: '/poems/:id',

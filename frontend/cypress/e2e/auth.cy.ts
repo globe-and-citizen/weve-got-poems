@@ -1,5 +1,5 @@
 // Import fakerjs
-import {faker} from '@faker-js/faker'
+import { faker } from '@faker-js/faker'
 
 describe('Login Page', () => {
   const randomName = faker.person.fullName() // Rowan Nikolaus
