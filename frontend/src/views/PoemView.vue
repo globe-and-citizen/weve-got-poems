@@ -7,6 +7,8 @@ import { useAppStore } from '@/stores/app'
 import { useFetch, useFetchDelay } from '@/composables/useFetch'
 import CustomLoader from '@/components/CustomLoader.vue'
 import AcNotification from '@/components/ac-notification.vue'
+import IconLike from '@/components/icons/IconLike.vue'
+import IconDislike from '@/components/icons/IconDislike.vue'
 
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const router = useRouter()
@@ -34,7 +36,6 @@ interface DataModel {
 const { error, data, loading, isLoaded } = useFetch<Array<DataModel>>(endpoint + '/poems/')
 const {
   error: deleteError,
-  data: deleteData,
   loading: deleteLoading,
   isLoaded: deleteIsLoaded,
   execute: executeDelete
@@ -46,7 +47,15 @@ const {
   }
 })
 
+const likeData = ref()
+const likeError = ref()
+const likeLoading = ref()
+const likeLoaded = ref()
 
+const dislikeData=ref()
+const dislikeError = ref()
+const dislikeLoading = ref()
+const dislikeLoaded = ref()
 const getCurrentPoem = () => {
   if (!data.value) return
   return data.value.find((poem: any, i: number) => {
@@ -68,7 +77,6 @@ const getCurrentPoem = () => {
 }
 
 const currentPoem = ref()
-
 
 
 watchEffect(() => {
@@ -105,11 +113,66 @@ const onDelete = async () => {
 }
 const isCurrentPoemAuthor = () => {
   if (currentPoem.value) {
-    return currentPoem.value.author.id === appStore.getUser.id
+    return currentPoem.value.author.id === appStore.getUser?.id
   }
   return false
 }
 
+const onLike = async () => {
+  try {
+    likeLoading.value = true
+    const response = await fetch(endpoint + '/like', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + appStore.getToken
+      },
+      body: JSON.stringify({
+        poem_id: currentPoem.value.id
+      })
+    })
+    if (response.ok) {
+      likeData.value = await response.json()
+    } else if (response.status >= 400 && response.status < 500) {
+      likeError.value = `Client Error: ${response.status} - ${response.statusText}`
+    } else {
+      likeError.value = `Server Error: ${response.status} - ${response.statusText}`
+    }
+    likeLoaded.value = true
+  } catch (err: any) {
+    likeError.value = `Network Error: ${err.message}`
+  } finally {
+    likeLoading.value = false
+  }
+}
+
+const onDisLike = async () => {
+  try {
+    dislikeLoading.value = true
+    const response = await fetch(endpoint + '/dislike', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + appStore.getToken
+      },
+      body: JSON.stringify({
+        poem_id: currentPoem.value.id
+      })
+    })
+    if (response.ok) {
+      dislikeData.value = await response.json()
+    } else if (response.status >= 400 && response.status < 500) {
+      dislikeError.value = `Client Error: ${response.status} - ${response.statusText}`
+    } else {
+      dislikeError.value = `Server Error: ${response.status} - ${response.statusText}`
+    }
+    dislikeLoaded.value = true
+  } catch (err: any) {
+    dislikeError.value = `Network Error: ${err.message}`
+  } finally {
+    dislikeLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -118,6 +181,7 @@ const isCurrentPoemAuthor = () => {
       <ac-notification v-if='notification' :variant='notification.status'>
         {{ notification.message }}
       </ac-notification>
+
     </div>
     <CustomLoader v-if='loading' />
     <WelcomeItem v-if='currentPoem'>
@@ -130,6 +194,16 @@ const isCurrentPoemAuthor = () => {
       <div class='flex gap-2' v-if='isCurrentPoemAuthor()'>
         <RouterLink :to="'/poems/' + currentPoem.id+'/update'">Edit</RouterLink>
         <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
+      </div>
+      <div class='flex gap-2 text-center' v-if='appStore.getToken'>
+        <a @click.prevent='onLike()' class='flex gap-2  p-2 rounded cursor-pointer'>
+          {{ currentPoem.likes.length }}
+          <IconLike />
+        </a>
+        <a @click.prevent='onDisLike()' class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded  cursor-pointer'>
+          {{ currentPoem.dislikes.length }}
+          <IconDislike />
+        </a>
       </div>
       {{ currentPoem.content }}
       <br>
