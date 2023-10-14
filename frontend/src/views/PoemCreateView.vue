@@ -2,9 +2,9 @@
 
 import { ref } from 'vue'
 import { useAppStore } from '@/stores/app'
-import Loader from '../components/CustomLoader.vue'
 import AcNotification from '../components/ac-notification.vue'
 import { useRouter } from 'vue-router'
+import CustomLoader from '@/components/CustomLoader.vue'
 
 const router = useRouter()
 const content = ref('')

@@ -4,7 +4,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
 import { useAppStore } from '@/stores/app'
-import { useFetch, useFetchDelay } from '@/composables/useFetch'
+import { useFetch } from '@/composables/useFetch'
 import CustomLoader from '@/components/CustomLoader.vue'
 import AcNotification from '@/components/ac-notification.vue'
 import IconLike from '@/components/icons/IconLike.vue'
@@ -39,20 +39,20 @@ const {
   loading: deleteLoading,
   isLoaded: deleteIsLoaded,
   execute: executeDelete
-} = useFetchDelay(endpoint + '/poems/' + router.currentRoute.value.params.id, {
+} = useFetch(endpoint + '/poems/' + router.currentRoute.value.params.id, {
   method: 'DELETE',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ' + appStore.getToken
   }
-})
+}, { immediate: false })
 
 const likeData = ref()
 const likeError = ref()
 const likeLoading = ref()
 const likeLoaded = ref()
 
-const dislikeData=ref()
+const dislikeData = ref()
 const dislikeError = ref()
 const dislikeLoading = ref()
 const dislikeLoaded = ref()
@@ -104,11 +104,8 @@ const onDelete = async () => {
   const confirmation = window.confirm('Are you sure you want to delete this poem?')
   if (confirmation) {
     // delete poem
-    const id = currentPoem.value.id
     deleteLoading.value = true
-    if (executeDelete) {
-      executeDelete()
-    }
+    executeDelete()
   }
 }
 const isCurrentPoemAuthor = () => {
@@ -192,7 +189,7 @@ const onDisLike = async () => {
         <h1>{{ currentPoem.title }}</h1>
       </template>
       <div class='flex gap-2' v-if='isCurrentPoemAuthor()'>
-        <RouterLink :to="'/poems/' + currentPoem.id+'/update'">Edit</RouterLink>
+        <RouterLink :to="'/poems/' + currentPoem.id+'/update'" data-test='update-poem-button'>Edit</RouterLink>
         <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
       </div>
       <div class='flex gap-2 text-center' v-if='appStore.getToken'>

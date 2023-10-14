@@ -73,7 +73,7 @@ const submitPoem = async () => {
   // handle poem update in try catch
   try {
     editLoading.value = true
-    const response = await fetch(endpoint + '/poem/' + router.currentRoute.value.params.id, {
+    const response = await fetch(endpoint + '/poems/' + router.currentRoute.value.params.id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
