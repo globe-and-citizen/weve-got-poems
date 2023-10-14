@@ -1,8 +1,6 @@
 <script lang='ts' setup>
-import TheWelcome from '@/components/TheWelcome.vue'
 import { onMounted, ref } from 'vue'
 import { useAppStore } from '@/stores/app'
-import Loader from '@/components/CustomLoader.vue'
 import CustomLoader from '@/components/CustomLoader.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
 import { RouterLink } from 'vue-router'
