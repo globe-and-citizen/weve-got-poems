@@ -4,7 +4,7 @@ import { RouterLink, useRouter } from 'vue-router'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
 import { useAppStore } from '@/stores/app'
-import { useFetch, useFetchDelay } from '@/composables/useFetch'
+import { useFetch } from '@/composables/useFetch'
 import CustomLoader from '@/components/CustomLoader.vue'
 import AcNotification from '@/components/ac-notification.vue'
 import IconLike from '@/components/icons/IconLike.vue'
@@ -39,20 +39,20 @@ const {
   loading: deleteLoading,
   isLoaded: deleteIsLoaded,
   execute: executeDelete
-} = useFetchDelay(endpoint + '/poems/' + router.currentRoute.value.params.id, {
+} = useFetch(endpoint + '/poems/' + router.currentRoute.value.params.id, {
   method: 'DELETE',
   headers: {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ' + appStore.getToken
   }
-})
+}, { immediate: false })
 
 const likeData = ref()
 const likeError = ref()
 const likeLoading = ref()
 const likeLoaded = ref()
 
-const dislikeData=ref()
+const dislikeData = ref()
 const dislikeError = ref()
 const dislikeLoading = ref()
 const dislikeLoaded = ref()
