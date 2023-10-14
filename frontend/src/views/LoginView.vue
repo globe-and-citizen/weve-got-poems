@@ -118,6 +118,16 @@
         </form>
       </div>
     </div>
+
+    <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+      <button
+        class='flex w-full justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+        data-test='register-button'
+      @click.prevent='onSignIn()'
+      >
+        Sign in Withe Ethereum
+      </button>
+    </div>
   </div>
 </template>
 
@@ -138,6 +148,11 @@ import { ref } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useRouter } from 'vue-router'
 import AcNotification from '@/components/ac-notification.vue'
+import { useAuthStore } from '@/stores/auth'
+
+
+const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
+
 
 const status = ref(true)
 
@@ -162,6 +177,10 @@ const notification = ref()
 const router = useRouter()
 
 const appStore = useAppStore()
+const authStore = useAuthStore()
+const onSignIn = () => {
+  authStore.signInWithEthereum()
+}
 if (appStore.getToken) {
   // notify user that he is already logged in
   // timeout before redirection
@@ -173,7 +192,6 @@ if (appStore.getToken) {
 const setStatus = (value: boolean) => {
   status.value = value
 }
-const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 
 const submitLogin = async () => {
 
