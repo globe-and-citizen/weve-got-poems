@@ -23,11 +23,11 @@ describe('Create Poem', () => {
 
     // check loading
     cy.get('[data-test="loader"]').should('be.visible')
-    // cy.get('[data-test="loader"]').should('not.exist')
+    cy.get('[data-test="loader"]').should('not.exist')
     // check success message
     cy.get('[data-cy="notification"]').contains('Poem created successfully')
-    // check redirection
-    cy.location('pathname').should('not.eq', '/poems/create')
+    // check redirection to the poem page
+    cy.location('pathname', { timeout: 5000 }).should('match', /\/poems\/\d+/)
   })
   describe('Given Existing Poem ', () => {
     beforeEach('When Visit the author First poem', () => {
