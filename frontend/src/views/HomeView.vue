@@ -4,6 +4,9 @@ import { onMounted, ref } from 'vue'
 import { useAppStore } from '@/stores/app'
 import Loader from '@/components/CustomLoader.vue'
 import CustomLoader from '@/components/CustomLoader.vue'
+import WelcomeItem from '@/components/WelcomeItem.vue'
+import { RouterLink } from 'vue-router'
+import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 
 
 const data = ref()
@@ -23,7 +26,20 @@ onMounted(async () => {
     <div class='flex justify-center' data-test='loader'>
       <CustomLoader v-if='loading' />
     </div>
-    <TheWelcome v-if='data' :data='data' />
+    <WelcomeItem v-for='item in data' :key='item.id'
+                 :data-test='item.author.id === appStore.getUser?.id ? "my-poem": "item"'>
+
+      <template #icon>
+        <DocumentationIcon />
+      </template>
+      <template #heading>
+        <RouterLink :to="'/poems/' + item.id" data-test='item-heading'>{{ item.title }}</RouterLink>
+      </template>
+      {{ item.content }}
+      <br>
+      <br>
+      {{ new Date(item.created_at).toLocaleDateString() }}
+    </WelcomeItem>
     // TODO : Pagination Here
   </main>
 </template>
