@@ -189,7 +189,7 @@ const onDisLike = async () => {
         <h1>{{ currentPoem.title }}</h1>
       </template>
       <div class='flex gap-2' v-if='isCurrentPoemAuthor()'>
-        <RouterLink :to="'/poems/' + currentPoem.id+'/update'">Edit</RouterLink>
+        <RouterLink :to="'/poems/' + currentPoem.id+'/update'" data-test='update-poem-button'>Edit</RouterLink>
         <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
       </div>
       <div class='flex gap-2 text-center' v-if='appStore.getToken'>
