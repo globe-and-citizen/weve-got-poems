@@ -2,6 +2,7 @@
 import WelcomeItem from './WelcomeItem.vue'
 import DocumentationIcon from './icons/IconDocumentation.vue'
 import { RouterLink } from 'vue-router'
+import { useAppStore } from '@/stores/app'
 
 // get the props
 const props = defineProps({
@@ -10,11 +11,14 @@ const props = defineProps({
     required: true
   }
 })
+const appStore = useAppStore()
 
 </script>
 
 <template>
-  <WelcomeItem v-for='item in data' :key='item.id' data-test='item'>
+  <WelcomeItem v-for='item in data' :key='item.id'
+               :data-test='item.author.id === appStore.getUser?.id ? "my-poem": "item"'>
+
     <template #icon>
       <DocumentationIcon />
     </template>
