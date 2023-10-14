@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref, watchEffect } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
@@ -56,6 +56,18 @@ const dislikeData = ref()
 const dislikeError = ref()
 const dislikeLoading = ref()
 const dislikeLoaded = ref()
+
+// TODO: is liked or disliked status
+// TODO: Disable liked or disliked button if user has already liked or disliked
+const isLiked = computed(() => {
+  return !!currentPoem.value.likes
+    .find((dislike_author: any) => dislike_author === appStore.getUser?.id)
+})
+
+const isDisliked = computed(() => {
+  return !!currentPoem.value.dislikes
+    .find((like_author: any) => like_author === appStore.getUser?.id)
+})
 const getCurrentPoem = () => {
   if (!data.value) return
   return data.value.find((poem: any, i: number) => {
@@ -116,6 +128,7 @@ const isCurrentPoemAuthor = () => {
 }
 
 const onLike = async () => {
+  if (isLiked.value) return
   try {
     likeLoading.value = true
     const response = await fetch(endpoint + '/like', {
@@ -141,9 +154,12 @@ const onLike = async () => {
   } finally {
     likeLoading.value = false
   }
+  // TODO: reload content instead of the page
+  location.reload()
 }
 
 const onDisLike = async () => {
+  if(isDisliked.value) return
   try {
     dislikeLoading.value = true
     const response = await fetch(endpoint + '/dislike', {
@@ -169,6 +185,8 @@ const onDisLike = async () => {
   } finally {
     dislikeLoading.value = false
   }
+  // TODO: reload content instead of the page
+  location.reload()
 }
 </script>
 
@@ -193,11 +211,14 @@ const onDisLike = async () => {
         <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
       </div>
       <div class='flex gap-2 text-center' v-if='appStore.getToken'>
-        <a @click.prevent='onLike()' class='flex gap-2  p-2 rounded cursor-pointer'>
+        <a @click.prevent='onLike()' class='flex gap-2  p-2 rounded '
+           :class='isLiked ? "bg-emerald-800/20" : "cursor-pointer"'>
           {{ currentPoem.likes.length }}
           <IconLike />
         </a>
-        <a @click.prevent='onDisLike()' class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded  cursor-pointer'>
+        <a @click.prevent='onDisLike()'
+           class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded'
+           :class='isDisliked ? "bg-red-800/20" : "cursor-pointer"'>
           {{ currentPoem.dislikes.length }}
           <IconDislike />
         </a>
