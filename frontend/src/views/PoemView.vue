@@ -104,11 +104,8 @@ const onDelete = async () => {
   const confirmation = window.confirm('Are you sure you want to delete this poem?')
   if (confirmation) {
     // delete poem
-    const id = currentPoem.value.id
     deleteLoading.value = true
-    if (executeDelete) {
-      executeDelete()
-    }
+    executeDelete()
   }
 }
 const isCurrentPoemAuthor = () => {
