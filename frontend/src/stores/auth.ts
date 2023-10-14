@@ -33,9 +33,9 @@ export const useAuthStore = defineStore('auth', {
         .catch(() => console.log('user rejected request'))
     },
 
-    async createSiweMessage(address) {
+    async createSiweMessage(address: string) {
 
-      const { error, data } = useFetch(`${endpoint}/nonce`, {
+      const { error, data } = useFetch (`${endpoint}/nonce`, {
         credentials: 'include',
       })
       // Fetch the From the API
