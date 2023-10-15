@@ -63,7 +63,7 @@ export function useWallet(): WalletType {
         } catch (error) {
             console.log('Error: ', error)
         }
-        return { provider, signer }
+        // return { provider, signer }
     }
 
     // TODO: make this function receiving the nonce instead of fetching it
