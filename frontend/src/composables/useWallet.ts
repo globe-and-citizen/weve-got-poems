@@ -1,8 +1,9 @@
+import type { Ref } from 'vue'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { BrowserProvider } from 'ethers'
 import { SiweMessage } from 'siwe'
 
-// Inteface for the useWallet composable
+// Interface for the useWallet composable
 export interface WalletType {
     /**
      * This function connects the user's MetaMask wallet to the app.
@@ -11,7 +12,7 @@ export interface WalletType {
     /**
      * This variable is true if the user is connected to MetaMask.
      */
-    isConnected: boolean
+    isConnected: Ref<boolean>
 
     /**
      * This variable is the provider that is used to connect to MetaMask.
@@ -36,7 +37,7 @@ export function useWallet(): WalletType {
     const userAddress = ref()
     const isConnected = ref(false)
     let provider: BrowserProvider | undefined
-    const signer = ref()
+    let signer: any
     const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
     let intervalId: string | number | NodeJS.Timeout | undefined
 
@@ -56,12 +57,13 @@ export function useWallet(): WalletType {
             }
             provider = new BrowserProvider(window.ethereum)
             if (provider) {
-                signer.value = await provider.getSigner()
-                userAddress.value = await signer.value.getAddress()
+                signer = await provider.getSigner()
+                userAddress.value = await signer.getAddress()
             }
         } catch (error) {
             console.log('Error: ', error)
         }
+        return { provider, signer }
     }
 
     // TODO: make this function receiving the nonce instead of fetching it
@@ -74,9 +76,7 @@ export function useWallet(): WalletType {
 
         const domain = window.location.host
         const origin = window.location.origin
-        const res = await fetch(`${endpoint}/nonce`, {
-            credentials: 'include'
-        })
+        const res = await fetch(`${endpoint}/nonce`)
         const message = new SiweMessage({
             domain,
             address,
@@ -93,33 +93,38 @@ export function useWallet(): WalletType {
     // TODO : Create a function that verify the signature by calling the backend and receiving a the signature
     async function signInWithEthereum() {
         // Connect the wallet if it is not connected
-        if (!isConnected.value) {
-            await connectWallet()
-        }
-        // Check if we have the signer and the provider
-        if (!signer.value || !provider) {
-            throw new Error('No signer or provider')
-        }
-        // Create the message
-        const message = await createSiweMessage(userAddress.value, 'Sign in with Ethereum to the app.')
-        // Sign the message
-        const signature = await signer.value.signMessage(message)
-        // Send the signature to the backend
-        const res = await fetch(`${endpoint}/auth`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ signature, message }),
-            credentials: 'include'
-        })
+        let value
+        try {
+            if (!isConnected.value) {
+                await connectWallet()
+            }
+            // Check if we have the signer and the provider
+            if (!signer || !provider) {
+                throw new Error('No signer or provider')
+            }
+            // Create the message
+            const message = await createSiweMessage(userAddress.value, 'Sign in with Ethereum to the app.')
+            // Sign the message
+            const signature = await signer.signMessage(message)
+            // Send the signature to the backend
+            const res = await fetch(`${endpoint}/verify`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ signature, message })
+            })
 
-        if (!res.ok) {
-            console.error(`Failed in getInformation: ${res.statusText}`)
-            return
+            if (!res.ok) {
+                console.error(`Failed in getInformation: ${res.statusText}`)
+                return
+            }
+            const { token } = await res.json()
+            value = token
+        } catch (e) {
+            console.log('here', e)
         }
-        const { token } = await res.json()
-        return token
+        return value
     }
 
     /**
@@ -141,10 +146,10 @@ export function useWallet(): WalletType {
                     userAddress.value = accounts.pop()
                     if (isConnected.value) {
                         // This throws an error if the user is not connected
-                        signer.value = await provider.getSigner()
-                        userAddress.value = await signer.value.getAddress()
+                        signer = await provider.getSigner()
+                        userAddress.value = await signer.getAddress()
                     } else {
-                        signer.value = undefined
+                        signer = undefined
                     }
                 } else {
                     isConnected.value = false
