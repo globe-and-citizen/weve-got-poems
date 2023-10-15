@@ -182,17 +182,13 @@ const spec = {
         }
       }
     },
-    '/like': {
+    '/poems/{id}/like': {
       post: {
         tags: ['Likes & Dislikes'],
         summary: 'Like a poem',
         operationId: 'likePoem',
         security: [{ JWTAuth: [] }],
-        requestBody: {
-          description: 'Like a poem',
-          required: true,
-          content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeInput' } } }
-        },
+        parameters: [{ name: 'id', in: 'path', description: 'The ID of the poem to like', required: true, schema: { type: 'integer' } }],
         responses: {
           201: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeResponse' } } } },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
@@ -206,11 +202,9 @@ const spec = {
         summary: 'Remove a like from a poem',
         operationId: 'removeLike',
         security: [{ JWTAuth: [] }],
-        requestBody: {
-          description: 'Remove a like from a poem',
-          required: true,
-          content: { 'application/json': { schema: { $ref: '#/components/schemas/LikeInput' } } }
-        },
+        parameters: [
+          { name: 'id', in: 'path', description: 'The ID of the poem to remove the like', required: true, schema: { type: 'integer' } }
+        ],
         responses: {
           204: { $ref: '#/components/responses/NoContent' },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
@@ -220,17 +214,14 @@ const spec = {
         }
       }
     },
-    '/dislike': {
+    '/poems/{id}/dislike': {
       post: {
         tags: ['Likes & Dislikes'],
         summary: 'Dislike a poem',
         operationId: 'dislikePoem',
         security: [{ JWTAuth: [] }],
-        requestBody: {
-          description: 'Dislike a poem',
-          required: true,
-          content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeInput' } } }
-        },
+        parameters: [{ name: 'id', in: 'path', description: 'The ID of the poem to dislike', required: true, schema: { type: 'integer' } }],
+
         responses: {
           201: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeResponse' } } } },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
@@ -244,11 +235,9 @@ const spec = {
         summary: 'Remove a dislike from a poem',
         operationId: 'removeDislike',
         security: [{ JWTAuth: [] }],
-        requestBody: {
-          description: 'Remove a dislike from a poem',
-          required: true,
-          content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeInput' } } }
-        },
+        parameters: [
+          { name: 'id', in: 'path', description: 'The ID of the poem to remove the dislike', required: true, schema: { type: 'integer' } }
+        ],
         responses: {
           204: { $ref: '#/components/responses/NoContent' },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
@@ -408,23 +397,11 @@ const spec = {
           message: { type: 'string' }
         }
       },
-      LikeInput: {
-        type: 'object',
-        properties: {
-          poem_id: { type: 'integer', example: 1 }
-        }
-      },
       LikeResponse: {
         type: 'object',
         properties: {
           id: { type: 'integer' },
           message: { type: 'string' }
-        }
-      },
-      DislikeInput: {
-        type: 'object',
-        properties: {
-          poem_id: { type: 'integer', example: 1 }
         }
       },
       DislikeResponse: {

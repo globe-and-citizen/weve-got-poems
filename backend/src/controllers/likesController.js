@@ -17,8 +17,10 @@ const create = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { poem_id } = req.body // Get poem_id from the request body
-    const type = req.path.split('/')[1] // Get type (like or dislike) from the route path (/like or /dislike)
+    const { poem_id } = req.params // Get poem_id from the route parameters
+
+    const parts = req.path.split('/')
+    const type = parts[parts.length - 1] // Get type (like or dislike) from the route path (/like or /dislike)
 
     const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
 
@@ -59,8 +61,8 @@ const create = async (req, res) => {
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
-    console.error(`Error adding ${type}: `, error)
-    res.status(500).json({ error: `Error adding ${type}` })
+    console.error('Error:', error)
+    res.status(500).json({ error: 'Error' })
   } finally {
     client.release() // Release the connection to the database
   }
@@ -79,8 +81,10 @@ const remove = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { poem_id } = req.body // Get the ID of the like or dislike from the route parameters
-    const type = req.path.split('/')[1] // Get type (like or dislike) from the route path (/like or /dislike)
+    const { poem_id } = req.params // Get poem_id from the route parameters
+
+    const parts = req.path.split('/')
+    const type = parts[parts.length - 1] // Get type (like or dislike) from the route path (/like or /dislike)
 
     const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
 
@@ -120,14 +124,14 @@ const remove = async (req, res) => {
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
-    console.error(`Error removing ${type}: `, error)
-    res.status(500).json({ error: `Error removing ${type}` })
+    console.error('Error:', error)
+    res.status(500).json({ error: 'Error' })
   } finally {
     client.release() // Release the connection to the database
   }
 }
 
 module.exports = {
-  create: [validateInput(['poem_id']), create],
+  create,
   remove
 }
