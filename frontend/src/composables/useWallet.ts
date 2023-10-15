@@ -1,7 +1,38 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { BrowserProvider } from 'ethers'
+import { SiweMessage } from 'siwe'
 
-export function useWallet() {
+// Inteface for the useWallet composable
+export interface WalletType {
+    /**
+     * This function connects the user's MetaMask wallet to the app.
+     */
+    connectWallet: () => Promise<void>
+    /**
+     * This variable is true if the user is connected to MetaMask.
+     */
+    isConnected: boolean
+
+    /**
+     * This variable is the provider that is used to connect to MetaMask.
+     */
+    provider: BrowserProvider | undefined
+    /**
+     * This function signs the message and send it to the backend.
+     */
+    signInWithEthereum: () => Promise<string | undefined>
+
+    /**
+     * This variable is the signer that is used to sign the message.
+     */
+    signer: any
+    /**
+     * This variable is the user's address.
+     */
+    userAddress: any
+}
+
+export function useWallet(): WalletType {
     const userAddress = ref()
     const isConnected = ref(false)
     let provider: BrowserProvider | undefined
@@ -31,6 +62,64 @@ export function useWallet() {
         } catch (error) {
             console.log('Error: ', error)
         }
+    }
+
+    // TODO: make this function receiving the nonce instead of fetching it
+    /*
+     WHY: SOLID principle :
+     - Single Responsibility Principle: A function should have one and only one reason to change, meaning that a function should have only one job.
+     And here if the API change the function need to be changed. This is not good
+     */
+    async function createSiweMessage(address: string, statement: string) {
+
+        const domain = window.location.host
+        const origin = window.location.origin
+        const res = await fetch(`${endpoint}/nonce`, {
+            credentials: 'include'
+        })
+        const message = new SiweMessage({
+            domain,
+            address,
+            statement,
+            uri: origin,
+            version: '1',
+            chainId: 1,
+            nonce: await res.text()
+        })
+        return message.prepareMessage()
+    }
+
+    // TODO : make this function only sign the message and not send it to the backend
+    // TODO : Create a function that verify the signature by calling the backend and receiving a the signature
+    async function signInWithEthereum() {
+        // Connect the wallet if it is not connected
+        if (!isConnected.value) {
+            await connectWallet()
+        }
+        // Check if we have the signer and the provider
+        if (!signer.value || !provider) {
+            throw new Error('No signer or provider')
+        }
+        // Create the message
+        const message = await createSiweMessage(userAddress.value, 'Sign in with Ethereum to the app.')
+        // Sign the message
+        const signature = await signer.value.signMessage(message)
+        // Send the signature to the backend
+        const res = await fetch(`${endpoint}/auth`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ signature, message }),
+            credentials: 'include'
+        })
+
+        if (!res.ok) {
+            console.error(`Failed in getInformation: ${res.statusText}`)
+            return
+        }
+        const { token } = await res.json()
+        return token
     }
 
     /**
@@ -73,5 +162,5 @@ export function useWallet() {
     onBeforeUnmount(() => {
         if (intervalId) clearInterval(intervalId)
     })
-    return { userAddress, isConnected, connectWallet, signer, provider }
+    return { connectWallet, isConnected, provider, signInWithEthereum, signer, userAddress }
 }
