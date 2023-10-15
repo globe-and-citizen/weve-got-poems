@@ -1,10 +1,10 @@
 <script setup lang='ts'>
-import { computed, ref, watchEffect } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import {computed, ref, watchEffect} from 'vue'
+import {RouterLink, useRouter} from 'vue-router'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import WelcomeItem from '@/components/WelcomeItem.vue'
-import { useAppStore } from '@/stores/app'
-import { useFetch } from '@/composables/useFetch'
+import {useAppStore} from '@/stores/app'
+import {useFetch} from '@/composables/useFetch'
 import CustomLoader from '@/components/CustomLoader.vue'
 import AcNotification from '@/components/ac-notification.vue'
 import IconLike from '@/components/icons/IconLike.vue'
@@ -33,7 +33,7 @@ interface DataModel {
   }
 }
 
-const { error, data, loading, isLoaded } = useFetch<Array<DataModel>>(endpoint + '/poems/')
+const {error, data, loading, isLoaded} = useFetch<Array<DataModel>>(endpoint + '/poems/')
 const {
   error: deleteError,
   loading: deleteLoading,
@@ -45,7 +45,7 @@ const {
     'Content-Type': 'application/json',
     'Authorization': 'Bearer ' + appStore.getToken
   }
-}, { immediate: false })
+}, {immediate: false})
 
 const likeData = ref()
 const likeError = ref()
@@ -61,12 +61,12 @@ const dislikeLoaded = ref()
 // TODO: Disable liked or disliked button if user has already liked or disliked
 const isLiked = computed(() => {
   return !!currentPoem.value.likes
-    .find((dislike_author: any) => dislike_author === appStore.getUser?.id)
+      .find((dislike_author: any) => dislike_author === appStore.getUser?.id)
 })
 
 const isDisliked = computed(() => {
   return !!currentPoem.value.dislikes
-    .find((like_author: any) => like_author === appStore.getUser?.id)
+      .find((like_author: any) => like_author === appStore.getUser?.id)
 })
 const getCurrentPoem = () => {
   if (!data.value) return
@@ -159,7 +159,7 @@ const onLike = async () => {
 }
 
 const onDisLike = async () => {
-  if(isDisliked.value) return
+  if (isDisliked.value) return
   try {
     dislikeLoading.value = true
     const response = await fetch(endpoint + '/dislike', {
@@ -198,30 +198,34 @@ const onDisLike = async () => {
       </ac-notification>
 
     </div>
-    <CustomLoader v-if='loading' />
+    <CustomLoader v-if='loading'/>
     <WelcomeItem v-if='currentPoem'>
       <template #icon>
-        <DocumentationIcon />
+        <DocumentationIcon/>
       </template>
       <template #heading>
         <h1>{{ currentPoem.title }}</h1>
       </template>
-      <div class='flex gap-2' v-if='isCurrentPoemAuthor()'>
-        <RouterLink :to="'/poems/' + currentPoem.id+'/update'" data-test='update-poem-button'>Edit</RouterLink>
-        <a @click.prevent='onDelete()' data-test='remove-poem-button'>Remove</a>
-      </div>
-      <div class='flex gap-2 text-center' v-if='appStore.getToken'>
-        <a @click.prevent='onLike()' class='flex gap-2  p-2 rounded '
-           :class='isLiked ? "bg-emerald-800/20" : "cursor-pointer"'>
-          {{ currentPoem.likes.length }}
-          <IconLike />
-        </a>
-        <a @click.prevent='onDisLike()'
-           class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded'
-           :class='isDisliked ? "bg-red-800/20" : "cursor-pointer"'>
-          {{ currentPoem.dislikes.length }}
-          <IconDislike />
-        </a>
+      <div class="flex" :class="isCurrentPoemAuthor() ? 'justify-between' : 'justify-end'">
+        <div class='flex gap-2' v-if='isCurrentPoemAuthor()'>
+          <RouterLink class=" p-2 rounded " :to="'/poems/' + currentPoem.id+'/update'" data-test='update-poem-button'>
+            Edit
+          </RouterLink>
+          <a @click.prevent='onDelete()' data-test='remove-poem-button' class="p-2 rounded">Remove</a>
+        </div>
+        <div class='flex gap-2 justify-end' v-if='appStore.getToken'>
+          <a @click.prevent='onLike()' class='flex gap-2  p-2 rounded '
+             :class='isLiked ? "bg-emerald-800/20" : "cursor-pointer"'>
+            {{ currentPoem.likes.length }}
+            <IconLike/>
+          </a>
+          <a @click.prevent='onDisLike()'
+             class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded'
+             :class='isDisliked ? "bg-red-800/20" : "cursor-pointer"'>
+            {{ currentPoem.dislikes.length }}
+            <IconDislike/>
+          </a>
+        </div>
       </div>
       {{ currentPoem.content }}
       <br>
@@ -229,8 +233,8 @@ const onDisLike = async () => {
       {{ new Date(currentPoem.created_at).toLocaleDateString() }}
       <div>
         <div class='navigation'>
-          <RouterLink :to="'/poems/' + previousId">Prev Poem</RouterLink>
-          <RouterLink :to="'/poems/' + nextId">Next Poem</RouterLink>
+          <RouterLink :to="'/poems/' + previousId" class="p-2 rounded">Prev Poem</RouterLink>
+          <RouterLink :to="'/poems/' + nextId" class="p-2 rounded">Next Poem</RouterLink>
         </div>
 
       </div>
