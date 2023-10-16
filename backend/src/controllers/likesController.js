@@ -4,7 +4,7 @@ const { validationResult } = require('express-validator')
 const { secret } = require('../middlewares/jwtConfig')
 const validateInput = require('../middlewares/validateInput')
 
-// Route to create a new like or dislike for a poem
+// Route to create a new like or dislike for a poem (toggle if reaction already exists)
 const create = async (req, res) => {
   const client = await pool.connect()
 
@@ -34,30 +34,52 @@ const create = async (req, res) => {
 
     const userId = decoded.id // Get the user ID from the decoded JWT token
 
-    // Check if the user has already liked or disliked the poem
-    const checkLikeDislikeQuery = `
-      SELECT id FROM ${type}s
+    // Check if the user has already reacted to the poem
+    const checkReactionQuery = `
+      SELECT id, reaction_type FROM reactions
       WHERE user_id = $1 AND poem_id = $2
     `
 
-    const checkResult = await client.query(checkLikeDislikeQuery, [userId, poem_id])
+    const checkResult = await client.query(checkReactionQuery, [userId, poem_id])
 
     if (checkResult.rows.length > 0) {
-      return res.status(400).json({ error: `User has already ${type}d this poem` })
+      // User has already reacted to the poem, determine the current type of reaction
+      const currentReaction = checkResult.rows[0]
+
+      if (currentReaction.reaction_type === type) {
+        return res.status(400).json({ message: `You already ${type}d this poem` })
+      }
+
+      // Toggle between like and dislike
+      const newType = type
+
+      // Update the reaction in the database with the new type
+      const updateQuery = `
+        UPDATE reactions
+        SET reaction_type = $1
+        WHERE id = $2
+      `
+
+      await client.query(updateQuery, [newType, currentReaction.id])
+
+      await client.query('COMMIT') // Commit the transaction
+
+      res.status(201).json({ id: currentReaction.id, message: `Reaction toggled to ${newType} successfully` })
+    } else {
+      // User has not reacted to the poem, create a new entry in reactions table
+      const insertQuery = `
+        INSERT INTO reactions (user_id, poem_id, reaction_type, created_at)
+        VALUES ($1, $2, $3, NOW())
+        RETURNING id;
+      `
+
+      const result = await client.query(insertQuery, [userId, poem_id, type])
+      const { id } = result.rows[0]
+
+      await client.query('COMMIT') // Commit the transaction
+
+      res.status(201).json({ id, message: `${type} added successfully` })
     }
-
-    const insertQuery = `
-      INSERT INTO ${type}s (user_id, poem_id, created_at)
-      VALUES ($1, $2, NOW())
-      RETURNING id;
-    `
-
-    const result = await client.query(insertQuery, [userId, poem_id])
-    const { id } = result.rows[0]
-
-    await client.query('COMMIT') // Commit the transaction
-
-    res.status(201).json({ id, message: `${type} added successfully` })
   } catch (error) {
     await client.query('ROLLBACK') // Rollback the transaction if an error occurred
 
