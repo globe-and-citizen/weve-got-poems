@@ -46,7 +46,9 @@ const login = async (req, res) => {
       {
         id: user.id,
         email: user.email,
-        name: user.name
+        name: user.name,
+        eth_address: user.eth_address,
+        created_at: user.created_at
       },
       secret,
       { expiresIn: '1h' }
