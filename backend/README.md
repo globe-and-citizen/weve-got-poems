@@ -34,6 +34,7 @@ erDiagram
         string email UK
         string password
         timestamp created_at
+        string eth_address UK
     }
     POEMS {
         int id PK
