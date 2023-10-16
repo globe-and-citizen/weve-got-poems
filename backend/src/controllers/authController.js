@@ -72,18 +72,73 @@ const nonce = (_, res) => {
   res.send(generateNonce())
 }
 
+// Route to authenticate a user using SIWE
 const siwe = async (req, res) => {
   const { message, signature } = req.body
   const siweMessage = new SiweMessage(message)
+  const eth_address = siweMessage.address // Get the eth_address from the Siwe message
+
   try {
     const isVerified = await siweMessage.verify({ signature })
 
     if (!isVerified) {
-      res.status(401).send(false).json({ message: 'Signature is not valid' })
+      res.status(401).json({ message: 'Signature is not valid' })
       return
     }
-  } catch {
-    res.send(false)
+
+    // Here, you need to check if a user with the provided eth_address exists in the database.
+    // If the user exists, generate and return a JWT for that user (sign in).
+    // If the user doesn't exist, create a new user in the database and then generate and return a JWT (sign up).
+    const checkUserQuery = `
+      SELECT * FROM users
+      WHERE eth_address = $1
+    `
+
+    const userCheckResult = await pool.query(checkUserQuery, [eth_address])
+
+    if (userCheckResult.rows.length > 0) {
+      // User with the provided eth_address exists, so generate a JWT for sign in.
+      const user = userCheckResult.rows[0]
+      const token = jwt.sign(
+        {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          eth_address: user.eth_address,
+          created_at: user.created_at
+        },
+        secret,
+        { expiresIn: '1h' }
+      )
+
+      res.status(200).json({ token, message: 'Sign in successful' })
+    } else {
+      // Query SQL to insert a new user into the 'users' table
+      const insertQuery = `
+        INSERT INTO users (eth_address, created_at)
+        VALUES ($1, NOW())
+        RETURNING id;
+      `
+
+      const insertResult = await pool.query(insertQuery, [eth_address])
+
+      // Generate a JWT for sign up
+      const user = insertResult.rows[0]
+      const token = jwt.sign(
+        {
+          id: user.id,
+          eth_address: eth_address,
+          created_at: user.created_at
+        },
+        secret,
+        { expiresIn: '1h' }
+      )
+
+      res.status(201).json({ token, message: 'Sign up successful' })
+    }
+  } catch (error) {
+    console.error('Error during SIWE authentication:', error)
+    res.status(500).json({ error: 'Error during SIWE authentication' })
   }
 }
 
