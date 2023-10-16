@@ -38,35 +38,12 @@ const createTable = async (req, res) => {
       );
     `
 
-    // Query SQL to create the 'likes' table
-    const createLikesTableQuery = `
-      CREATE TABLE IF NOT EXISTS likes (
-        id SERIAL PRIMARY KEY,
-        user_id INT NOT NULL REFERENCES users(id),
-        poem_id INT NOT NULL REFERENCES poems(id),
-        created_at TIMESTAMP NOT NULL,
-        UNIQUE (user_id, poem_id) -- Ensure each user can only give one like to a poem
-      );
-    `
-
-    // Query SQL to create the 'dislikes' table
-    const createDislikesTableQuery = `
-      CREATE TABLE IF NOT EXISTS dislikes (
-        id SERIAL PRIMARY KEY,
-        user_id INT NOT NULL REFERENCES users(id),
-        poem_id INT NOT NULL REFERENCES poems(id),
-        created_at TIMESTAMP NOT NULL,
-        UNIQUE (user_id, poem_id) -- Ensure each user can only give one dislike to a poem
-      );
-    `
-
     await client.query(createUserTableQuery)
     await client.query(createPoemsTableQuery)
-    await client.query(createLikesTableQuery)
-    await client.query(createDislikesTableQuery)
+    await client.query(createReactionsTableQuery)
     client.release()
 
-    res.send('"users", "poems", "likes", and "dislikes" tables created successfully')
+    res.send('"users", "poems", "reaction" tables created successfully')
   } catch (error) {
     console.error('Error creating tables:', error)
     res.status(500).send('Error creating tables')
