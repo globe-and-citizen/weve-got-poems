@@ -18,12 +18,13 @@ const appStore = useAppStore()
         <RouterLink to='/'>Home</RouterLink>
         <RouterLink to='/poems/create' v-if='appStore.getToken'>Create Poem</RouterLink>
         <RouterLink to='/login' v-if='!appStore.getToken'>Login</RouterLink>
+        <RouterLink to='/account' v-if='appStore.getToken'>My Account</RouterLink>
         <RouterLink to='/logout' v-if='appStore.getToken'>Logout</RouterLink>
 
       </nav>
     </div>
   </header>
-
+x
   <RouterView />
 </template>
 

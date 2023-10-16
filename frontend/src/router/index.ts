@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import PoemView from '../views/PoemView.vue'
 import PoemCreateView from '@/views/PoemCreateView.vue'
 import PoemEditView from '@/views/PoemEditView.vue'
+import UserView from '@/views/UserView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,11 @@ const router = createRouter({
       path: '/poems/:id',
       name: 'show_poem',
       component: PoemView
+    },
+    {
+      path: '/account',
+      name: 'my_account',
+      component: UserView
     },
     {
       path: '/login',
