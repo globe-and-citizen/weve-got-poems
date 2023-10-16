@@ -46,13 +46,13 @@ const spec = {
         }
       }
     },
-    '/verify': {
+    '/siwe': {
       post: {
         tags: ['Authentication'],
-        summary: 'Verify Ethereum authentication',
-        operationId: 'verifyAuthentication',
+        summary: 'Sign in with Ethereum',
+        operationId: 'ethereumAuthentication',
         requestBody: {
-          description: 'Verify Ethereum authentication',
+          description: 'The message and signature to sign in with Ethereum',
           required: true,
           content: {
             'application/json': {

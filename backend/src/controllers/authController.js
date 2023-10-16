@@ -70,12 +70,16 @@ const nonce = (_, res) => {
   res.send(generateNonce())
 }
 
-const verify = async (req, res) => {
+const siwe = async (req, res) => {
   const { message, signature } = req.body
   const siweMessage = new SiweMessage(message)
   try {
-    await siweMessage.verify({ signature })
-    res.status(201).send(true)
+    const isVerified = await siweMessage.verify({ signature })
+
+    if (!isVerified) {
+      res.status(401).send(false).json({ message: 'Signature is not valid' })
+      return
+    }
   } catch {
     res.send(false)
   }
@@ -84,5 +88,5 @@ const verify = async (req, res) => {
 module.exports = {
   login: [validateInput(['email', 'password']), login],
   nonce,
-  verify
+  siwe
 }
