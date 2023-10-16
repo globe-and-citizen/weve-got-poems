@@ -2,7 +2,6 @@ const pool = require('../db')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const { secret } = require('../middlewares/jwtConfig')
-const validateInput = require('../middlewares/validateInput')
 
 // Route to create a new like or dislike for a poem (toggle if reaction already exists)
 const create = async (req, res) => {
