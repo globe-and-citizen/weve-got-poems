@@ -75,14 +75,15 @@ const nonce = (_, res) => {
 // Route to authenticate a user using SIWE
 const siwe = async (req, res) => {
   const { message, signature } = req.body
-  const siweMessage = new SiweMessage(message)
-  const eth_address = siweMessage.address // Get the eth_address from the Siwe message
 
   try {
+    const siweMessage = new SiweMessage(message)
+    const eth_address = siweMessage.address // Get the eth_address from the Siwe message
+
     const isVerified = await siweMessage.verify({ signature })
 
     if (!isVerified) {
-      res.status(401).json({ message: 'Signature is not valid' })
+      res.status(401).json({ error: 'Signature is not valid' })
       return
     }
 
@@ -137,8 +138,8 @@ const siwe = async (req, res) => {
       res.status(201).json({ token, message: 'Sign up successful' })
     }
   } catch (error) {
-    console.error('Error during SIWE authentication:', error)
-    res.status(500).json({ error: 'Error during SIWE authentication' })
+    console.error(error)
+    res.status(500).json({ error: error.message })
   }
 }
 
