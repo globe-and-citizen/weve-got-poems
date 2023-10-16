@@ -28,6 +28,16 @@ const createTable = async (req, res) => {
       );
     `
 
+    const createReactionsTableQuery = `
+      CREATE TABLE IF NOT EXISTS reactions (
+        id SERIAL PRIMARY KEY,
+        user_id INT NOT NULL REFERENCES users(id),
+        poem_id INT NOT NULL REFERENCES poems(id),
+        reaction_type VARCHAR(10) NOT NULL CHECK (reaction_type IN ('like', 'dislike')),
+        created_at TIMESTAMP NOT NULL
+      );
+    `
+
     // Query SQL to create the 'likes' table
     const createLikesTableQuery = `
       CREATE TABLE IF NOT EXISTS likes (
