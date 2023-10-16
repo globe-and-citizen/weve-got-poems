@@ -21,7 +21,7 @@ const login = async (req, res) => {
 
     // Query SQL to get the user with the specified email from the 'users' table
     const selectQuery = `
-      SELECT id, name, email, password FROM users
+      SELECT * FROM users
       WHERE email = $1
     `
 
