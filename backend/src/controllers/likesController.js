@@ -16,26 +16,24 @@ const create = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { poem_id } = req.params // Get poem_id from the route parameters
-
-    const parts = req.path.split('/')
-    const type = parts[parts.length - 1] // Get type (like or dislike) from the route path (/like or /dislike)
-
     const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
 
     if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
       return res.status(401).json({ error: 'Bearer token not provided' })
     }
 
+    const { poem_id } = req.params // Get poem_id from the route parameters
+
+    const parts = req.path.split('/')
+    const type = parts[parts.length - 1] // Get type (like or dislike) from the route path (/like or /dislike)
+
     const token = authorizationHeader.split(' ')[1] // Extract the token (remove "Bearer " prefix)
-
     const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
-
     const userId = decoded.id // Get the user ID from the decoded JWT token
 
     // Check if the user has already reacted to the poem
     const checkReactionQuery = `
-      SELECT id, reaction_type FROM reactions
+      SELECT id, is_like FROM likes
       WHERE user_id = $1 AND poem_id = $2
     `
 
@@ -44,35 +42,36 @@ const create = async (req, res) => {
     if (checkResult.rows.length > 0) {
       // User has already reacted to the poem, determine the current type of reaction
       const currentReaction = checkResult.rows[0]
+      const currentType = currentReaction.is_like ? 'like' : 'dislike'
 
-      if (currentReaction.reaction_type === type) {
+      if (currentType === type) {
         return res.status(400).json({ message: `You already ${type}d this poem` })
       }
 
       // Toggle between like and dislike
-      const newType = type
+      const isLike = type === 'like'
 
       // Update the reaction in the database with the new type
       const updateQuery = `
-        UPDATE reactions
-        SET reaction_type = $1
+        UPDATE likes
+        SET is_like = $1
         WHERE id = $2
       `
 
-      await client.query(updateQuery, [newType, currentReaction.id])
+      await client.query(updateQuery, [isLike, currentReaction.id])
 
       await client.query('COMMIT') // Commit the transaction
 
-      res.status(201).json({ id: currentReaction.id, message: `Reaction toggled to ${newType} successfully` })
+      res.status(201).json({ id: currentReaction.id, message: `Reaction toggled to ${type} successfully` })
     } else {
-      // User has not reacted to the poem, create a new entry in reactions table
+      // User has not reacted to the poem, create a new entry in likes table
       const insertQuery = `
-        INSERT INTO reactions (user_id, poem_id, reaction_type, created_at)
+        INSERT INTO likes (user_id, poem_id, is_like, created_at)
         VALUES ($1, $2, $3, NOW())
         RETURNING id;
       `
 
-      const result = await client.query(insertQuery, [userId, poem_id, type])
+      const result = await client.query(insertQuery, [userId, poem_id, type === 'like'])
       const { id } = result.rows[0]
 
       await client.query('COMMIT') // Commit the transaction
@@ -102,30 +101,28 @@ const remove = async (req, res) => {
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { poem_id } = req.params // Get poem_id from the route parameters
-
-    const parts = req.path.split('/')
-    const type = parts[parts.length - 1] // Get type (like or dislike) from the route path (/like or /dislike)
-
     const authorizationHeader = req.headers.authorization // Get the Authorization header from the request
 
     if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
       return res.status(401).json({ error: 'Bearer token not provided' })
     }
 
+    const { poem_id } = req.params // Get poem_id from the route parameters
+
+    const parts = req.path.split('/')
+    const type = parts[parts.length - 1] // Get type (like or dislike) from the route path (/like or /dislike)
+
     const token = authorizationHeader.split(' ')[1] // Extract the token (remove "Bearer " prefix)
-
     const decoded = jwt.verify(token, secret) // Verify and decode the JWT token
-
     const userId = decoded.id // Get the user ID from the decoded JWT token
 
     // Check if the user has already liked or disliked the poem
     const checkReactionQuery = `
-      SELECT id FROM reactions
-      WHERE user_id = $1 AND poem_id = $2 AND reaction_type = $3
+      SELECT id FROM likes
+      WHERE user_id = $1 AND poem_id = $2 AND is_like = $3
     `
 
-    const checkResult = await client.query(checkReactionQuery, [userId, poem_id, type])
+    const checkResult = await client.query(checkReactionQuery, [userId, poem_id, type === 'like'])
 
     if (checkResult.rows.length === 0) {
       return res.status(404).json({ error: `The ${type} was not found or does not belong to the user` })
@@ -133,11 +130,11 @@ const remove = async (req, res) => {
 
     // Delete the like or dislike of the specific user for the poem
     const deleteQuery = `
-      DELETE FROM reactions
-      WHERE user_id = $1 AND poem_id = $2 AND reaction_type = $3
+      DELETE FROM likes
+      WHERE user_id = $1 AND poem_id = $2 AND is_like = $3
     `
 
-    await client.query(deleteQuery, [userId, poem_id, type])
+    await client.query(deleteQuery, [userId, poem_id, type === 'like'])
 
     await client.query('COMMIT') // Commit the transaction
 

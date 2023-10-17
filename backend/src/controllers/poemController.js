@@ -89,13 +89,13 @@ const read = async (req, res) => {
         users.name AS user_name,
         (
           SELECT ARRAY_AGG(user_id)
-          FROM reactions
-          WHERE poem_id = poems.id AND reaction_type = 'like'
+          FROM likes
+          WHERE poem_id = poems.id AND is_like = true
         ) AS likes,
         (
           SELECT ARRAY_AGG(user_id)
-          FROM reactions
-          WHERE poem_id = poems.id AND reaction_type = 'dislike'
+          FROM likes
+          WHERE poem_id = poems.id AND is_like = false
         ) AS dislikes
       FROM poems
       INNER JOIN users ON poems.user_id = users.id
