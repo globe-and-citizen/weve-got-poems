@@ -196,22 +196,6 @@ const spec = {
           404: { $ref: '#/components/responses/NotFound' },
           500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
         }
-      },
-      delete: {
-        tags: ['Likes & Dislikes'],
-        summary: 'Remove a like from a poem',
-        operationId: 'removeLike',
-        security: [{ JWTAuth: [] }],
-        parameters: [
-          { name: 'id', in: 'path', description: 'The ID of the poem to remove the like', required: true, schema: { type: 'integer' } }
-        ],
-        responses: {
-          204: { $ref: '#/components/responses/NoContent' },
-          400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          401: { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          404: { $ref: '#/components/responses/NotFound' },
-          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
-        }
       }
     },
     '/poems/{id}/dislike': {
@@ -221,25 +205,8 @@ const spec = {
         operationId: 'dislikePoem',
         security: [{ JWTAuth: [] }],
         parameters: [{ name: 'id', in: 'path', description: 'The ID of the poem to dislike', required: true, schema: { type: 'integer' } }],
-
         responses: {
           201: { description: 'Success', content: { 'application/json': { schema: { $ref: '#/components/schemas/DislikeResponse' } } } },
-          400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          401: { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
-          404: { $ref: '#/components/responses/NotFound' },
-          500: { description: 'Internal server error', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } }
-        }
-      },
-      delete: {
-        tags: ['Likes & Dislikes'],
-        summary: 'Remove a dislike from a poem',
-        operationId: 'removeDislike',
-        security: [{ JWTAuth: [] }],
-        parameters: [
-          { name: 'id', in: 'path', description: 'The ID of the poem to remove the dislike', required: true, schema: { type: 'integer' } }
-        ],
-        responses: {
-          204: { $ref: '#/components/responses/NoContent' },
           400: { description: 'Bad Request', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
           401: { description: 'Unauthorized', content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } } },
           404: { $ref: '#/components/responses/NotFound' },
