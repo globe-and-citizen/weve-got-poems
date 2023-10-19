@@ -19,7 +19,7 @@ const appStore = useAppStore()
         <RouterLink to='/poems/create' v-if='appStore.getToken'>Create Poem</RouterLink>
         <RouterLink to='/login' v-if='!appStore.getToken'>Login</RouterLink>
         <RouterLink to='/account' v-if='appStore.getToken'>My Account</RouterLink>
-        <RouterLink to='/logout' v-if='appStore.getToken'>Logout</RouterLink>
+        <a  v-if='appStore.getToken' @click.prevent='appStore.setToken("")'>Logout</a>
 
       </nav>
     </div>
