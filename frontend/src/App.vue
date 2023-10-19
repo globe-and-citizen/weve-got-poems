@@ -24,7 +24,6 @@ const appStore = useAppStore()
       </nav>
     </div>
   </header>
-x
   <RouterView />
 </template>
 
