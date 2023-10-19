@@ -17,7 +17,7 @@ export const useAppStore = defineStore('app', () => {
 
 
     const getToken = computed(() => tokenExpiration.value > Date.now() ? token.value : '')
-    const getUser= computed(() => jwt_decode(getToken.value) as any)
+    const getUser = computed(() => getToken.value ? jwt_decode(getToken.value) as any : undefined)
 
     return { token, tokenExpiration, setToken, getToken, getUser, setUser }
 }, { persist: true })

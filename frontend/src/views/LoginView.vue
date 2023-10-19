@@ -11,8 +11,8 @@
               data-test='login' @click='setStatus(true)'>Login
       </button>
       <button
-        :class='{"bg-white shadow": !status}' class='flex items-center rounded-md py-2 px-12 text-sm font-semibold '
-        data-test='register' @click='setStatus(false)'>
+          :class='{"bg-white shadow": !status}' class='flex items-center rounded-md py-2 px-12 text-sm font-semibold '
+          data-test='register' @click='setStatus(false)'>
         Register
       </button>
     </div>
@@ -51,9 +51,9 @@
 
           <div>
             <button
-              class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-              data-test='login-button'
-              type='submit'>
+                class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
+                data-test='login-button'
+                type='submit'>
               Sign in
             </button>
           </div>
@@ -109,14 +109,24 @@
 
           <div>
             <button
-              class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-              data-test='register-button'
-              type='submit'>
+                class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
+                data-test='register-button'
+                type='submit'>
               Register
             </button>
           </div>
         </form>
       </div>
+    </div>
+
+    <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+      <button
+          class='flex w-full justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
+          data-test='register-button'
+          @click.prevent='onSignIn()'
+      >
+        Sign in Withe Ethereum
+      </button>
     </div>
   </div>
 </template>
@@ -138,6 +148,11 @@ import { ref } from 'vue'
 import { useAppStore } from '@/stores/app'
 import { useRouter } from 'vue-router'
 import AcNotification from '@/components/ac-notification.vue'
+import { useWallet } from '@/composables/useWallet'
+
+
+const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
+
 
 const status = ref(true)
 
@@ -162,6 +177,10 @@ const notification = ref()
 const router = useRouter()
 
 const appStore = useAppStore()
+const wallet = useWallet()
+const onSignIn = () => {
+  wallet.signInWithEthereum()
+}
 if (appStore.getToken) {
   // notify user that he is already logged in
   // timeout before redirection
@@ -169,11 +188,9 @@ if (appStore.getToken) {
     router.push('/')
   }, 5000)
 }
-
 const setStatus = (value: boolean) => {
   status.value = value
 }
-const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 
 const submitLogin = async () => {
 
@@ -238,16 +255,16 @@ const submitLogin = async () => {
 const submitRegister = async () => {
   // send data to backend using fetch api
   await fetch(endpoint + '/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: registerEmail.value,
-        name: registerName.value,
-        password: registerPassword.value
-      })
-    }
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: registerEmail.value,
+          name: registerName.value,
+          password: registerPassword.value
+        })
+      }
   ).then(async (response) => {
     registerData.value = await response.json()
 
