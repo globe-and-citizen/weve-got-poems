@@ -103,10 +103,11 @@ const submitUpdate = async () => {
   // Handle fetch in a try catch
   try {
     updateLoading.value = true
-    const response = await fetch(endpoint + '/user', {
-      method: 'POST',
+    const response = await fetch(endpoint + '/user/' + appStore.getUser.id, {
+      method: 'PUT',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + appStore.getToken
       },
       body: JSON.stringify({
         email: email.value,
