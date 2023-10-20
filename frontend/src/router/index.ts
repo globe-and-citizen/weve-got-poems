@@ -4,6 +4,7 @@ import PoemView from '../views/PoemView.vue'
 import PoemCreateView from '@/views/PoemCreateView.vue'
 import PoemEditView from '@/views/PoemEditView.vue'
 import UserView from '@/views/UserView.vue'
+import { useAppStore } from '@/stores/app'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,20 @@ const router = createRouter({
       component: () => import('../views/LoginView.vue')
     }
   ]
+})
+
+router.beforeEach(async (to) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const publicPages = ['/', '/login', '/poems/:id']
+
+  // Check if the matched route is a public page
+  const authRequired = !publicPages.includes(to.matched[0].path)
+  const appStore = useAppStore()
+
+  if (authRequired && !appStore.getUser) {
+    // auth.returnUrl = to.fullPath
+    return '/login'
+  }
 })
 
 export default router
