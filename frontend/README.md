@@ -6,6 +6,12 @@ showcase of some technologies:
 - Layer 8
 - SIWE : Signe in with Ethereum
 
+## Find the project online
+
+Deployed on firebase
+
+https://weve-got-poems.web.app/
+
 ## How to run the project
 
 - Install dependencies with `npm install`
