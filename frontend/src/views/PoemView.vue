@@ -33,7 +33,7 @@ interface DataModel {
   }
 }
 
-const { error, data, loading, isLoaded } = useFetch<Array<DataModel>>(endpoint + '/poems/')
+const { error, data, loading, isLoaded, execute } = useFetch<Array<DataModel>>(endpoint + '/poems/')
 const {
   error: deleteError,
   loading: deleteLoading,
@@ -154,8 +154,7 @@ const onLike = async () => {
   } finally {
     likeLoading.value = false
   }
-  // TODO: reload content instead of the page
-  location.reload()
+  execute()
 }
 
 const onDisLike = async () => {
@@ -185,8 +184,7 @@ const onDisLike = async () => {
   } finally {
     dislikeLoading.value = false
   }
-  // TODO: reload content instead of the page
-  location.reload()
+  execute()
 }
 </script>
 
