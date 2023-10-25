@@ -38,6 +38,5 @@ onMounted(async () => {
       <br>
       {{ new Date(item.created_at).toLocaleDateString() }}
     </WelcomeItem>
-    // TODO : Pagination Here
   </main>
 </template>
