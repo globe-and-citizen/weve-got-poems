@@ -40,13 +40,27 @@ const onSignIn = () => {
   wallet.signInWithEthereum().then(token => {
     if (token) {
       appStore.setToken(token)
-      router.push('/')
+      // notify user that he is logged in
+      notification.value = {
+        status: 'success',
+        message: 'You have successfully logged in. Redirecting to home page...'
+      }
+
+      // timeout before redirection
+      setTimeout(() => {
+        router.push('/')
+      }, 5000)
     }
   })
 }
 
 if (appStore.getToken) {
   // notify user that he is already logged in
+
+  notification.value = {
+    status: 'success',
+    message: 'You are already logged in. Redirecting to home page...'
+  }
   // timeout before redirection
   setTimeout(() => {
     router.push('/')
