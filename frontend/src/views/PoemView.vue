@@ -57,8 +57,6 @@ const dislikeError = ref()
 const dislikeLoading = ref()
 const dislikeLoaded = ref()
 
-// TODO: is liked or disliked status
-// TODO: Disable liked or disliked button if user has already liked or disliked
 const isLiked = computed(() => {
   return !!currentPoem.value.likes
     .find((dislike_author: any) => dislike_author === appStore.getUser?.id)
