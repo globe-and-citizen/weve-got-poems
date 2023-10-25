@@ -214,17 +214,23 @@ const onDisLike = async () => {
           <a @click.prevent='onDelete()' data-test='remove-poem-button' class='p-2 rounded'>Remove</a>
         </div>
         <div class='flex gap-2 justify-end'>
-          <a @click.prevent='appStore.getToken ? onLike() : ""' class='flex gap-2  p-2 rounded '
-             :class='isLiked ? "bg-emerald-800/20" :  appStore.getToken ? "cursor-pointer" : ""'>
-            {{ currentPoem.likes.length }}
-            <IconLike />
-          </a>
-          <a @click.prevent='appStore.getToken ? onDisLike() : ""'
-             class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded'
-             :class='isDisliked ? "bg-red-800/20" : appStore.getToken ? "cursor-pointer" : "" '>
-            {{ currentPoem.dislikes.length }}
-            <IconDislike />
-          </a>
+          <div class='group relative'>
+            <span class="group-hover:opacity-100 opacity-0 absolute w-max bottom-full bg-black text-white p-1 rounded" v-if='!appStore.getToken'>You need to be authenticated</span>
+            <a @click.prevent='appStore.getToken ? onLike() : ""' class='flex gap-2  p-2 rounded '
+               :class='isLiked ? "bg-emerald-800/20" :  appStore.getToken ? "cursor-pointer" : ""'>
+              {{ currentPoem.likes.length }}
+              <IconLike />
+            </a>
+          </div>
+          <div class='group relative'>
+            <span class="group-hover:opacity-100 opacity-0 absolute w-max bottom-full bg-black text-white p-1 rounded" v-if='!appStore.getToken'>You need to be authenticated</span>
+            <a @click.prevent='appStore.getToken ? onDisLike() : ""'
+               class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded'
+               :class='isDisliked ? "bg-red-800/20" : appStore.getToken ? "cursor-pointer" : "" '>
+              {{ currentPoem.dislikes.length }}
+              <IconDislike />
+            </a>
+          </div>
         </div>
       </div>
       {{ currentPoem.content }}
@@ -247,4 +253,5 @@ const onDisLike = async () => {
   display: flex;
   justify-content: space-between;
 }
+
 </style>
