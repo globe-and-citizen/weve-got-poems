@@ -1,6 +1,12 @@
+<script lang='ts' setup>
+
+import { useAppStore } from '@/stores/app'
+
+const appStore = useAppStore()
+</script>
 <template>
   <div class="item">
-    <i>
+    <i :class='appStore.getToken ? "bg-emerald-200": ""'>
       <slot name="icon"></slot>
     </i>
     <div class="details">
@@ -51,7 +57,6 @@ h3 {
     left: -26px;
     position: absolute;
     border: 1px solid var(--color-border);
-    background: var(--color-background);
     border-radius: 8px;
     width: 50px;
     height: 50px;
