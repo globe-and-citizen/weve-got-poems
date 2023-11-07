@@ -5,142 +5,21 @@
         {{ notification.message }}
       </ac-notification>
     </div>
-    <div class='flex justify-center space-x-1 rounded-lg p-0.5 bg-slate-50 m-auto'>
-      <button :class='{"bg-white shadow": status}'
-              class='flex items-center rounded-md py-2 px-12 text-sm font-semibold'
-              data-test='login' @click='setStatus(true)'>Login
-      </button>
-      <button
-        :class='{"bg-white shadow": !status}' class='flex items-center rounded-md py-2 px-12 text-sm font-semibold '
-        data-test='register' @click='setStatus(false)'>
-        Register
-      </button>
+    <div class='sm:mx-auto sm:w-full sm:max-w-sm'>
+      <h2 class='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>Sign in to your
+        account using Ethereum</h2>
     </div>
-    <div v-if='status'>
-      <div class='sm:mx-auto sm:w-full sm:max-w-sm'>
-        <h2 class='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>Sign in to your
-          account</h2>
-      </div>
-      <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-        <form class='space-y-6' @submit.prevent='submitLogin'>
-          <div>
-            <label class='block text-sm font-medium leading-6 text-gray-900' for='email'>Email address</label>
-            <div class='mt-2'>
-              <input id='email' v-model='loginEmail' autocomplete='email'
-                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                     name='email' required
-                     type='email' />
-            </div>
-          </div>
-
-          <div>
-            <div class='flex items-center justify-between'>
-              <label class='block text-sm font-medium leading-6 text-gray-900' for='password'>Password</label>
-              <div class='text-sm'>
-                <a class='font-semibold text-emerald-600 hover:text-emerald-500' href='#'>Forgot password?</a>
-              </div>
-            </div>
-            <div class='mt-2'>
-              <input id='password' v-model='loginPassword' autocomplete='current-password'
-                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                     name='password'
-                     required
-                     type='password' />
-            </div>
-          </div>
-
-          <div>
-            <button
-              class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-              data-test='login-button'
-              type='submit'>
-              Sign in
-            </button>
-          </div>
-        </form>
-
-        <p class='mt-10 text-center text-sm text-gray-500'>
-          Not a member?
-          {{ ' ' }}
-          <a class='font-semibold leading-6 text-emerald-500 hover:text-emerald-500' href='#'>Start a 14 day free
-            trial</a>
-        </p>
-      </div>
-    </div>
-    <div v-else>
-      <div class='sm:mx-auto sm:w-full sm:max-w-sm'>
-        <h2 class='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>Register your
-          account</h2>
-      </div>
-      <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-        <form class='space-y-6' @submit.prevent='submitRegister'>
-          <div>
-            <label class='block text-sm font-medium leading-6 text-gray-900' for='email'>Email address</label>
-            <div class='mt-2'>
-              <input id='email' v-model='registerEmail' autocomplete='email'
-                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                     name='email'
-                     required
-                     type='email' />
-            </div>
-          </div>
-
-          <div>
-            <label class='block text-sm font-medium leading-6 text-gray-900' for='name'>Name</label>
-            <div class='mt-2'>
-              <input id='name' v-model='registerName' autocomplete='name'
-                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                     name='name' required
-                     type='text' />
-            </div>
-          </div>
-          <div>
-            <div class='flex items-center justify-between'>
-              <label class='block text-sm font-medium leading-6 text-gray-900' for='password'>Password</label>
-            </div>
-            <div class='mt-2'>
-              <input id='password' v-model='registerPassword' autocomplete='current-password'
-                     class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                     name='password'
-                     required
-                     type='password' />
-            </div>
-          </div>
-
-          <div>
-            <button
-              class='flex w-full justify-center rounded-md bg-emerald-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-              data-test='register-button'
-              type='submit'>
-              Register
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
     <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
       <button
         class='flex w-full justify-center rounded-md bg-blue-400 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
         data-test='register-button'
         @click.prevent='onSignIn()'
       >
-        Sign in Withe Ethereum
+        Sign in With Ethereum
       </button>
     </div>
   </div>
 </template>
-
-<style lang='scss'>
-* {
-  //border: solid red 1px;
-}
-
-@media (min-width: 1024px) {
-  .about {
-  }
-}
-</style>
 
 <script setup lang='ts'>
 
@@ -151,27 +30,6 @@ import AcNotification from '@/components/ac-notification.vue'
 import { useWallet } from '@/composables/useWallet'
 
 
-const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
-
-
-const status = ref(true)
-
-const registerEmail = ref('')
-const registerName = ref('')
-const registerPassword = ref('')
-
-const loginEmail = ref('')
-const loginPassword = ref('')
-
-const loginError = ref()
-const loginData = ref()
-const loginStatus = ref()
-const loginLoading = ref()
-const loginLoaded = ref(false)
-
-const registerError = ref()
-const registerData = ref()
-const registerStatus = ref()
 const notification = ref()
 
 const router = useRouter()
@@ -182,129 +40,31 @@ const onSignIn = () => {
   wallet.signInWithEthereum().then(token => {
     if (token) {
       appStore.setToken(token)
-      router.push('/')
+      // notify user that he is logged in
+      notification.value = {
+        status: 'success',
+        message: 'You have successfully logged in. Redirecting to home page...'
+      }
+
+      // timeout before redirection
+      setTimeout(() => {
+        router.push('/')
+      }, 5000)
     }
   })
 }
 
 if (appStore.getToken) {
   // notify user that he is already logged in
+
+  notification.value = {
+    status: 'success',
+    message: 'You are already logged in. Redirecting to home page...'
+  }
   // timeout before redirection
   setTimeout(() => {
     router.push('/')
   }, 5000)
 }
-const setStatus = (value: boolean) => {
-  status.value = value
-}
 
-const submitLogin = async () => {
-
-  // Handle fetch in a try catch
-  try {
-    loginLoading.value = true
-    const response = await fetch(endpoint + '/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: loginEmail.value,
-        password: loginPassword.value
-      })
-    })
-    if (response.ok) {
-      // Successful response
-      loginData.value = await response.json()
-      if (loginData.value.token) {
-        appStore.setToken(loginData.value.token)
-      }
-      // Notification message
-      notification.value = {
-        message: 'Welcome to our platform! ',
-        status: 'success'
-      }
-      // Redirection
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
-    } else if (response.status >= 400 && response.status < 500) {
-      // Client error
-      notification.value = {
-        message: `Unable to login the user  : Client Error: ${response.status} - ${response.statusText}`,
-        status: 'error'
-      }
-    } else {
-      // Server error
-      notification.value = {
-        message: `Unable to login the user  : Server Error: ${response.status} - ${response.statusText}`,
-        status: 'error'
-      }
-    }
-  } catch (error: any) {
-    // Network error or other unexpected errors
-    notification.value = {
-      message: `Unable to login the user  : Unexpected Error: ${error.message}`,
-      status: 'error'
-    }
-    loginError.value = error
-  } finally {
-    loginLoading.value = false
-  }
-
-  // reset inputs values
-  loginEmail.value = ''
-  loginPassword.value = ''
-  loginStatus.value = 'done'
-}
-
-const submitRegister = async () => {
-  // send data to backend using fetch api
-  await fetch(endpoint + '/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email: registerEmail.value,
-        name: registerName.value,
-        password: registerPassword.value
-      })
-    }
-  ).then(async (response) => {
-    registerData.value = await response.json()
-
-    // TODO: register should return 201
-    if (response.status === 201) {
-      if (registerData.value.token) {
-        appStore.setToken(registerData.value.token)
-      }
-      // Notification message
-      notification.value = {
-        message: 'Welcome to our platform! ',
-        status: 'success'
-      }
-
-      // redirect to home page after timeout
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
-    } else {
-      notification.value = {
-        message: 'Unable to Register the user \n Message Error: ' + registerData.value.message,
-        status: 'error'
-      }
-    }
-  }).catch((error) => {
-    registerData.value = error
-    notification.value = {
-      message: 'Unable to Register the user \n Message Error: ' + error.message,
-      status: 'error'
-    }
-  })
-  // reset inputs values
-  registerEmail.value = ''
-  registerName.value = ''
-  registerPassword.value = ''
-}
 </script>

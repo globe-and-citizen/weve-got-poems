@@ -6,37 +6,28 @@
       </ac-notification>
     </div>
     <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
+      <div class='sm:mx-auto sm:w-full sm:max-w-sm'>
+        <h2 class='my-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>User Account</h2>
+      </div>
       <form class='space-y-6' @submit.prevent='submitUpdate'>
+
         <div>
-          <label class='block text-sm font-medium leading-6 text-gray-900' for='email'>Email address</label>
+          <label class='block text-sm font-medium leading-6 text-gray-900' for='name'>Wallet Address</label>
           <div class='mt-2'>
-            <input id='email' v-model='email' autocomplete='email'
-                   class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                   name='email' required
-                   type='email' />
+            <input id='name' :value='appStore.getUser.eth_address'
+                   class='block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
+                   name='name'
+                   disabled
+                   type='text' />
           </div>
         </div>
-
         <div>
           <label class='block text-sm font-medium leading-6 text-gray-900' for='name'>Displayed Name</label>
           <div class='mt-2'>
             <input id='name' v-model='name'
-                   class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
+                   class='block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
                    name='name' required
                    type='text' />
-          </div>
-        </div>
-
-        <div>
-          <div class='flex items-center justify-between'>
-            <label class='block text-sm font-medium leading-6 text-gray-900' for='password'>Password</label>
-          </div>
-          <div class='mt-2'>
-            <input id='password' v-model='password' autocomplete='current-password'
-                   class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                   name='password'
-                   required
-                   type='password' />
           </div>
         </div>
 
@@ -65,25 +56,19 @@
 
 import { ref } from 'vue'
 import { useAppStore } from '@/stores/app'
-import { useRouter } from 'vue-router'
 import AcNotification from '@/components/ac-notification.vue'
-import { useWallet } from '@/composables/useWallet'
 import CustomLoader from '@/components/CustomLoader.vue'
 
 
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 
 
-const router = useRouter()
 
 const appStore = useAppStore()
 
-const email = ref('')
 const name = ref('')
-const password = ref('')
 
 if (appStore.getUser) {
-  email.value = appStore.getUser.email
   name.value = appStore.getUser.name
 }
 
@@ -92,11 +77,6 @@ const updateData = ref()
 const updateLoading = ref(false)
 
 const notification = ref()
-
-const wallet = useWallet()
-const onSignIn = () => {
-  wallet.signInWithEthereum()
-}
 
 const submitUpdate = async () => {
 
@@ -110,8 +90,6 @@ const submitUpdate = async () => {
         'Authorization': 'Bearer ' + appStore.getToken
       },
       body: JSON.stringify({
-        email: email.value,
-        password: password.value,
         name: name.value
       })
     })
@@ -150,9 +128,5 @@ const submitUpdate = async () => {
     updateLoading.value = false
   }
 
-  // reset inputs values
-  // email.value = ''
-  // password.value = ''
-  // email.value = 'done'
 }
 </script>

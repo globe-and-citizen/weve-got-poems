@@ -7,13 +7,14 @@ import { RouterLink } from 'vue-router'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 
 
+const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const data = ref()
 const loading = ref(false)
 
 const appStore = useAppStore()
 onMounted(async () => {
   loading.value = true
-  const response = await fetch('https://weve-got-poems-server.onrender.com/v1/poems')
+  const response = await fetch(endpoint + '/poems/')
   data.value = await response.json()
   loading.value = false
 })
@@ -38,6 +39,5 @@ onMounted(async () => {
       <br>
       {{ new Date(item.created_at).toLocaleDateString() }}
     </WelcomeItem>
-    // TODO : Pagination Here
   </main>
 </template>

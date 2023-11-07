@@ -31,4 +31,5 @@ But if you are more Frontend oriented, please read the [Frontend README](./front
 ## Production URLs
 
 - Frontend: https://weve-got-poems.pages.dev/
+- Frontend: (firebase) https://weve-got-poems.web.app/
 - Backend: https://weve-got-poems-server.onrender.com/
