@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const layer8 = require('layer8-middleware-wasm')
+// const layer8 = require('layer8-middleware-wasm')
 require('dotenv').config()
 
 const app = express()
@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000
 
 app.use(cors())
 app.use(express.json())
-app.use(layer8)
+// app.use(layer8)
 
 const authRoutes = require('./routes/authRoutes')
 const configRoutes = require('./routes/configRoutes')
