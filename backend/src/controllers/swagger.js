@@ -11,7 +11,7 @@ const spec = {
   },
   servers: [
     { url: 'https://api-wevegotpoems.up.railway.app/v1', description: 'Production server' },
-    { url: 'http://localhost:5432/v1', description: 'Local server' }
+    { url: 'http://localhost:51787/v1', description: 'Local server' }
   ],
   paths: {
     '/login': {
