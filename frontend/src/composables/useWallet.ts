@@ -107,7 +107,7 @@ export function useWallet(): WalletType {
             // Sign the message
             const signature = await signer.signMessage(message)
             // Send the signature to the backend
-            const res = await fetch(`${endpoint}/verify`, {
+            const res = await fetch(`${endpoint}/siwe`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

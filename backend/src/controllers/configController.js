@@ -21,7 +21,7 @@ const createTable = async (req, res) => {
     const createPoemsTableQuery = `
       CREATE TABLE IF NOT EXISTS poems (
         id SERIAL PRIMARY KEY,
-        user_id INT NOT NULL REFERENCES users(id),
+        user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         content TEXT NOT NULL,
         created_at TIMESTAMP NOT NULL,
         title VARCHAR(255) NOT NULL
@@ -31,8 +31,8 @@ const createTable = async (req, res) => {
     const createReactionsTableQuery = `
       CREATE TABLE IF NOT EXISTS likes (
         id SERIAL PRIMARY KEY,
-        user_id INT NOT NULL REFERENCES users(id),
-        poem_id INT NOT NULL REFERENCES poems(id),
+        user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        poem_id INT NOT NULL REFERENCES poems(id) ON DELETE CASCADE,
         created_at TIMESTAMP NOT NULL,
         is_like BOOLEAN
       );

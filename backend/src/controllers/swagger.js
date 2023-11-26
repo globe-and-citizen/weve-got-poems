@@ -10,8 +10,8 @@ const spec = {
     description: 'The canonical repo for Layer8\'s original Service Provider: "We\'ve Got Poems"'
   },
   servers: [
-    { url: 'https://weve-got-poems-server.onrender.com/v1', description: 'Production server' },
-    { url: 'http://localhost:5432/v1', description: 'Local server' }
+    { url: 'https://api-wevegotpoems.up.railway.app/v1', description: 'Production server' },
+    { url: 'http://localhost:51787/v1', description: 'Local server' }
   ],
   paths: {
     '/login': {

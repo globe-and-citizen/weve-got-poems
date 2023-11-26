@@ -2,9 +2,18 @@
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { useAppStore } from '@/stores/app'
-// import { useAppStore } from '../stores/app'
 
 const appStore = useAppStore()
+function shortenEthereumAddress(address: string) {
+  if (address.length < 8) {
+    return address; // Address is too short to shorten.
+  }
+
+  const prefix = address.slice(0, 6);
+  const suffix = address.slice(-4);
+
+  return `${prefix}...${suffix}`;
+}
 </script>
 
 <template>
@@ -13,13 +22,13 @@ const appStore = useAppStore()
 
     <div>
       <HelloWorld msg='Poems, Poems, Everywhere; Very, very, soon!' />
-
+      <p v-if='appStore.getToken' class='text-right text-xl'>Welcome {{ shortenEthereumAddress(appStore.getUser.eth_address)}}</p>
       <nav>
         <RouterLink to='/'>Home</RouterLink>
         <RouterLink to='/poems/create' v-if='appStore.getToken'>Create Poem</RouterLink>
         <RouterLink to='/login' v-if='!appStore.getToken'>Login</RouterLink>
         <RouterLink to='/account' v-if='appStore.getToken'>My Account</RouterLink>
-        <RouterLink to='/logout' v-if='appStore.getToken'>Logout</RouterLink>
+        <a  v-if='appStore.getToken' @click.prevent='appStore.setToken("")'>Logout</a>
 
       </nav>
     </div>
