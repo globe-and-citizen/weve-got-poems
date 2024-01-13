@@ -20,6 +20,7 @@
   "homepage": "https://github.com/globe-and-citizen/weve-got-poems#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "client-oauth2": "^4.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "ethers": "^6.7.1",
@@ -28,6 +29,7 @@
     "jsonwebtoken": "^9.0.2",
     "layer8-middleware-wasm": "^1.0.2",
     "pg": "^8.11.3",
+    "popsicle": "^12.1.2",
     "siwe": "^2.1.4",
     "xss": "^1.0.14"
   },
