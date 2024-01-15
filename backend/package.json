@@ -28,6 +28,7 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
     "layer8-middleware-wasm": "^1.0.2",
+    "nodemon": "^3.0.2",
     "pg": "^8.11.3",
     "popsicle": "^12.1.2",
     "siwe": "^2.1.4",
