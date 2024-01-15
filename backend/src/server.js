@@ -33,8 +33,14 @@ const layer8Auth = new ClientOAuth2({
 const app = express()
 const port = process.env.PORT || 3000
 
+app.get("/healthcheck", (req, res) => {
+  console.log("Enpoint for testing");
+  console.log("req.body: ", req.body);
+  res.send("Bro, ur poems coming soon. Relax a little.");
+});
+
 const Layer8 = require("./dist/loadWASM.js");
-//app.use(Layer8);
+app.use(Layer8);
 
 app.use(cors())
 app.use(express.json())
