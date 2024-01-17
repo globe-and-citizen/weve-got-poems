@@ -13,6 +13,7 @@ const loading = ref(false)
 const appStore = useAppStore()
 onMounted(async () => {
   loading.value = true
+  // TODO: remove this timeout
   setTimeout(async () => {
     console.log('going to try now 1...')
 
