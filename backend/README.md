@@ -13,6 +13,8 @@ Make sure to provide the appropriate values for the variables based on your spec
 
 ### Install Dependencies
 
+To install the required dependencies, run the following command:
+
 ```bash
 npm install
 ```
@@ -27,12 +29,16 @@ npm start
 
 #### Using Docker
 
+```bash
 run the following command to start a postgres container with docker
 docker run --env=POSTGRES_PASSWORD=1234 --env=POSTGRES_USER=postgres --env=POSTGRES_DB=postgres -p 5432:5432 postgres:latest
+```
 
 #### Another database
 
 If you want to use another database, you can change the values in the .env file
+
+// TODO: run database migration scripts
 
 ## Database Diagram
 
