@@ -4,7 +4,7 @@
   "description": "The canonical repo of Layer8's first Service Provider",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "nodemon src/server.js",
     "db:create-table": "node src/script.js",
     "format": "prettier --write \"**/*.{js,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +21,7 @@
   "homepage": "https://github.com/globe-and-citizen/weve-got-poems#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "client-oauth2": "^4.3.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "ethers": "^6.7.1",
@@ -28,7 +29,9 @@
     "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.2",
     "layer8-middleware-wasm": "^1.0.2",
+    "nodemon": "^3.0.2",
     "pg": "^8.11.3",
+    "popsicle": "^12.1.2",
     "siwe": "^2.1.4",
     "xss": "^1.0.14"
   },
