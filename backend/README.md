@@ -29,8 +29,9 @@ npm start
 
 #### Using Docker
 
-```bash
 run the following command to start a postgres container with docker
+
+```bash
 docker run --env=POSTGRES_PASSWORD=1234 --env=POSTGRES_USER=postgres --env=POSTGRES_DB=postgres -p 5432:5432 postgres:latest
 ```
 
