@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
+    "db:create-table": "node src/script.js",
     "format": "prettier --write \"**/*.{js,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
