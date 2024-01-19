@@ -1,5 +1,14 @@
 # We've Got Poems
 
+## Descrition
+
+We've Got Poems is a web application that allows users to create and share poems.
+We've Got Poems is a POC : Proof Of Concept. It is a project that aims to be a showcase of some technologies:
+
+Layer 8 : A suite of network protocol implementations that sum to create an anonymizing reverse proxy dedicated to dissociating a user's true identity from their online content choices.
+
+SIWE : Signe in with Ethereum : Sign-In with Ethereum is an authentication standard (EIP-4361) that enables secure communication between a frontend and backend. SIWE is a powerful method for creating user sessions based on a wallet connection, and much more! The example below builds on the Connect Wallet and Sign Message examples.
+
 The canonical repo for Layer8's original Service Provider: "We've Got Poems"
 
 <p align="center">
@@ -31,5 +40,5 @@ But if you are more Frontend oriented, please read the [Frontend README](./front
 ## Production URLs
 
 - Frontend: https://weve-got-poems.pages.dev
-- Frontend: (firebase) https://weve-got-poems.web.app/
+- Frontend: (firebase) https://weve-got-poem.web.app/
 - Backend: https://api-wevegotpoems.up.railway.app
