@@ -31,6 +31,36 @@ The canonical repo for Layer8's original Service Provider: "We've Got Poems"
 <img src="https://img.shields.io/github/package-json/dependency-version/globe-and-citizen/weve-got-poems/vue-router?filename=frontend%2Fpackage.json" />
 </p>
 
+## Stack and Technologies
+
+### Project libraries
+
+To be able to successfully add your own components to the project, you will need to understand the following libraries:
+
+### Frontend
+
+- [Vue](https://vuejs.org/)
+- [Vue Router](https://router.vuejs.org/)
+- [Pinia](https://pinia.esm.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Ethers](https://docs.ethers.io/v5/)
+
+### Backend
+
+- [Express](https://expressjs.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Layer8](https://layer8.space/)
+- [SIWE](https://docs.login.xyz/)
+- [Ethers](https://docs.ethers.io/v5/)
+
+### QA
+
+- [ESLint](https://eslint.org/)
+- [Prettier](https://prettier.io/)
+- [Cypress](https://www.cypress.io/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vue Test Utils](https://vue-test-utils.vuejs.org/)
+
 ## How to Contribute
 
 If you want to contribute to the Backend of this project, please read the [Backend README](./backend/README.md).
