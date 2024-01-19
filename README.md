@@ -3,6 +3,7 @@
 ## Descrition
 
 We've Got Poems is a web application that allows users to create and share poems.
+
 We've Got Poems is a POC : Proof Of Concept. It is a project that aims to be a showcase of some technologies:
 
 Layer 8 : A suite of network protocol implementations that sum to create an anonymizing reverse proxy dedicated to dissociating a user's true identity from their online content choices.
