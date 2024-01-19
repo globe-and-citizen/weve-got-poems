@@ -41,6 +41,14 @@ If you want to use another database, you can change the values in the .env file
 
 // TODO: run database migration scripts
 
+#### Database Table Creation
+
+Run the following command to create the database tables:
+
+```bash
+npm run db:create-table
+```
+
 ## Database Diagram
 
 ```mermaid
