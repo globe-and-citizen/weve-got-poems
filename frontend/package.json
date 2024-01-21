@@ -3,11 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "run-p type-check \"build-only {@}\" --",
     "build-only": "vite build",
     "build:deploy": "run-s build \"deploy {@}\" --",
-    "deploy":  "firebase deploy --only hosting:weve-got-poems",
+    "deploy": "firebase deploy --only hosting:weve-got-poems",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "preview": "vite preview",
