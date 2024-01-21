@@ -18,7 +18,7 @@ services:
       context: ./frontend
       target: development
     ports:
-      - '8080:80' # Map container port to the PORT environment variable
+      - '5173:5173' # Map container port to the PORT environment variable
     volumes:
       - ./frontend/src:/app/src
   backend:
@@ -26,9 +26,9 @@ services:
       context: ./backend
       target: development
     environment:
-      EXTERNAL_DB_URL: 'postgres://postgres:1234@localhost:5432/postgres'
+      EXTERNAL_DB_URL: 'postgres://postgres:1234@db:5432/postgres'
     ports:
-      - '5173:5173' # Map container port to the PORT environment variable
+      - '8000:8000' # Map container port to the PORT environment variable
     volumes:
       - ./backend/src:/app/src
 volumes:
