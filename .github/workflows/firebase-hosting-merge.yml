@@ -20,6 +20,6 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CRYPTO_TIP_APP }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CELEBRITYFANALYZER_DEV }}'
           channelId: live
-          projectId: celebrityfanalizer
+          projectId: celebrityfanalyzer-dev
