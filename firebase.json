@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "weve-got-poems",
+    "site": "weve-got-poem",
     "public": "frontend/dist",
     "ignore": [
       "firebase.json",
