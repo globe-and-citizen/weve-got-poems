@@ -80,6 +80,21 @@ If you want to contribute to the Backend of this project, please read the [Backe
 
 But if you are more Frontend oriented, please read the [Frontend README](./frontend/README.md).
 
+## How to run the project
+
+#### With docker
+
+- Clone the repository with `git clone`
+- Go to the project folder with `cd weve-got-poems`
+- Build the project with docker-compose `docker-compose build`
+- Run the project with docker-compose `docker-compose up`
+- Open in the browser the URL that is shown in the console
+- Enjoy
+
+### Without docker
+
+Check the README of the [Backend](./backend/README.md) and [Frontend](./frontend/README.md) to run each project separately.
+
 ## Production URLs
 
 - Frontend: https://weve-got-poems.pages.dev
