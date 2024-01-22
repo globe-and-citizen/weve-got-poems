@@ -1,19 +1,5 @@
 # Welcome to "We've Got Poems" 📜✨
 
-## Overview
-
-"We've Got Poems" is not just a web application; it's a creative haven where users can weave their poetic expressions and share them with the world. This project started as a Proof Of Concept (POC) but has evolved into a showcase of cutting-edge technologies that enhance user experience and security.
-
-## Features
-
-### Layer 8: Anonymizing Reverse Proxy
-
-Dive into the future of online privacy with Layer 8, a suite of network protocol implementations seamlessly integrated into "We've Got Poems." This anonymizing reverse proxy is dedicated to dissociating a user's true identity from their online content choices, ensuring a secure and private environment for creative expression.
-
-### SIWE: Sign-In with Ethereum
-
-Embrace the future of authentication with SIWE (Sign-In with Ethereum), an implementation of the EIP-4361 standard. This revolutionary authentication method establishes secure communication between the frontend and backend, providing a robust foundation for user sessions based on a wallet connection. Explore features like Connect Wallet and Sign Message, unlocking a world of possibilities beyond traditional authentication methods.
-
 <p align="center">
   <img alt="Repository Size" src="https://img.shields.io/github/repo-size/globe-and-citizen/weve-got-poems?filename=backend%2Fpackage.json" />
   <a href="https://weve-got-poem.web.app/"><img src="https://img.shields.io/website?url=https%3A%2F%2Fweve-got-poem.web.app" /></a>
@@ -42,7 +28,19 @@ Embrace the future of authentication with SIWE (Sign-In with Ethereum), an imple
 </p>
 <!-- Add other frontend badges here -->
 
-#### Both Dependencies
+## Overview
+
+"We've Got Poems" is not just a web application; it's a creative haven where users can weave their poetic expressions and share them with the world. This project started as a Proof Of Concept (POC) but has evolved into a showcase of cutting-edge technologies that enhance user experience and security.
+
+## Features
+
+### Layer 8: Anonymizing Reverse Proxy
+
+Dive into the future of online privacy with Layer 8, a suite of network protocol implementations seamlessly integrated into "We've Got Poems." This anonymizing reverse proxy is dedicated to dissociating a user's true identity from their online content choices, ensuring a secure and private environment for creative expression.
+
+### SIWE: Sign-In with Ethereum
+
+Embrace the future of authentication with SIWE (Sign-In with Ethereum), an implementation of the EIP-4361 standard. This revolutionary authentication method establishes secure communication between the frontend and backend, providing a robust foundation for user sessions based on a wallet connection. Explore features like Connect Wallet and Sign Message, unlocking a world of possibilities beyond traditional authentication methods.
 
 ## Stack and Technologies
 
@@ -81,6 +79,21 @@ We welcome contributions from the community to make "We've Got Poems" even more 
 If you want to contribute to the Backend of this project, please read the [Backend README](./backend/README.md).
 
 But if you are more Frontend oriented, please read the [Frontend README](./frontend/README.md).
+
+## How to run the project
+
+#### With docker
+
+- Clone the repository with `git clone`
+- Go to the project folder with `cd weve-got-poems`
+- Build the project with docker-compose `docker-compose build`
+- Run the project with docker-compose `docker-compose up`
+- Open in the browser the URL that is shown in the console
+- Enjoy
+
+### Without docker
+
+Check the README of the [Backend](./backend/README.md) and [Frontend](./frontend/README.md) to run each project separately.
 
 ## Production URLs
 
