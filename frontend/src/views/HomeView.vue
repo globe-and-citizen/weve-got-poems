@@ -18,7 +18,6 @@ onMounted(async () => {
     console.log('going to try now 1...')
 
     // TODO: remove this ts-ignore
-    //@ts-ignore
     const response = await layer8.fetch(endpoint + '/poems/', { method: 'GET' })
 
     console.log('going to try now 2...')

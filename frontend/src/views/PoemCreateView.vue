@@ -10,7 +10,6 @@ const content = ref('')
 const title = ref('')
 
 // Create Poem
-const error = ref()
 const data = ref()
 const loading = ref()
 const loaded = ref()
@@ -21,8 +20,6 @@ const notification = ref()
 const submitPoem = async () => {
   loading.value = true
 
-  // TODO: remove this ts-ignore
-  //@ts-ignore
   await layer8
     .fetch(endpoint + '/poems', {
       method: 'POST',
@@ -35,8 +32,6 @@ const submitPoem = async () => {
         content: content.value
       })
     })
-    // TODO: remove this ts-ignore
-    //@ts-ignore
     .then((response) => {
       if (response.ok) {
         notification.value = {
@@ -50,8 +45,6 @@ const submitPoem = async () => {
         throw new Error(`Unable to create the poem : Server Error: ${response.status} - ${response.statusText}`)
       }
     })
-    // TODO: remove this ts-ignore
-    //@ts-ignore
     .then((response) => {
       data.value = response
       loaded.value = true
@@ -60,14 +53,11 @@ const submitPoem = async () => {
         router.push('/poems/' + data.value.id)
       }, 2000)
     })
-    // TODO: remove this ts-ignore
-    //@ts-ignore
     .catch((error) => {
       notification.value = {
         message: 'Unable to create poem \n Message Error: ' + error.message,
         status: 'error'
       }
-      error.value = error
     })
     .finally(() => {
       loading.value = false

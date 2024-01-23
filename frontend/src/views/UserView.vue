@@ -81,8 +81,6 @@ const submitUpdate = async () => {
   try {
     updateLoading.value = true
 
-    // TODO: remove this ts-ignore
-    //@ts-ignore
     const response = await layer8.fetch(endpoint + '/user/' + appStore.getUser.id, {
       method: 'PUT',
       headers: {

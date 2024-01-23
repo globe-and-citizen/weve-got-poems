@@ -77,7 +77,6 @@ export function useWallet(): WalletType {
     const origin = window.location.origin
 
     // TODO: remove this ts-ignore
-    //@ts-ignore
     const res = await layer8.fetch(`${endpoint}/nonce`)
     const message = new SiweMessage({
       domain,
@@ -110,8 +109,6 @@ export function useWallet(): WalletType {
       const signature = await signer.signMessage(message)
 
       // Send the signature to the backend
-      // TODO: remove this ts-ignore
-      //@ts-ignore
       const res = await layer8.fetch(`${endpoint}/siwe`, {
         method: 'POST',
         headers: {
