@@ -7,9 +7,9 @@ interface Window {
   ethereum: any
 }
 
-// Make globalThis.BACKEND = 'localhost:8000' available.
-declare const BACKEND: string
-
+/**
+ * Add layer8 to the globalThis object.
+ */
 interface Layer8 {
   fetch(input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response>
 }
