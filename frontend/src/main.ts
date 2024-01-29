@@ -3,12 +3,12 @@ import './assets/main.css'
 globalThis.BACKEND = 'localhost:8000'
 
 //@ts-ignore
-import * as interceptor from 'http://localhost:5001/assets-v1/cdn/interceptor/index.local.js'
+//import * as interceptor from 'http://localhost:5001/assets-v1/cdn/interceptor/index.local.js'
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import { createApp } from 'vue'
 
-console.log('interceptor', interceptor)
+//console.log('interceptor', interceptor)
 
 import App from './App.vue'
 import router from './router'
