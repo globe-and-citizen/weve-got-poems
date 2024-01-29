@@ -15,13 +15,14 @@ onMounted(async () => {
   loading.value = true
   // TODO: remove this timeout
   setTimeout(async () => {
-    console.log('going to try now 1...')
+    console.log('Frontend: going to try now 1...')
 
     // TODO: remove this ts-ignore
     const response = await layer8.fetch(endpoint + '/poems/', { method: 'GET' })
 
-    console.log('going to try now 2...')
-
+    console.log('Frontend: going to try now 2...')
+    // log response body
+    // console.log('Frontend: response body', response.body)
     data.value = await response.json()
     console.log('data value', data.value)
 
