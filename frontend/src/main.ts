@@ -1,6 +1,6 @@
 import './assets/main.css'
 //@ts-ignore
-globalThis.BACKEND = 'localhost:8000'
+//lobalThis.BACKEND = 'localhost:8000'
 
 //@ts-ignore
 //import * as interceptor from 'http://localhost:5001/assets-v1/cdn/interceptor/index.local.js'
