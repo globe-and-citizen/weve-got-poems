@@ -14,6 +14,35 @@ function shortenEthereumAddress(address: string) {
 
   return `${prefix}...${suffix}`
 }
+
+async function getCheck() {
+  console.log("yeah i'll check...")
+  try {
+    const resp = await layer8.fetch('http://localhost/get-check')
+    console.log("Yeah I'll get-check: ", await resp.text())
+  } catch (err) {
+    console.log('get-check err: ', err)
+  }
+}
+
+async function postCheck() {
+  console.log("yeah i'll post-check...")
+  try {
+    const resp = await layer8.fetch('http://localhost/post-check', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'Application/Json'
+      },
+      body: JSON.stringify({
+        email: 'loginEmail.value',
+        password: 'loginPassword.value'
+      })
+    })
+    console.log("Yeah I'll get-check: ", await resp.json())
+  } catch (err) {
+    console.log('get-check err: ', err)
+  }
+}
 </script>
 
 <template>
@@ -22,6 +51,10 @@ function shortenEthereumAddress(address: string) {
 
     <div>
       <HelloWorld msg="Poems, Poems, Everywhere; Very, very, soon!" />
+      <button @click="getCheck">GET CHECK</button>
+      <br />
+      <br />
+      <button @click="postCheck">POST CHECK</button>
       <p v-if="appStore.getToken" class="text-right text-xl">Welcome {{ shortenEthereumAddress(appStore.getUser.eth_address) }}</p>
       <nav>
         <RouterLink to="/">Home</RouterLink>
