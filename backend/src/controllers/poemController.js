@@ -61,6 +61,7 @@ const create = async (req, res) => {
 
 // Route to get all poems from the 'poems' table with likes and dislikes
 const read = async (req, res) => {
+  console.log("hit me...")
   try {
     const client = await pool.connect()
 

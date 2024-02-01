@@ -27,7 +27,7 @@ const layer8Auth = new ClientOAuth2({
 })
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8000
 
 app.get('/healthcheck', (req, res) => {
   console.log('Enpoint for testing')
@@ -41,12 +41,28 @@ app.use(Layer8)
 app.use(cors())
 app.use(express.json())
 
+app.get('/get-check', (req, res) => {
+  //console.log("get-check req: ", req.params)
+  console.log('get req.body: ', req.body)
+  res.status(200).send("You've pinged /get-check")
+})
+
+app.post('/post-check', (req, res) => {
+  // console.log("post-check req: ", req)
+  console.log('post req.body: ', req.body)
+  res.status(200).send({ message: "You've pinged /post-check}" })
+})
+
+console.log('1 at least hit me...')
+
 const authRoutes = require('./routes/authRoutes')
 const configRoutes = require('./routes/configRoutes')
 const likeRoutes = require('./routes/likeRoutes')
 const poemRoutes = require('./routes/poemRoutes')
 const userRoutes = require('./routes/userRoutes')
 const swaggerRoute = require('./routes/swaggerRoute')
+
+console.log('2 at least hit me...')
 
 app.use('/', swaggerRoute)
 app.use('/v1', authRoutes, likeRoutes, poemRoutes, userRoutes)
