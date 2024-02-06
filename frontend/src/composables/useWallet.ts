@@ -78,6 +78,9 @@ export function useWallet(): WalletType {
 
     // TODO: remove this ts-ignore
     const res = await layer8.fetch(`${endpoint}/nonce`)
+    const nonce = await res.text()
+    console.log('' + nonce)
+
     const message = new SiweMessage({
       domain,
       address,
@@ -85,7 +88,7 @@ export function useWallet(): WalletType {
       uri: origin,
       version: '1',
       chainId: 1,
-      nonce: await res.text()
+      nonce: nonce
     })
     return message.prepareMessage()
   }

@@ -16,13 +16,15 @@
     "cy:open": "cypress open"
   },
   "dependencies": {
+    "ethers": "^6.8.0",
     "jwt-decode": "^3.1.2",
+    "layer8_interceptor": "^0.0.7",
+    "layer8_middleware": "^0.0.6",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.2.0",
+    "siwe": "^2.1.4",
     "vue": "^3.3.4",
-    "vue-router": "^4.2.4",
-    "ethers": "^6.8.0",
-    "siwe": "^2.1.4"
+    "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
