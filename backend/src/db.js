@@ -3,7 +3,7 @@ require('dotenv').config()
 
 const pool = new Pool({
   connectionString: process.env.EXTERNAL_DB_URL,
-  ssl: true
+  ssl: false
 })
 
 module.exports = pool
