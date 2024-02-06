@@ -36,13 +36,14 @@ app.get('/healthcheck', (req, res) => {
 })
 
 const Layer8 = require('./dist/loadWASM.js')
+const configRoutes = require('./routes/configRoutes')
+app.use('/config', configRoutes) // Uncomment if you want to use the config routes
 app.use(Layer8)
 
 app.use(cors())
 app.use(express.json())
 
 const authRoutes = require('./routes/authRoutes')
-const configRoutes = require('./routes/configRoutes')
 const likeRoutes = require('./routes/likeRoutes')
 const poemRoutes = require('./routes/poemRoutes')
 const userRoutes = require('./routes/userRoutes')
@@ -50,7 +51,6 @@ const swaggerRoute = require('./routes/swaggerRoute')
 
 app.use('/', swaggerRoute)
 app.use('/v1', authRoutes, likeRoutes, poemRoutes, userRoutes)
-app.use('/config', configRoutes) // Uncomment if you want to use the config routes
 
 app.listen(port, () => {
   console.log(`Server is listening on http://localhost:${port}`)
