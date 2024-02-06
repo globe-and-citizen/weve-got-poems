@@ -2,11 +2,11 @@ import type { Ref, UnwrapRef } from 'vue'
 import { onMounted, ref } from 'vue'
 
 export interface FetchResult<T> {
-  data: Ref<UnwrapRef<T | null>>;
-  error: Ref<String | null>;
-  loading: Ref<boolean>;
-  isLoaded: Ref<boolean>;
-  execute: () => void;
+  data: Ref<UnwrapRef<T | null>>
+  error: Ref<String | null>
+  loading: Ref<boolean>
+  isLoaded: Ref<boolean>
+  execute: () => void
 }
 
 interface UseFetchOptions {
@@ -15,7 +15,7 @@ interface UseFetchOptions {
    *
    * @default true
    */
-  immediate?: boolean;
+  immediate?: boolean
   /**
    * Will automatically refetch when:
    * - the URL is changed if the URL is a ref
@@ -26,7 +26,11 @@ interface UseFetchOptions {
   refetch?: boolean
 }
 
-export function useFetch<T>(url: string, option: RequestInit = {}, useFetchOptions: UseFetchOptions = { immediate: true, refetch: true }): FetchResult<T> {
+export function useFetch<T>(
+  url: string,
+  option: RequestInit = {},
+  useFetchOptions: UseFetchOptions = { immediate: true, refetch: true }
+): FetchResult<T> {
   const data = ref<T | null>(null)
   const error = ref<String | null>(null)
   const loading = ref<boolean>(true)
@@ -74,4 +78,3 @@ export function useFetch<T>(url: string, option: RequestInit = {}, useFetchOptio
 
   return { data, error, loading, isLoaded, execute }
 }
-

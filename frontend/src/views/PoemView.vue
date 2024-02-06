@@ -1,14 +1,15 @@
-<script setup lang='ts'>
+<script setup lang="ts">
+import CustomLoader from '@/components/CustomLoader.vue'
+import WelcomeItem from '@/components/WelcomeItem.vue'
+import AcNotification from '@/components/ac-notification.vue'
+import IconDislike from '@/components/icons/IconDislike.vue'
+import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
+import IconLike from '@/components/icons/IconLike.vue'
+import { useFetch } from '@/composables/useFetch'
+import { useAppStore } from '@/stores/app'
 import { computed, ref, watchEffect } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
-import WelcomeItem from '@/components/WelcomeItem.vue'
-import { useAppStore } from '@/stores/app'
-import { useFetch } from '@/composables/useFetch'
-import CustomLoader from '@/components/CustomLoader.vue'
-import AcNotification from '@/components/ac-notification.vue'
-import IconLike from '@/components/icons/IconLike.vue'
-import IconDislike from '@/components/icons/IconDislike.vue'
+//@ts-ignore
 
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const router = useRouter()
@@ -39,13 +40,17 @@ const {
   loading: deleteLoading,
   isLoaded: deleteIsLoaded,
   execute: executeDelete
-} = useFetch(endpoint + '/poems/' + router.currentRoute.value.params.id, {
-  method: 'DELETE',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer ' + appStore.getToken
-  }
-}, { immediate: false })
+} = useFetch(
+  endpoint + '/poems/' + router.currentRoute.value.params.id,
+  {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + appStore.getToken
+    }
+  },
+  { immediate: false }
+)
 
 const likeData = ref()
 const likeError = ref()
@@ -58,13 +63,11 @@ const dislikeLoading = ref()
 const dislikeLoaded = ref()
 
 const isLiked = computed(() => {
-  return !!currentPoem.value.likes
-    .find((dislike_author: any) => dislike_author === appStore.getUser?.id)
+  return !!currentPoem.value.likes.find((dislike_author: any) => dislike_author === appStore.getUser?.id)
 })
 
 const isDisliked = computed(() => {
-  return !!currentPoem.value.dislikes
-    .find((like_author: any) => like_author === appStore.getUser?.id)
+  return !!currentPoem.value.dislikes.find((like_author: any) => like_author === appStore.getUser?.id)
 })
 const getCurrentPoem = () => {
   if (!data.value) return
@@ -87,7 +90,6 @@ const getCurrentPoem = () => {
 }
 
 const currentPoem = ref()
-
 
 watchEffect(() => {
   currentPoem.value = getCurrentPoem()
@@ -133,7 +135,7 @@ const onLike = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + appStore.getToken
+        Authorization: 'Bearer ' + appStore.getToken
       },
       body: JSON.stringify({
         poem_id: currentPoem.value.id
@@ -163,7 +165,7 @@ const onDisLike = async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + appStore.getToken
+        Authorization: 'Bearer ' + appStore.getToken
       },
       body: JSON.stringify({
         poem_id: currentPoem.value.id
@@ -189,40 +191,52 @@ const onDisLike = async () => {
 <template>
   <main>
     <div>
-      <ac-notification v-if='notification' :variant='notification.status'>
+      <ac-notification v-if="notification" :variant="notification.status">
         {{ notification.message }}
       </ac-notification>
-
     </div>
-    <CustomLoader v-if='loading' />
-    <WelcomeItem v-if='currentPoem'>
+    <CustomLoader v-if="loading" />
+    <WelcomeItem v-if="currentPoem">
       <template #icon>
         <DocumentationIcon />
       </template>
       <template #heading>
         <h1>{{ currentPoem.title }}</h1>
       </template>
-      <div class='flex' :class="isCurrentPoemAuthor() ? 'justify-between' : 'justify-end'">
-        <div class='flex gap-2' v-if='isCurrentPoemAuthor()'>
-          <RouterLink class=' p-2 rounded ' :to="'/poems/' + currentPoem.id+'/update'" data-test='update-poem-button'>
-            Edit
-          </RouterLink>
-          <a @click.prevent='onDelete()' data-test='remove-poem-button' class='p-2 rounded'>Remove</a>
+      <div class="flex" :class="isCurrentPoemAuthor() ? 'justify-between' : 'justify-end'">
+        <div class="flex gap-2" v-if="isCurrentPoemAuthor()">
+          <RouterLink class="p-2 rounded" :to="'/poems/' + currentPoem.id + '/update'" data-test="update-poem-button">Edit</RouterLink>
+          <a @click.prevent="onDelete()" data-test="remove-poem-button" class="p-2 rounded">Remove</a>
         </div>
-        <div class='flex gap-2 justify-end'>
-          <div class='group relative'>
-            <span class="group-hover:opacity-100 opacity-0 absolute w-max bottom-full bg-black text-white p-1 rounded" v-if='!appStore.getToken'>You need to be authenticated</span>
-            <a @click.prevent='appStore.getToken ? onLike() : ""' class='flex gap-2  p-2 rounded '
-               :class='isLiked ? "bg-emerald-800/20" :  appStore.getToken ? "cursor-pointer" : ""'>
+        <div class="flex gap-2 justify-end">
+          <div class="group relative">
+            <span
+              class="group-hover:opacity-100 opacity-0 absolute w-max bottom-full bg-black text-white p-1 rounded"
+              v-if="!appStore.getToken"
+            >
+              You need to be authenticated
+            </span>
+            <a
+              @click.prevent="appStore.getToken ? onLike() : ''"
+              class="flex gap-2 p-2 rounded"
+              :class="isLiked ? 'bg-emerald-800/20' : appStore.getToken ? 'cursor-pointer' : ''"
+            >
               {{ currentPoem.likes.length }}
               <IconLike />
             </a>
           </div>
-          <div class='group relative'>
-            <span class="group-hover:opacity-100 opacity-0 absolute w-max bottom-full bg-black text-white p-1 rounded" v-if='!appStore.getToken'>You need to be authenticated</span>
-            <a @click.prevent='appStore.getToken ? onDisLike() : ""'
-               class='flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded'
-               :class='isDisliked ? "bg-red-800/20" : appStore.getToken ? "cursor-pointer" : "" '>
+          <div class="group relative">
+            <span
+              class="group-hover:opacity-100 opacity-0 absolute w-max bottom-full bg-black text-white p-1 rounded"
+              v-if="!appStore.getToken"
+            >
+              You need to be authenticated
+            </span>
+            <a
+              @click.prevent="appStore.getToken ? onDisLike() : ''"
+              class="flex gap-2 text-red-600 hover:bg-red-800/20 p-2 rounded"
+              :class="isDisliked ? 'bg-red-800/20' : appStore.getToken ? 'cursor-pointer' : ''"
+            >
               {{ currentPoem.dislikes.length }}
               <IconDislike />
             </a>
@@ -230,15 +244,14 @@ const onDisLike = async () => {
         </div>
       </div>
       {{ currentPoem.content }}
-      <br>
-      <br>
+      <br />
+      <br />
       {{ new Date(currentPoem.created_at).toLocaleDateString() }}
       <div>
-        <div class='navigation'>
-          <RouterLink :to="'/poems/' + previousId" class='p-2 rounded'>Prev Poem</RouterLink>
-          <RouterLink :to="'/poems/' + nextId" class='p-2 rounded'>Next Poem</RouterLink>
+        <div class="navigation">
+          <RouterLink :to="'/poems/' + previousId" class="p-2 rounded">Prev Poem</RouterLink>
+          <RouterLink :to="'/poems/' + nextId" class="p-2 rounded">Next Poem</RouterLink>
         </div>
-
       </div>
     </WelcomeItem>
   </main>
@@ -249,5 +262,4 @@ const onDisLike = async () => {
   display: flex;
   justify-content: space-between;
 }
-
 </style>

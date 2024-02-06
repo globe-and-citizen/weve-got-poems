@@ -6,6 +6,8 @@ import { useAppStore } from '@/stores/app'
 import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
+//@ts-ignore
+import layer8_interceptor from 'layer8_interceptor'
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const data = ref()
 const loading = ref(false)
@@ -18,7 +20,7 @@ onMounted(async () => {
     console.log('Frontend: going to try now 1...')
 
     // TODO: remove this ts-ignore
-    const response = await layer8.fetch(endpoint + '/poems/', { method: 'GET' })
+    const response = await layer8_interceptor.fetch(endpoint + '/poems', { method: 'GET' })
 
     console.log('Frontend: going to try now 2...')
     // log response body
