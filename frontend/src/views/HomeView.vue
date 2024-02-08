@@ -9,6 +9,8 @@ import { RouterLink } from 'vue-router'
 //@ts-ignore
 import layer8_interceptor from 'layer8_interceptor'
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
+console.log('Frontend: endpoint', endpoint)
+
 const data = ref()
 const loading = ref(false)
 
