@@ -16,6 +16,8 @@ jobs:
       - name: 💻 Build
         run: npm install && npm run build
         working-directory: ./frontend
+        env:
+          VITE_BACKEND_ENDPOINT: '${{ secrets.VITE_BACKEND_ENDPOINT }}'
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
