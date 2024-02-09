@@ -43,7 +43,9 @@ export function useFetch<T>(
     loading.value = true
     isLoaded.value = false
 
-    fetch(url, option)
+    console.log('Frontend: layer8 Fetching data ...')
+    layer8
+      .fetch(url, option)
       .then(async (response) => {
         if (response.ok) {
           try {

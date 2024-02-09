@@ -1,11 +1,10 @@
-<script lang='ts' setup>
-
-import { computed, ref, watchEffect } from 'vue'
+<script lang="ts" setup>
+import { useFetch } from '@/composables/useFetch'
 import { useAppStore } from '@/stores/app'
+import { computed, onMounted, ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 import Loader from '../components/CustomLoader.vue'
 import AcNotification from '../components/ac-notification.vue'
-import { useRouter } from 'vue-router'
-import { useFetch } from '@/composables/useFetch'
 
 const router = useRouter()
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
@@ -29,12 +28,24 @@ interface DataModel {
   }
 }
 
-const { error, data, loading, isLoaded } = useFetch<Array<DataModel>>(endpoint + '/poems/')
+const { error, data, loading, isLoaded, execute } = useFetch<Array<DataModel>>(
+  endpoint + '/poems/',
+  {
+    method: 'GET'
+  },
+  { immediate: false }
+)
 
+onMounted(async () => {
+  loading.value = true
+  // TODO: remove this timeout
+  setTimeout(async () => {
+    execute()
+  }, 5000)
+})
 const editError = ref()
 const editData = ref()
 const editLoading = ref()
-
 
 // const {
 //   error: editError,
@@ -73,11 +84,11 @@ const submitPoem = async () => {
   // handle poem update in try catch
   try {
     editLoading.value = true
-    const response = await fetch(endpoint + '/poems/' + router.currentRoute.value.params.id, {
+    const response = await layer8.fetch(endpoint + '/poems/' + router.currentRoute.value.params.id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + appStore.getToken
+        Authorization: 'Bearer ' + appStore.getToken
       },
       body: JSON.stringify({
         title: title.value,
@@ -122,57 +133,62 @@ const submitPoem = async () => {
 
 <template>
   <div>
-    <div>
+    <div></div>
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Update a Poem</h2>
     </div>
-    <div class='sm:mx-auto sm:w-full sm:max-w-sm'>
-      <h2 class='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-        Update a Poem</h2>
+    <div class="flex justify-center" data-test="loader" v-if="loading">
+      <Loader />
     </div>
-    <div class='flex justify-center' data-test='loader' v-if='loading'>
-      <CustomLoader />
-    </div>
-    <div class='mt-10 sm:mx-auto sm:w-full sm:max-w-sm' v-else>
-      <form class='space-y-6' @submit.prevent='submitPoem'>
-        <ac-notification v-if='notification' :variant='notification.status'>
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm" v-else>
+      <form class="space-y-6" @submit.prevent="submitPoem">
+        <ac-notification v-if="notification" :variant="notification.status">
           {{ notification.message }}
         </ac-notification>
         <div>
-          <label class='block text-sm font-medium leading-6 text-gray-900' for='title'>Title</label>
-          <div class='mt-2'>
-            <input id='title' v-model='title' autocomplete='title'
-                   class='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                   name='title' required
-                   type='text' />
+          <label class="block text-sm font-medium leading-6 text-gray-900" for="title">Title</label>
+          <div class="mt-2">
+            <input
+              id="title"
+              v-model="title"
+              autocomplete="title"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
+              name="title"
+              required
+              type="text"
+            />
           </div>
         </div>
         <div>
-          <div class='flex items-center justify-between'>
-            <label class='block text-sm font-medium leading-6 text-gray-900' for='content'>Content</label>
+          <div class="flex items-center justify-between">
+            <label class="block text-sm font-medium leading-6 text-gray-900" for="content">Content</label>
           </div>
-          <div class='mt-2'>
-            <textarea id='content' v-model='content' autocomplete='current-content'
-                      class='block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6'
-                      name='content'
-                      required
-                      type='content' />
+          <div class="mt-2">
+            <textarea
+              id="content"
+              v-model="content"
+              autocomplete="current-content"
+              class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
+              name="content"
+              required
+              type="content"
+            />
           </div>
         </div>
 
         <div>
           <button
-            class='flex w-full justify-center rounded-md bg-emerald-600 px-3 p-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600'
-            data-test='save-poem-button'
-            type='submit'>
-            <Loader v-if='editLoading' class='mr-6' />
+            class="flex w-full justify-center rounded-md bg-emerald-600 px-3 p-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
+            data-test="save-poem-button"
+            type="submit"
+          >
+            <Loader v-if="editLoading" class="mr-6" />
             Update Poem
           </button>
         </div>
       </form>
-
     </div>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
