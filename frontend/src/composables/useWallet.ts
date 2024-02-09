@@ -75,6 +75,7 @@ export function useWallet(): WalletType {
   async function createSiweMessage(address: string, statement: string) {
     const domain = window.location.host
     const origin = window.location.origin
+    console.log('Frontend: layer8 Fetching nonce from the backend...')
 
     // TODO: remove this ts-ignore
     const res = await layer8.fetch(`${endpoint}/nonce`)
