@@ -5,11 +5,12 @@ import AcNotification from '@/components/ac-notification.vue'
 import IconDislike from '@/components/icons/IconDislike.vue'
 import DocumentationIcon from '@/components/icons/IconDocumentation.vue'
 import IconLike from '@/components/icons/IconLike.vue'
-import { useFetch } from '@/composables/useFetch'
 import { useAppStore } from '@/stores/app'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref, watchEffect } from 'vue'
+
 import { RouterLink, useRouter } from 'vue-router'
 //@ts-ignore
+import layer8_interceptor from 'layer8_interceptor'
 
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT
 const router = useRouter()
@@ -33,25 +34,48 @@ interface DataModel {
     name: string
   }
 }
+const data = ref()
+const loading = ref(false)
 
-const { error, data, loading, isLoaded, execute } = useFetch<Array<DataModel>>(endpoint + '/poems/')
-const {
-  error: deleteError,
-  loading: deleteLoading,
-  isLoaded: deleteIsLoaded,
-  execute: executeDelete
-} = useFetch(
-  endpoint + '/poems/' + router.currentRoute.value.params.id,
-  {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + appStore.getToken
+const deleteError = ref()
+const deleteLoading = ref()
+const deleteIsLoaded = ref()
+
+const executeDelete = async () => {
+  try {
+    const response = await layer8_interceptor.fetch(endpoint + '/poems/' + router.currentRoute.value.params.id, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + appStore.getToken
+      }
+    })
+    if (response.ok) {
+      deleteIsLoaded.value = true
+    } else if (response.status >= 400 && response.status < 500) {
+      deleteError.value = `Client Error: ${response.status} - ${response.statusText}`
+    } else {
+      deleteError.value = `Server Error: ${response.status} - ${response.statusText}`
     }
-  },
-  { immediate: false }
-)
+  } catch (err: any) {
+    deleteError.value = `Network Error: ${err.message}`
+  } finally {
+    deleteLoading.value = false
+  }
+}
 
+const loadData = async () => {
+  const response = await layer8_interceptor.fetch(endpoint + '/poems', { method: 'GET' })
+  data.value = await response.json()
+  loading.value = false
+}
+onMounted(async () => {
+  loading.value = true
+  // TODO: remove this timeout
+  setTimeout(async () => {
+    loadData()
+  }, 5000)
+})
 const likeData = ref()
 const likeError = ref()
 const likeLoading = ref()
@@ -93,24 +117,24 @@ const currentPoem = ref()
 
 watchEffect(() => {
   currentPoem.value = getCurrentPoem()
-  if (deleteIsLoaded.value) {
-    // redirect after timeout
-    // if no error and poem is deleted successfully
-    if (!deleteError.value) {
-      notification.value = {
-        message: 'Poem deleted successfully',
-        status: 'success'
-      }
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
-    } else {
-      notification.value = {
-        message: `Unable to delete poem ${deleteError.value}`,
-        status: 'error'
-      }
-    }
-  }
+  // if (deleteIsLoaded.value) {
+  //   // redirect after timeout
+  //   // if no error and poem is deleted successfully
+  //   if (!deleteError.value) {
+  //     notification.value = {
+  //       message: 'Poem deleted successfully',
+  //       status: 'success'
+  //     }
+  //     setTimeout(() => {
+  //       router.push('/')
+  //     }, 2000)
+  //   } else {
+  //     notification.value = {
+  //       message: `Unable to delete poem ${deleteError.value}`,
+  //       status: 'error'
+  //     }
+  //   }
+  // }
 })
 const onDelete = async () => {
   const confirmation = window.confirm('Are you sure you want to delete this poem?')
@@ -128,10 +152,12 @@ const isCurrentPoemAuthor = () => {
 }
 
 const onLike = async () => {
+  console.log('Frontend: onLike')
+
   if (isLiked.value) return
   try {
     likeLoading.value = true
-    const response = await fetch(endpoint + '/poems/' + router.currentRoute.value.params.id + '/like', {
+    const response = await layer8_interceptor.fetch(endpoint + '/poems/' + router.currentRoute.value.params.id + '/like', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -154,14 +180,16 @@ const onLike = async () => {
   } finally {
     likeLoading.value = false
   }
-  execute()
+
+  loadData()
+  console.log('Frontend: onLike done')
 }
 
 const onDisLike = async () => {
   if (isDisliked.value) return
   try {
     dislikeLoading.value = true
-    const response = await fetch(endpoint + '/poems/' + router.currentRoute.value.params.id + '/dislike', {
+    const response = await layer8_interceptor.fetch(endpoint + '/poems/' + router.currentRoute.value.params.id + '/dislike', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -184,7 +212,7 @@ const onDisLike = async () => {
   } finally {
     dislikeLoading.value = false
   }
-  execute()
+  loadData()
 }
 </script>
 
