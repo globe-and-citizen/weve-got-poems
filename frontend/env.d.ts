@@ -1,17 +1,9 @@
-/// <reference types="vite/client" />
+/* eslint-disable */
 
-/**
- * Add ethereum to the window object.
- */
-interface Window {
-  ethereum: any
+declare namespace NodeJS {
+  interface ProcessEnv {
+    NODE_ENV: string;
+    VUE_ROUTER_MODE: 'hash' | 'history' | 'abstract' | undefined;
+    VUE_ROUTER_BASE: string | undefined;
+  }
 }
-
-/**
- * Add layer8 to the globalThis object.
- */
-interface Layer8 {
-  fetch(input: RequestInfo | URL, init?: RequestInit | undefined): Promise<Response>
-}
-// make globalThis.layer8 available.
-declare const layer8: Layer8

@@ -28,7 +28,7 @@ export interface WalletType {
    */
   initiateSendEther(
     recipientAddress: string,
-    amountInEther: string
+    amountInEther: string,
   ): Promise<
     | {
         transactionId: any;
@@ -103,10 +103,10 @@ export function useWallet(): WalletType {
         alert(
           ` please make sure you're connected to  ${
             import.meta.env.VITE_CURRENT_NETWORK_NAME
-          }`
+          }`,
         );
         throw new Error(
-          " please make sure you're connected to sepolia network"
+          " please make sure you're connected to sepolia network",
         );
       }
     }
@@ -180,7 +180,7 @@ export function useWallet(): WalletType {
       // Create the message
       const message = await createSiweMessage(
         userAddress.value,
-        'Sign in with Ethereum to the app.'
+        'Sign in with Ethereum to the app.',
       );
       // Sign the message
       const signature = await signer.signMessage(message);
@@ -229,7 +229,7 @@ export function useWallet(): WalletType {
   // Example usage:
   async function initiateSendEther(
     recipientAddress: string,
-    amountInEther: string
+    amountInEther: string,
   ) {
     let value;
     try {
@@ -247,7 +247,7 @@ export function useWallet(): WalletType {
       if (signer) {
         const transactionResult = await sendEther(
           recipientAddress,
-          amountInEther
+          amountInEther,
         );
         return transactionResult;
         // Further logic to handle successful transaction

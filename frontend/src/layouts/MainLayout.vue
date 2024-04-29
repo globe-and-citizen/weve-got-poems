@@ -37,24 +37,32 @@
           </q-item-section>
           <q-item-section> Login </q-item-section>
         </q-item>
-        <q-item clickable v-ripple to="/poems/create">
-          <q-item-section avatar>
-            <q-icon name="add_circle_outline" />
-          </q-item-section>
-          <q-item-section> Create Poem </q-item-section>
-        </q-item>
-        <q-item clickable v-ripple to="/poems" data-text="poems_list">
-          <q-item-section avatar>
-            <q-icon name="list" />
-          </q-item-section>
-          <q-item-section> Poems List </q-item-section>
-        </q-item>
-        <q-item clickable v-ripple to="/poems/admin/list">
-          <q-item-section avatar>
-            <q-icon name="list" />
-          </q-item-section>
-          <q-item-section> Poems list admin</q-item-section>
-        </q-item>
+        <q-expansion-item icon="library_books" label="Poems">
+          <q-item class="q-ml-xl" clickable v-ripple to="/poems/create">
+            <q-item-section avatar>
+              <q-icon name="add_circle_outline" />
+            </q-item-section>
+            <q-item-section> Create </q-item-section>
+          </q-item>
+          <q-item
+            class="q-ml-xl"
+            clickable
+            v-ripple
+            to="/poems"
+            data-text="poems_list"
+          >
+            <q-item-section avatar>
+              <q-icon name="auto_stories" />
+            </q-item-section>
+            <q-item-section> List </q-item-section>
+          </q-item>
+          <q-item class="q-ml-xl" clickable v-ripple to="/poems/admin/list">
+            <q-item-section avatar>
+              <q-icon name="settings" />
+            </q-item-section>
+            <q-item-section> Admin</q-item-section>
+          </q-item>
+        </q-expansion-item>
       </q-list>
     </q-drawer>
 
@@ -65,8 +73,8 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 import { useAppStore } from 'src/stores/app';
+import { ref } from 'vue';
 
 export default {
   name: 'MyLayout',

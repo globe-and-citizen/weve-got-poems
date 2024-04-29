@@ -5,10 +5,10 @@ import { usePoemStore } from 'src/stores/poems';
 import { computed, onMounted, ref } from 'vue';
 
 import { useQuasar } from 'quasar';
+import CryptoTransactionDetailCard from 'src/components/cryptoTransactions/CryptoTransactionDetailCard.vue';
 import PoemEditCardView from 'src/components/poems/PoemEditCardView.vue';
 import WalletPaymentCard from 'src/components/web3/WalletPaymentCard.vue';
 import { useWallet } from 'src/composables/useWallet';
-import CryptoTransactionDetailCard from 'src/components/cryptoTransactions/CryptoTransactionDetailCard.vue';
 
 interface Poem {
   id: number;
@@ -135,7 +135,7 @@ const options = [
   },
 ];
 
-const pagination = ref({ rowsPerPage: 0 });
+const pagination = ref({ rowsPerPage: 10 });
 function onDisplayContentDialog(poem: Poem) {
   displayContentDialog.value.show = true;
   displayContentDialog.value.poem = poem;
@@ -152,13 +152,13 @@ async function onCryptoPaymentDialog(poem: Poem) {
       endpoint + `/ctransactions/?poem_id=${poem.id}`,
       {
         method: 'GET',
-      }
+      },
     );
     const cryptoTransactionExist = await response.json();
     if (cryptoTransactionExist.length > 0) {
       console.log(
         'the cypto transactions ============== ',
-        cryptoTransactionExist
+        cryptoTransactionExist,
       );
       crytptoTransactionDialog.value.cTransaction = cryptoTransactionExist[0];
       crytptoTransactionDialog.value.show = true;
@@ -219,13 +219,13 @@ async function loadPoems() {
           $q.notify({ type: 'negative', message: ' please login! ' });
         } else {
           poems.value = poems.value.filter(
-            (poem: Poem) => poem.author.id == appStore.getUser?.id
+            (poem: Poem) => poem.author.id == appStore.getUser?.id,
           );
         }
       }
       if (selectedPoem.value?.id) {
         const updatedPoem = poems.value?.find(
-          (poem) => poem.id === selectedPoem.value?.id
+          (poem) => poem.id === selectedPoem.value?.id,
         );
         // Re-specify selectedPoem with its updated version from the list
         if (updatedPoem) {
