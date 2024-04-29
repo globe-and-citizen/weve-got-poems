@@ -1,0 +1,18 @@
+{
+  "videosFolder": "../cypress/videos",
+  "projectId": "i4uq2d",
+  "video": true,
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "http://localhost:9000",
+    
+    "types": [
+      "cypress",
+      "@synthetixio/synpress/support",
+      "cypress-wait-until",
+      "@testing-library/cypress"
+    ],
+    "outDir": "./output"
+  },
+  "include": ["**/*.*"]
+}
