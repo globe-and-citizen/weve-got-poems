@@ -63,7 +63,7 @@ const create = async (req, res) => {
 const read = async (req, res) => {
   try {
     const client = await pool.connect()
-
+    console.log('the readd is calleddd================= ')
     // Build the WHERE conditions and the query parameters based on the query string
     const queryParams = []
     const whereConditions = []
@@ -85,8 +85,10 @@ const read = async (req, res) => {
         poems.content,
         poems.created_at,
         poems.title,
+        poems.is_paid,
         users.id AS user_id,
         users.name AS user_name,
+        users.eth_address AS user_eth_address,
         (
           SELECT ARRAY_AGG(user_id)
           FROM likes
@@ -110,8 +112,10 @@ const read = async (req, res) => {
       id: row.id,
       author: {
         id: row.user_id,
-        name: row.user_name
+        name: row.user_name,
+        eth_address: row.user_eth_address
       },
+      is_paid: row.is_paid,
       content: row.content,
       created_at: row.created_at,
       dislikes: row.dislikes || [],
