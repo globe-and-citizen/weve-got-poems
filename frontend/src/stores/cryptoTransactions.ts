@@ -24,6 +24,7 @@ export const useCTransactionStore = defineStore('cTransaction', {
     async saveTransaction(payload: {
       poem_id: number;
       tx_hash: string;
+      network_name:string;
     }): Promise<{ success: boolean; data?: any; error?: string }> {
       try {
         const response = await fetch(endpoint + '/ctransactions', {

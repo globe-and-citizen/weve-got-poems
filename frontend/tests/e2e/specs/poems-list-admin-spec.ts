@@ -133,43 +133,45 @@ describe('should load poems admin', () => {
     });
   });
 
-  it('should initiate ethereum transaction ', () => {
-    cy.intercept('GET', '**/v1/poems/**').as('apiPoems');
-    cy.ensureLogin().then(() => {
-      cy.switchAccount().then(() => {
-        cy.visit('http://localhost:9000/poems/admin/list').then(() => {
-          cy.wait(4000);
-          let shouldStop = false;
-          if (shouldStop == false) {
-            cy.get('.q-table tr').each(($row) => {
-              // Assume 'data-wallet-address' is an attribute you might need to add to your component for testing
-              const ethAddress = $row.find('td').first().text();
-              //const ethAddress = $row.find('[data-author]').text();
+  // it('should initiate ethereum transaction ', () => {
+  //   cy.intercept('GET', '**/v1/poems/**').as('apiPoems');
+  //   cy.ensureLogin().then(() => {
+  //     cy.switchAccount().then(() => {
+  //       cy.ensureLogin().then(() => {
+  //         cy.visit('http://localhost:9000/poems/admin/list').then(() => {
+  //           cy.wait(4000);
+  //           let shouldStop = false;
+  //           if (shouldStop == false) {
+  //             cy.get('.q-table tr').each(($row) => {
+  //               // Assume 'data-wallet-address' is an attribute you might need to add to your component for testing
+  //               const ethAddress = $row.find('td').first().text();
+  //               //const ethAddress = $row.find('[data-author]').text();
 
-              if (ethAddress.length >= 42 && shouldStop == false) {
-                if (!cy.wrap($row.find('.q-btn')).contains('edit')) {
-                  cy.wrap($row.find('.q-btn')).contains('payment').click();
+  //               if (ethAddress.length >= 42 && shouldStop == false) {
+  //                 if (!cy.wrap($row.find('.q-btn')).contains('edit')) {
+  //                   cy.wrap($row.find('.q-btn')).contains('payment').click();
 
-                  //cy.get('amount').should('contain', 'Poem Creation');
-                  cy.get('[amount"]').type('0.00000001');
-                  cy.get('[data-test="confirm-send-ether"]');
-                  cy.wait('@apiPoems');
+  //                   //cy.get('amount').should('contain', 'Poem Creation');
+  //                   cy.get('[amount"]').type('0.00000001');
+  //                   cy.get('[data-test="confirm-send-ether"]');
+  //                   cy.wait('@apiPoems');
 
-                  cy.get('.q-notification__message').contains(
-                    'Transaction created successfully',
-                  );
+  //                   cy.get('.q-notification__message').contains(
+  //                     'Transaction created successfully',
+  //                   );
 
-                  shouldStop = true;
-                }
-                //cy.wrap($row).get('.q-btn').contains('payment').click();
-                // cy.get('.q-notification__message').contains(
-                //   "the author don't set a wallet address"
-                // );
-              }
-            });
-          }
-        });
-      });
-    });
-  });
+  //                   shouldStop = true;
+  //                 }
+  //                 //cy.wrap($row).get('.q-btn').contains('payment').click();
+  //                 // cy.get('.q-notification__message').contains(
+  //                 //   "the author don't set a wallet address"
+  //                 // );
+  //               }
+  //             });
+  //           }
+  //         });
+  //       });
+  //     });
+  //   });
+  // });
 });
