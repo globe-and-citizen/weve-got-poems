@@ -3,7 +3,7 @@
     <q-card-section class="q-pt-none">
       <q-form @submit.prevent="onSubmit()">
         <q-input
-          data-text="sender-wallet-address"
+          data-test="sender-wallet-address"
           hide-hint
           label="your wallet address"
           maxlength="80"
@@ -12,7 +12,7 @@
           disable
         />
         <q-input
-          data-text="receiver-wallet-address"
+          data-test="receiver-wallet-address"
           hide-hint
           label="creator wallet address"
           maxlength="80"
@@ -22,17 +22,18 @@
         />
         <!-- Input for USD Amount -->
         <q-input
+          data-test="usd-amount"
           v-model="usdAmount"
           label="Price in USD"
           type="number"
           min="1"
-          @update:model-value="convertToMatic()"
+          @update:model-value="convertToEther()"
           icon="attach_money"
         />
         <!-- Displaying Corresponding Ether Amount -->
         <q-input
           data-text="amount"
-          v-model="maticAmount"
+          v-model="etherAmount"
           label="Price in matic"
           mask="#.######"
           fill-mask="0"
@@ -44,12 +45,11 @@
           <q-btn color="dark" label="Cancel" v-close-popup />
           <q-btn
             label="proceed payment"
-            :disable="!maticAmount"
+            :disable="!etherAmount"
             color="primary"
-            data-test="confirm-delete-entry"
+            data-test="confirm-send-ether"
             type="submit"
             v-close-popup
-            data-text="initiate-ether-btn"
           />
         </q-card-actions>
       </q-form>
@@ -89,13 +89,13 @@ const etherRate = ref<number>(0);
 onMounted(async() => {
   _walletAddress.value = props.walletAddress;
   senderWalletAddress.value = appStore?.getUser?.eth_address;
-  await fetchMaticRate();
+  await fetchEtherRate();
 });
 
 function convertToEther() {
   console.log('convert to ether called');
-  if (maticRate.value && usdAmount.value) {
-    etherAmount.value = (usdAmount.value / maticRate.value).toFixed(6);
+  if (etherRate.value && usdAmount.value) {
+    etherAmount.value = (usdAmount.value / etherRate.value).toFixed(6);
   }
 }
 
@@ -159,7 +159,7 @@ async function onSubmit() {
     try {
       
       await wallet
-        .initiateSendEther(props.walletAddress, maticAmount.value)
+        .initiateSendEther(props.walletAddress, etherAmount.value)
         .then(async (transactionResult) => {
           if (transactionResult?.success == true) {
             console.log('the transaction result ========= ', transactionResult);

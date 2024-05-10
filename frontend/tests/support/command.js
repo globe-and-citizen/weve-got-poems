@@ -67,14 +67,15 @@ Cypress.Commands.add(
   'switchAccount',
   (
     address = 'Account 2',
-    private_key = 'a3818f8d98716f4d6b18ac3ae5da8e871f0cb81b6a1d69a10a062f44307931da',
+    private_key = 'e836cc51b40d2abee4516e970c56b7b182a41b906ba26196893329e0add1c127',
   ) => {
     cy.getMetamaskWalletAddress().then((currentAddress) => {
       if (currentAddress !== address) {
         // The address does not match
         cy.log('The wallet address does not match the expected address.');
-
-       // cy.wait(cy.importMetamaskAccount(private_key), 4000);
+        cy.importMetamaskAccount(private_key)
+        cy.switchMetamaskAccount('Account 2')
+        
         // cy.isMetamaskWindowActive().then((result) => {
         //   if (result) {
         //     //let's cancel
