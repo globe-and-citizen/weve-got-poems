@@ -16,7 +16,7 @@ COPY . .
 # Command to run your Node.js application
 CMD ["npm", "run", "dev"]
 
-EXPOSE 5173
+EXPOSE 9000
 
 FROM node:18-alpine as build
 

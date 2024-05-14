@@ -1,6 +1,7 @@
 # Dockerfile for Node Express backend 
 FROM node:18.2.0-alpine as development
 
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -17,7 +18,7 @@ COPY . .
 CMD ["npm", "run", "start"]
 
 # Expose the port in the environement variable 
-EXPOSE $PORT
+EXPOSE 8000
 
 # Stage 1: Build the application
 # FROM node:18.2.0-alpine AS builder
