@@ -24,7 +24,7 @@ const login = async (req, res) => {
       SELECT * FROM users
       WHERE email = $1
     `
-    //finding the result..
+    //finding the result.. an retreive detail
     const result = await client.query(selectQuery, [sanitizedEmail])
 
     // If the user with the specified email doesn't exist, return a 404 error
