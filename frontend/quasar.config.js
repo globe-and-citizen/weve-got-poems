@@ -43,6 +43,34 @@ module.exports = configure(function (/* ctx */) {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node20',
       },
+      env: {
+        // Define environment variables for production build
+        VITE_BACKEND_ENDPOINT: JSON.stringify(
+          process.env.VITE_BACKEND_ENDPOINT,
+        ),
+        VITE_ALCHEMY_SEPOLIA_PROVIDER_URL: JSON.stringify(
+          process.env.VITE_ALCHEMY_SEPOLIA_PROVIDER_URL,
+        ),
+        VITE_ALCHEMY_POLYGON_AMOY_PROVIDER_URL: JSON.stringify(
+          process.env.VITE_ALCHEMY_POLYGON_AMOY_PROVIDER_URL,
+        ),
+        VITE_CURRENT_NETWORK_ID: JSON.stringify(
+          process.env.VITE_CURRENT_NETWORK_ID,
+        ),
+        VITE_CURRENT_NETWORK_NAME: JSON.stringify(
+          process.env.VITE_CURRENT_NETWORK_NAME,
+        ),
+        VITE_ALCHEMY_SEPOLIA_SCAN_URL: JSON.stringify(
+          process.env.VITE_ALCHEMY_SEPOLIA_SCAN_URL,
+        ),
+        VITE_ALCHEMY_POLYGON_AMOY_SCAN_URL: JSON.stringify(
+          process.env.VITE_ALCHEMY_POLYGON_AMOY_SCAN_URL,
+        ),
+        SECRET_WORDS: JSON.stringify(process.env.SECRET_WORDS),
+        NETWORK_NAME: JSON.stringify(process.env.NETWORK_NAME),
+
+        // Add more production environment variables as needed
+      },
 
       vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
