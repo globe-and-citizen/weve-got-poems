@@ -13,7 +13,7 @@ function generateWalletAddress() {
   return `0x${randomString}`
 }
 
-console.log(process.env.EXTERNAL_DB_URL)
+//console.log(process.env.EXTERNAL_DB_URL)
 const client = new Client({
   connectionString: process.env.EXTERNAL_DB_URL
 })
