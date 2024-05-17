@@ -13,10 +13,16 @@ RUN npm ci
 # Copy the rest of the application code
 COPY . .
 
+# List files to ensure .env is copied
+RUN ls -al
+
+# Copy the .env file
+COPY .env.example .env
+
 # Command to run your Node.js application
 CMD ["npm", "run", "dev"]
 
-EXPOSE 5173
+EXPOSE 9000
 
 FROM node:18-alpine as build
 
@@ -35,11 +41,13 @@ RUN npm run build
 # Use nginx base image for serving Vue app
 FROM nginx:latest as production
 
-# Copy built app from build-stage to nginx server
-COPY --from=build /app/dist /usr/share/nginx/html
-
 # Expose port (default is 80 for nginx)
-EXPOSE 80
+
+#COPY ./docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy built app from build-stage to nginx server
+COPY --from=build /app/dist/spa /usr/share/nginx/html
 
 # Command to start nginx
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

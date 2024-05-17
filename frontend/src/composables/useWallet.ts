@@ -33,6 +33,7 @@ export interface WalletType {
     | {
         transactionId: any;
         blockNumber: any;
+        networkName: any;
         success: boolean;
       }
     | undefined
@@ -41,7 +42,10 @@ export interface WalletType {
   /**
    * Retrieves details for a specific Ethereum transaction.
    */
-  getTransactionDetails(txHash: string): Promise<
+  getTransactionDetails(
+    txHash: string,
+    networkName: string,
+  ): Promise<
     | {
         amount: string;
         sender: string;
@@ -98,7 +102,7 @@ export function useWallet(): WalletType {
   async function checkNetwork() {
     if (provider) {
       const networkId = await provider.getNetwork();
-      console.log('the chainID ', networkId.chainId);
+      //console.log('the chainID ', networkId.chainId);
       if (networkId.chainId != import.meta.env.VITE_CURRENT_NETWORK_ID) {
         alert(
           ` please make sure you're connected to  ${
@@ -170,7 +174,7 @@ export function useWallet(): WalletType {
     let value;
     try {
       if (!isConnected.value) {
-        console.log('the user is connected ==================');
+        //console.log('the user is connected ==================');
         await connectWallet();
       }
       // Check if we have the signer and the provider
@@ -206,7 +210,11 @@ export function useWallet(): WalletType {
     return value;
   }
 
-  async function sendEther(recipientAddress: string, amountInEther: string) {
+  async function sendEther(
+    recipientAddress: string,
+    amountInEther: string,
+    networkName: string,
+  ) {
     //initate transaction..
     const transaction = {
       to: ethers.getAddress(recipientAddress),
@@ -215,10 +223,11 @@ export function useWallet(): WalletType {
     try {
       const txResponse = await signer.sendTransaction(transaction);
       const txReceipt = await txResponse.wait();
-      console.log('txReceipt ============ ', txReceipt);
+      //console.log('txReceipt ============ ', txReceipt);
       return {
         transactionId: txReceipt.hash,
         blockNumber: txReceipt.blockNumber,
+        networkName: networkName,
         success: txReceipt.status === 1,
       };
     } catch (error) {
@@ -232,6 +241,7 @@ export function useWallet(): WalletType {
     amountInEther: string,
   ) {
     let value;
+    //console.log('initiate transaction called ================= ')
     try {
       if (!isConnected.value) {
         await connectWallet();
@@ -241,13 +251,14 @@ export function useWallet(): WalletType {
         throw new Error('No signer or provider');
       }
       //let's check the network id
-
-      console.log('the network id ', await provider.getNetwork());
+      const network = await provider.getNetwork();
+      //console.log('the network id ', await provider.getNetwork());
       //11155111
       if (signer) {
         const transactionResult = await sendEther(
           recipientAddress,
           amountInEther,
+          network?.name,
         );
         return transactionResult;
         // Further logic to handle successful transaction
@@ -257,17 +268,20 @@ export function useWallet(): WalletType {
     }
   }
 
-  async function getTransactionDetails(txHash: string) {
-    console.log('the transaction hash ========== ', txHash);
-    const sepoliaProviderUrl = import.meta.env
-      .VITE_ALCHEMY_SEPOLIA_PROVIDER_URL;
+  async function getTransactionDetails(txHash: string, networkName: string) {
+    //console.log('the transaction hash ========== ', txHash);
+    let currentProviderUrl = import.meta.env
+      .VITE_ALCHEMY_POLYGON_AMOY_PROVIDER_URL;
+    if (networkName.includes('sepolia')) {
+      currentProviderUrl = import.meta.env.VITE_ALCHEMY_SEPOLIA_PROVIDER_URL;
+    }
 
-    const sepoliaProvider = new ethers.JsonRpcProvider(sepoliaProviderUrl);
+    const currentProvider = new ethers.JsonRpcProvider(currentProviderUrl);
     try {
       // Fetch the transaction details
-      const transaction = await sepoliaProvider.getTransaction(txHash);
+      const transaction = await currentProvider.getTransaction(txHash);
       // Fetch the transaction receipt to get the status
-      const receipt = await sepoliaProvider.getTransactionReceipt(txHash);
+      const receipt = await currentProvider.getTransactionReceipt(txHash);
       let result = null;
       if (transaction) {
         // Extracting the desired information

@@ -23,7 +23,7 @@ export const usePoemStore = defineStore('poem', {
   actions: {
     async submitPoem(
       title: string,
-      content: string
+      content: string,
     ): Promise<{ success: boolean; poem?: any; error?: string }> {
       try {
         const response = await fetch(`${endpoint}/poems`, {
@@ -51,7 +51,7 @@ export const usePoemStore = defineStore('poem', {
     async updatetePoem(
       id: number,
       title: string,
-      content: string
+      content: string,
     ): Promise<{ success: boolean; data?: any; error?: string }> {
       try {
         const response = await fetch(endpoint + `/poems/${id}`, {
@@ -91,6 +91,30 @@ export const usePoemStore = defineStore('poem', {
         return { success: true, data: data };
       } catch (error) {
         console.error('Error creating new poem:', error);
+        return { success: false };
+      }
+    },
+
+    async loadPaidPoemsByAuthor(
+      is_paid: boolean,
+      user_id: number,
+    ): Promise<{
+      success: boolean;
+      data?: Poem[];
+      error?: string;
+    }> {
+      try {
+        const response = await fetch(
+          endpoint + `/poems/?user_id=${user_id}&is_paid=${is_paid}`,
+          { method: 'GET' },
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return { success: true, data: data };
+      } catch (error) {
+        console.error('Error fetching  transactions :', error);
         return { success: false };
       }
     },

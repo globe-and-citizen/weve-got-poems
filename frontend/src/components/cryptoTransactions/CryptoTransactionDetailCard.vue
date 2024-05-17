@@ -4,6 +4,12 @@
       <q-form>
         <q-input
           hide-hint
+          label="Network"
+          v-model="cryptoTransactionDetail.networkName"
+          disable
+        />
+        <q-input
+          hide-hint
           label="Intiator"
           v-model="cryptoTransactionDetail.initiatorEmail"
           disable
@@ -63,8 +69,8 @@
 </template>
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { ref, onMounted } from 'vue';
-import { useWallet } from 'src/composables/useWallet';
+import { onMounted, ref } from 'vue';
+import { useWallet } from '../../composables/useWallet';
 
 const $q = useQuasar();
 
@@ -81,6 +87,7 @@ const cryptoTransactionDetail = ref({
   status: '',
   transactionHash: '',
   checkLink: '',
+  networkName: '',
 });
 const _initiator = ref('');
 
@@ -98,17 +105,21 @@ function openLink(url: string) {
 
 async function loadCrytptoTransactionDetail() {
   try {
+    cryptoTransactionDetail.value.networkName =
+      props.cryptoTransaction?.network_name;
     cryptoTransactionDetail.value.transactionHash =
       props.cryptoTransaction?.tx_hash;
     const initiator = props.cryptoTransaction?.user_id;
 
     const retreivedTransactionDetail = await wallet.getTransactionDetails(
-      props.cryptoTransaction?.tx_hash
+      props.cryptoTransaction?.tx_hash,
+      props.cryptoTransaction?.network_name,
     );
-    console.log(
-      'the transactions detail ========== ',
-      retreivedTransactionDetail
-    );
+    //console.log("the network name ========= ", props.cryptoTransaction?.network_name)
+    // console.log(
+    //   'the transactions detail ========== ',
+    //   retreivedTransactionDetail,
+    // );
     if (retreivedTransactionDetail) {
       cryptoTransactionDetail.value.initiatorEmail = initiator;
       cryptoTransactionDetail.value.sender = retreivedTransactionDetail.sender;
@@ -120,7 +131,17 @@ async function loadCrytptoTransactionDetail() {
         ? retreivedTransactionDetail?.amount
         : '';
       cryptoTransactionDetail.value.status = retreivedTransactionDetail.status;
-      cryptoTransactionDetail.value.checkLink = `https://sepolia.etherscan.io/tx/${props.cryptoTransaction?.tx_hash}`;
+
+      if (props.cryptoTransaction?.network_name.includes('sepolia')) {
+        //console.log("sepolia includesd")
+        cryptoTransactionDetail.value.checkLink =
+          import.meta.env.VITE_ALCHEMY_SEPOLIA_SCAN_URL +
+          props.cryptoTransaction?.tx_hash;
+      } else {
+        cryptoTransactionDetail.value.checkLink =
+          import.meta.env.VITE_ALCHEMY_POLYGON_AMOY_SCAN_URL +
+          props.cryptoTransaction?.tx_hash;
+      }
     }
   } catch (error) {
     $q.notify({

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 // import DocumentationIcon from 'src/components/icons/IconDocumentation.vue';
-import { useAppStore } from 'src/stores/app';
-import { usePoemStore } from 'src/stores/poems';
 import { computed, onMounted, ref } from 'vue';
+import { useAppStore } from '../../stores/app';
+import { usePoemStore } from '../../stores/poems';
+import WalletPaymentCard from '../web3/WalletPaymentCard.vue';
 
 import { useQuasar } from 'quasar';
 
@@ -33,18 +34,64 @@ const likeData = ref();
 
 const dislikeData = ref();
 
+const handleCloseDialog = () => {
+  return true;
+};
+
 const isLiked = computed(() => {
   return !!selectedPoem.value?.likes.find(
-    (dislike_author: any) => dislike_author === appStore.getUser?.id
+    (dislike_author: any) => dislike_author === appStore.getUser?.id,
   );
 });
 
 const isDisliked = computed(() => {
   return !!selectedPoem.value?.dislikes.find(
-    (like_author: any) => like_author === appStore.getUser?.id
+    (like_author: any) => like_author === appStore.getUser?.id,
   );
 });
 
+const cryptoPaymentDialog = ref<{
+  show: boolean;
+  poem?: Poem;
+  eth_address: string;
+}>({
+  show: false,
+  eth_address: '',
+});
+
+async function onCryptoPaymentDialog(poem: Poem | null) {
+  if (poem) {
+    if (!appStore?.getUser?.id) {
+      $q.notify({
+        type: 'negative',
+        message: 'please login first !',
+      });
+    } else {
+      if (poem.author.eth_address && poem?.author?.eth_address.length > 20) {
+        if (poem.author.eth_address != appStore?.getUser?.eth_address) {
+          cryptoPaymentDialog.value.show = true;
+          cryptoPaymentDialog.value.poem = poem;
+          if (poem.author.eth_address) {
+            cryptoPaymentDialog.value.eth_address = poem.author.eth_address;
+          } else {
+            cryptoPaymentDialog.value.eth_address = '';
+          }
+        } else {
+          $q.notify({
+            type: 'negative',
+            message:
+              "sender and receiver should have different wallet address: you can't sender money yo your self",
+          });
+        }
+      } else {
+        $q.notify({
+          type: 'negative',
+          message: "the author don't set a wallet address",
+        });
+      }
+    }
+  }
+}
 async function selectPoem(poem: Poem) {
   selectedPoem.value = poem;
   selectedPoemIndex.value = poems.value.findIndex((p) => p.id === poem.id);
@@ -53,13 +100,13 @@ async function selectPoem(poem: Poem) {
 const onLike = async () => {
   $q.loading.show();
   if (!appStore.getUser) {
-    console.log('should notify');
+    //console.log('should notify');
     $q.notify({ type: 'negative', message: ' please login! ' });
     $q.loading.hide();
   } else {
     if (selectedPoem.value) {
       const { success, data, error } = await poemStore.onLike(
-        selectedPoem.value.id
+        selectedPoem.value.id,
       );
       if (success) {
         $q.loading.hide();
@@ -75,13 +122,13 @@ const onLike = async () => {
 const onDisLike = async () => {
   $q.loading.show();
   if (!appStore.getUser) {
-    console.log('should notify');
+    //console.log('should notify');
     $q.notify({ type: 'negative', message: ' please login! ' });
     $q.loading.hide();
   } else {
     if (selectedPoem.value) {
       const { success, data, error } = await poemStore.onDisLike(
-        selectedPoem.value.id
+        selectedPoem.value.id,
       );
       if (success) {
         $q.loading.hide();
@@ -102,7 +149,7 @@ function updateSelectedPoem() {
   // Assuming 'poems' is the reactive state updated by loadPoems()
   // and contains the latest list of poems.
   const updatedPoem = poems.value?.find(
-    (poem) => poem.id === selectedPoem.value?.id
+    (poem) => poem.id === selectedPoem.value?.id,
   );
 
   // Re-specify selectedPoem with its updated version from the list
@@ -135,7 +182,7 @@ const appStore = useAppStore();
 
 onMounted(async () => {
   await loadPoems();
-  console.log('the current user ', appStore.getUser);
+  //console.log('the current user ', appStore.getUser);
 });
 
 async function loadPoems() {
@@ -146,7 +193,7 @@ async function loadPoems() {
       poems.value = data;
       if (selectedPoem.value?.id) {
         const updatedPoem = poems.value?.find(
-          (poem) => poem.id === selectedPoem.value?.id
+          (poem) => poem.id === selectedPoem.value?.id,
         );
         // Re-specify selectedPoem with its updated version from the list
         if (updatedPoem) {
@@ -213,6 +260,9 @@ async function loadPoems() {
           </div>
         </q-card-section>
         <q-card-section class="flex justify-between">
+          <q-btn @click="onCryptoPaymentDialog(selectedPoem)">
+            <q-icon name="local_cafe"></q-icon>
+          </q-btn>
           <q-btn
             @click="onLike()"
             flat
@@ -255,6 +305,21 @@ async function loadPoems() {
       </div>
     </div>
   </div>
+  <q-dialog v-model="cryptoPaymentDialog.show">
+    <q-card style="width: 400px; max-width: 60vw">
+      <q-card-section class="q-pb-none">
+        <h6 class="q-my-sm">Payment Confirmation</h6>
+      </q-card-section>
+      <walletPaymentCard
+        :wallet-address="cryptoPaymentDialog.eth_address"
+        @hide-dialog="handleCloseDialog"
+        :poem="cryptoPaymentDialog.poem"
+      />
+      <!-- <q-card-actions align="right">
+        <q-btn color="primary" flat label="Cancel" v-close-popup />
+      </q-card-actions> -->
+    </q-card>
+  </q-dialog>
 </template>
 
 <style scoped>

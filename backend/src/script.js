@@ -13,7 +13,7 @@ function generateWalletAddress() {
   return `0x${randomString}`
 }
 
-console.log(process.env.EXTERNAL_DB_URL)
+//console.log(process.env.EXTERNAL_DB_URL)
 const client = new Client({
   connectionString: process.env.EXTERNAL_DB_URL
 })
@@ -58,6 +58,7 @@ const createCryptoTransactionsTableQuery = `
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     poem_id INT NOT NULL REFERENCES poems(id) ON DELETE CASCADE,
     tx_hash VARCHAR(255) NOT NULL,
+    network_name VARCHAR(255) NOT NULL,
     created_at TIMESTAMP NOT NULL
   );
 `

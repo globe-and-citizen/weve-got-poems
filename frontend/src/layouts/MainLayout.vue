@@ -37,6 +37,19 @@
           </q-item-section>
           <q-item-section> Login </q-item-section>
         </q-item>
+        <q-expansion-item icon="library_books" label="Transactions">
+          <q-item
+            class="q-ml-xl"
+            clickable
+            v-ripple
+            to="/ctransactions/admin/list"
+          >
+            <q-item-section avatar>
+              <q-icon name="auto_stories" />
+            </q-item-section>
+            <q-item-section> List </q-item-section>
+          </q-item>
+        </q-expansion-item>
         <q-expansion-item icon="library_books" label="Poems">
           <q-item class="q-ml-xl" clickable v-ripple to="/poems/create">
             <q-item-section avatar>

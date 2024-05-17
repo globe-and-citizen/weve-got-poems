@@ -29,25 +29,3 @@ EXPOSE $PORT
 # RUN npm ci --only=production
 
 # COPY . .
-
-# RUN npm run build
-
-# # Stage 2: Create a lightweight image
-# FROM node:18.2.0-alpine
-
-# WORKDIR /app
-
-# # Create a non-root user
-# RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-
-# # Copy necessary files from the builder stage
-# COPY --from=builder /app/dist /app/dist
-# COPY --from=builder /app/package.json /app/package.json
-# COPY --from=builder /app/node_modules /app/node_modules
-
-# # Change to non-root user
-# USER appuser
-
-# EXPOSE 3000
-
-# CMD ["npm", "start"]

@@ -31,7 +31,7 @@ const getProvider = async () => {
     // With the walletProvider obtained, proceed to create the ethers provider and signer
     const provider = new ethers.providers.Web3Provider(walletProvider);
     const signer = provider.getSigner();
-    console.log('the network id===== ', provider.getNetwork());
+    //console.log('the network id===== ', provider.getNetwork());
 
     return signer;
   } catch (error) {
@@ -52,7 +52,7 @@ export const initiateSendEther = async (recipientAddress, amountInEther) => {
         const transactionResult = await sendEther(
           recipientAddress,
           amountInEther,
-          signer
+          signer,
         );
         return transactionResult;
         // Further logic to handle successful transaction
@@ -70,7 +70,7 @@ export const getTransactionDetails = async (txHash) => {
   const sepoliaProviderUrl = import.meta.env.VITE_ALCHEMY_SEPOLIA_PROVIDER_URL;
 
   const sepoliaProvider = new ethers.providers.JsonRpcProvider(
-    sepoliaProviderUrl
+    sepoliaProviderUrl,
   );
   try {
     // Fetch the transaction details
