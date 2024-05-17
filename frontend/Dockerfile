@@ -13,6 +13,9 @@ RUN npm ci
 # Copy the rest of the application code
 COPY . .
 
+# Copy the .env file
+COPY .env .env
+
 # Command to run your Node.js application
 CMD ["npm", "run", "dev"]
 
@@ -41,6 +44,7 @@ FROM nginx:latest as production
 
 # Copy built app from build-stage to nginx server
 COPY --from=build /app/dist/spa /usr/share/nginx/html
+
 # Command to start nginx
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
