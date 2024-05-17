@@ -47,9 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { useAppStore } from 'src/stores/app';
 import { useQuasar } from 'quasar';
+import { useAppStore } from 'src/stores/app';
+import { computed, onMounted, ref } from 'vue';
 // import { useRouter } from 'vue-router';
 //import AcNotification from 'src/components/ac-notification.vue';
 import { useWallet } from 'src/composables/useWallet';
@@ -58,7 +58,7 @@ const notification = ref();
 
 // const router = useRouter();
 
-console.log('==========================callledddddddddddddddd===========');
+//console.log('==========================callledddddddddddddddd===========');
 
 const appStore = useAppStore();
 const wallet = useWallet();
@@ -96,14 +96,14 @@ const onSignIn = () => {
       }
     });
   } catch (error) {
-    console.log('error=================================== ');
+    //console.log('error=================================== ');
     $q.notify({ type: 'negative', message: `${error}` });
   }
 };
 
 if (appStore.getToken) {
   // notify user that he is already logged in
-  console.log('the user ================== ', appStore?.getUser?.eth_address);
+  //console.log('the user ================== ', appStore?.getUser?.eth_address);
 
   notification.value = {
     status: 'success',

@@ -1,11 +1,8 @@
 <script lang="ts" setup>
-import CustomLoader from 'src/components/CustomLoader.vue';
-import WelcomeItem from 'src/components/WelcomeItem.vue';
 // import DocumentationIcon from 'src/components/icons/IconDocumentation.vue';
-import { useAppStore } from 'src/stores/app';
-import { computed, onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
 import { useQuasar } from 'quasar';
+import { computed, onMounted, ref } from 'vue';
+import { useAppStore } from '../stores/app';
 
 interface Poem {
   id: number;
@@ -43,13 +40,13 @@ const dislikeLoaded = ref();
 
 const isLiked = computed(() => {
   return !!selectedPoem.value?.likes.find(
-    (dislike_author: any) => dislike_author === appStore.getUser?.id
+    (dislike_author: any) => dislike_author === appStore.getUser?.id,
   );
 });
 
 const isDisliked = computed(() => {
   return !!selectedPoem.value?.dislikes.find(
-    (like_author: any) => like_author === appStore.getUser?.id
+    (like_author: any) => like_author === appStore.getUser?.id,
   );
 });
 
@@ -78,7 +75,7 @@ const onLike = async () => {
           body: JSON.stringify({
             poem_id: selectedPoem.value?.id,
           }),
-        }
+        },
       );
       if (response.ok) {
         likeData.value = await response.json();
@@ -116,7 +113,7 @@ const onDisLike = async () => {
           body: JSON.stringify({
             poem_id: selectedPoem.value?.id,
           }),
-        }
+        },
       );
 
       if (response.ok) {
@@ -141,7 +138,7 @@ function updateSelectedPoem() {
   // Assuming 'poems' is the reactive state updated by loadPoems()
   // and contains the latest list of poems.
   const updatedPoem = poems.value?.find(
-    (poem) => poem.id === selectedPoem.value?.id
+    (poem) => poem.id === selectedPoem.value?.id,
   );
 
   // Re-specify selectedPoem with its updated version from the list
@@ -199,7 +196,7 @@ async function loadPoems() {
   console.log('data value', poems.value);
   if (selectedPoem.value?.id) {
     const updatedPoem = poems.value?.find(
-      (poem) => poem.id === selectedPoem.value?.id
+      (poem) => poem.id === selectedPoem.value?.id,
     );
     // Re-specify selectedPoem with its updated version from the list
     if (updatedPoem) {

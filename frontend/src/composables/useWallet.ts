@@ -42,7 +42,10 @@ export interface WalletType {
   /**
    * Retrieves details for a specific Ethereum transaction.
    */
-  getTransactionDetails(txHash: string,networkName:string): Promise<
+  getTransactionDetails(
+    txHash: string,
+    networkName: string,
+  ): Promise<
     | {
         amount: string;
         sender: string;
@@ -99,7 +102,7 @@ export function useWallet(): WalletType {
   async function checkNetwork() {
     if (provider) {
       const networkId = await provider.getNetwork();
-      console.log('the chainID ', networkId.chainId);
+      //console.log('the chainID ', networkId.chainId);
       if (networkId.chainId != import.meta.env.VITE_CURRENT_NETWORK_ID) {
         alert(
           ` please make sure you're connected to  ${
@@ -171,7 +174,7 @@ export function useWallet(): WalletType {
     let value;
     try {
       if (!isConnected.value) {
-        console.log('the user is connected ==================');
+        //console.log('the user is connected ==================');
         await connectWallet();
       }
       // Check if we have the signer and the provider
@@ -220,7 +223,7 @@ export function useWallet(): WalletType {
     try {
       const txResponse = await signer.sendTransaction(transaction);
       const txReceipt = await txResponse.wait();
-      console.log('txReceipt ============ ', txReceipt);
+      //console.log('txReceipt ============ ', txReceipt);
       return {
         transactionId: txReceipt.hash,
         blockNumber: txReceipt.blockNumber,
@@ -238,7 +241,7 @@ export function useWallet(): WalletType {
     amountInEther: string,
   ) {
     let value;
-    console.log('initiate transaction called ================= ')
+    //console.log('initiate transaction called ================= ')
     try {
       if (!isConnected.value) {
         await connectWallet();
@@ -265,14 +268,13 @@ export function useWallet(): WalletType {
     }
   }
 
-  async function getTransactionDetails(txHash: string,networkName:string) {
-    console.log('the transaction hash ========== ', txHash);
+  async function getTransactionDetails(txHash: string, networkName: string) {
+    //console.log('the transaction hash ========== ', txHash);
     let currentProviderUrl = import.meta.env
       .VITE_ALCHEMY_POLYGON_AMOY_PROVIDER_URL;
     if (networkName.includes('sepolia')) {
       currentProviderUrl = import.meta.env.VITE_ALCHEMY_SEPOLIA_PROVIDER_URL;
     }
-   
 
     const currentProvider = new ethers.JsonRpcProvider(currentProviderUrl);
     try {

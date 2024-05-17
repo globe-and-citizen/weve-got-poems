@@ -1,14 +1,13 @@
 <script lang="ts" setup>
-// import DocumentationIcon from 'src/components/icons/IconDocumentation.vue';
-import { useAppStore } from 'src/stores/app';
-import { usePoemStore } from 'src/stores/poems';
 import { computed, onMounted, ref } from 'vue';
+import { useAppStore } from '../../../stores/app';
+import { usePoemStore } from '../../../stores/poems';
 
 import { useQuasar } from 'quasar';
 import CryptoTransactionDetailCard from 'src/components/cryptoTransactions/CryptoTransactionDetailCard.vue';
 import PoemEditCardView from 'src/components/poems/PoemEditCardView.vue';
 import WalletPaymentCard from 'src/components/web3/WalletPaymentCard.vue';
-import { useWallet } from 'src/composables/useWallet';
+import { useWallet } from '../../../composables/useWallet';
 
 interface Poem {
   id: number;
@@ -156,10 +155,10 @@ async function onCryptoPaymentDialog(poem: Poem) {
     );
     const cryptoTransactionExist = await response.json();
     if (cryptoTransactionExist.length > 0) {
-      console.log(
-        'the cypto transactions ============== ',
-        cryptoTransactionExist,
-      );
+      // console.log(
+      //   'the cypto transactions ============== ',
+      //   cryptoTransactionExist,
+      // );
       crytptoTransactionDialog.value.cTransaction = cryptoTransactionExist[0];
       crytptoTransactionDialog.value.show = true;
     } else {
