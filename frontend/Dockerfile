@@ -13,6 +13,9 @@ RUN npm ci
 # Copy the rest of the application code
 COPY . .
 
+# List files to ensure .env is copied
+RUN ls -al
+
 # Copy the .env file
 COPY .env .env
 
