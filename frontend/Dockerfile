@@ -35,11 +35,12 @@ RUN npm run build
 # Use nginx base image for serving Vue app
 FROM nginx:latest as production
 
-# Copy built app from build-stage to nginx server
-COPY --from=build /app/dist /usr/share/nginx/html
-
 # Expose port (default is 80 for nginx)
-EXPOSE 80
 
+#COPY ./docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
+
+# Copy built app from build-stage to nginx server
+COPY --from=build /app/dist/spa /usr/share/nginx/html
 # Command to start nginx
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 // import DocumentationIcon from 'src/components/icons/IconDocumentation.vue';
-import { useAppStore } from 'src/stores/app';
-import { usePoemStore } from 'src/stores/poems';
+import { useAppStore } from '../../stores/app';
+import { usePoemStore } from '../../stores/poems';
 import { computed, onMounted, ref } from 'vue';
+import WalletPaymentCard from '../web3/WalletPaymentCard.vue';
 
 import { useQuasar } from 'quasar';
 
@@ -33,6 +34,10 @@ const likeData = ref();
 
 const dislikeData = ref();
 
+const handleCloseDialog = () => {
+  return true;
+};
+
 const isLiked = computed(() => {
   return !!selectedPoem.value?.likes.find(
     (dislike_author: any) => dislike_author === appStore.getUser?.id
@@ -45,6 +50,52 @@ const isDisliked = computed(() => {
   );
 });
 
+const cryptoPaymentDialog = ref<{
+  show: boolean;
+  poem?: Poem;
+  eth_address: string;
+}>({
+  show: false,
+  eth_address: '',
+});
+
+async function onCryptoPaymentDialog(poem: Poem|null) {
+  if(poem){
+
+ 
+  if (!appStore?.getUser?.id) {
+    $q.notify({
+      type: 'negative',
+      message: 'please login first !',
+    });
+  } else {
+    
+    if (poem.author.eth_address && poem?.author?.eth_address.length > 20) {
+      if (poem.author.eth_address != appStore?.getUser?.eth_address) {
+        cryptoPaymentDialog.value.show = true;
+        cryptoPaymentDialog.value.poem = poem;
+        if (poem.author.eth_address) {
+          cryptoPaymentDialog.value.eth_address = poem.author.eth_address;
+        } else {
+          cryptoPaymentDialog.value.eth_address = '';
+        }
+      } else {
+        $q.notify({
+          type: 'negative',
+          message:
+            "sender and receiver should have different wallet address: you can't sender money yo your self",
+        });
+      }
+    } else {
+      $q.notify({
+        type: 'negative',
+        message: "the author don't set a wallet address",
+      });
+    }
+  
+  }
+}
+}
 async function selectPoem(poem: Poem) {
   selectedPoem.value = poem;
   selectedPoemIndex.value = poems.value.findIndex((p) => p.id === poem.id);
@@ -213,6 +264,11 @@ async function loadPoems() {
           </div>
         </q-card-section>
         <q-card-section class="flex justify-between">
+          <q-btn @click="onCryptoPaymentDialog(selectedPoem)">
+            <q-icon
+            name="local_cafe"
+            ></q-icon>
+          </q-btn>
           <q-btn
             @click="onLike()"
             flat
@@ -255,6 +311,21 @@ async function loadPoems() {
       </div>
     </div>
   </div>
+  <q-dialog v-model="cryptoPaymentDialog.show">
+    <q-card style="width: 400px; max-width: 60vw">
+      <q-card-section class="q-pb-none">
+        <h6 class="q-my-sm">Payment Confirmation</h6>
+      </q-card-section>
+      <walletPaymentCard
+        :wallet-address="cryptoPaymentDialog.eth_address"
+        @hide-dialog="handleCloseDialog"
+        :poem="cryptoPaymentDialog.poem"
+      />
+      <!-- <q-card-actions align="right">
+        <q-btn color="primary" flat label="Cancel" v-close-popup />
+      </q-card-actions> -->
+    </q-card>
+  </q-dialog>
 </template>
 
 <style scoped>

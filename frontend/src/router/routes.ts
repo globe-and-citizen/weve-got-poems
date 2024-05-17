@@ -42,6 +42,15 @@ const routes: RouteRecordRaw[] = [
         // which is lazy-loaded when the route is visited.
         component: () => import('src/components/admin/poems/poemListAdmin.vue'),
       },
+      {
+        path: '/ctransactions/admin/list',
+        name: 'ctransactions_admin_list',
+        // route level code-splitting
+        // this generates a separate chunk (About.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+          import('src/components/admin/ctransactions/transactionList.vue'),
+      },
     ],
   },
 
