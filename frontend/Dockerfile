@@ -17,7 +17,7 @@ COPY . .
 RUN ls -al
 
 # Copy the .env file
-COPY .env .env
+COPY .env.example .env
 
 # Command to run your Node.js application
 CMD ["npm", "run", "dev"]
