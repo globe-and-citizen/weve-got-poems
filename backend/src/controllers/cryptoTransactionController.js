@@ -12,7 +12,7 @@ const create = async (req, res) => {
   try {
     await client.query('BEGIN'); // Start a transaction
 
-    const { poem_id, tx_hash } = req.body; // Assuming poem_id and tx_hash are provided in the request body
+    const { poem_id, tx_hash,network_name } = req.body; // Assuming poem_id and tx_hash are provided in the request body
     console.log("the req========= ", req.body);
     const authorizationHeader = req.headers.authorization;
     if (!authorizationHeader || !authorizationHeader.startsWith('Bearer ')) {
@@ -25,11 +25,11 @@ const create = async (req, res) => {
 
     // First, insert the new transaction
     const insertQuery = `
-      INSERT INTO cryptoTransactions (poem_id, user_id, tx_hash, created_at)
-      VALUES ($1, $2, $3, NOW())
+      INSERT INTO cryptoTransactions (poem_id, user_id, tx_hash, network_name, created_at)
+      VALUES ($1, $2, $3,$4, NOW())
       RETURNING id;
     `;
-    const result = await client.query(insertQuery, [poem_id, userId, tx_hash]);
+    const result = await client.query(insertQuery, [poem_id, userId, tx_hash,network_name]);
     const { id } = result.rows[0];
 
     // Update the is_paid status in the poems table
@@ -71,7 +71,7 @@ const read = async (req, res) => {
 
     let selectQuery = `
       SELECT
-       cryptotransactions.id, cryptotransactions.tx_hash, cryptotransactions.created_at, cryptotransactions.poem_id, cryptotransactions.user_id,
+       cryptotransactions.id, cryptotransactions.tx_hash,cryptotransactions.network_name, cryptotransactions.created_at, cryptotransactions.poem_id, cryptotransactions.user_id,
         users.name AS user_name,
         poems.title AS poem_title
       FROM cryptotransactions 
@@ -99,7 +99,7 @@ const read = async (req, res) => {
 module.exports = {
   create: [
     // Use the validateInput middleware to validate the request body
-    validateInput(['tx_hash', 'poem_id']),
+    validateInput(['tx_hash', 'poem_id','network_name']),
     create
   ],
   read,

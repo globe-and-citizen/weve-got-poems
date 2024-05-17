@@ -135,7 +135,7 @@ const options = [
   },
 ];
 
-const pagination = ref({ rowsPerPage: 10 });
+const pagination = ref({ rowsPerPage: 0 });
 function onDisplayContentDialog(poem: Poem) {
   displayContentDialog.value.show = true;
   displayContentDialog.value.poem = poem;
