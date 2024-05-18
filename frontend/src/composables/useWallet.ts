@@ -102,8 +102,8 @@ export function useWallet(): WalletType {
   async function checkNetwork() {
     if (provider) {
       const networkId = await provider.getNetwork();
-      //console.log('the chainID ', networkId.chainId);
-      if (networkId.chainId != import.meta.env.VITE_CURRENT_NETWORK_ID) {
+
+      if (!networkId.name.includes(import.meta.env.VITE_CURRENT_NETWORK_NAME)) {
         alert(
           ` please make sure you're connected to  ${
             import.meta.env.VITE_CURRENT_NETWORK_NAME
