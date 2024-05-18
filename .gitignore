@@ -90,6 +90,8 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist/*
+dist-ssr
+.quasar
 
 # Gatsby files
 .cache/
@@ -129,7 +131,6 @@ dist/*
 .pnp.*
 
 #IDEA
-
 .idea
 
 # Firebase
