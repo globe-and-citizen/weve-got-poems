@@ -99,7 +99,7 @@ Check the README of the [Backend](./backend/README.md) and [Frontend](./frontend
 
 - Frontend: https://weve-got-poems.pages.dev
 - Frontend: (firebase) https://weve-got-poem.web.app/
-- Backend: https://api-wevegotpoems.up.railway.app
+- Backend: https://api-weve-got-poems.up.railway.app
 
 ## Join the Poetic Journey
 
