@@ -1,44 +1,48 @@
 <template>
-  <div class="q-pa-md row items-start q-gutter-md">
-    <!-- Poems list on the left in a card with shadow -->
-    <div class="col-4">
+  <div class="q-pa-md row items-start q-gutter-md justify-center">
+    <div class="col-12 col-md-6 col-lg-4">
       <q-card class="my-card">
-        <q-card-section class="text-h6">
-          Profile
+        <q-card-section class="text-center bg-primary q-mx-auto q-my-auto">
+          <div class="text-h6 q-mb-sm text-white">Profile</div>
+          <div class="text-subtitle2 q-mb-md text-white">
+            Sign in with your Sepolia account
+          </div>
 
-          <div class="text-subtitle2">Signin with your ethereum account</div>
-          <div v-if="walletAddress" class="text-subtitle2">
+          <div v-if="walletAddress" class="q-mb-md">
             <q-form class="q-gutter-md">
               <q-input
+                bg-color="white"
                 filled
                 readonly
                 v-model="walletAddress"
                 label="Your wallet address *"
-                hint=""
                 lazy-rules
                 :rules="[
                   (val) => (val && val.length > 0) || 'Please type something',
                 ]"
               />
-              <!-- <q-btn @click.prevent="onSignIn()" color="secondary">
-                <div class="ellipsis"><span icon="edit"></span>Update</div>
-              </q-btn> -->
-              <q-btn
-                data-test="sign-button"
-                @click.prevent="onLogout()"
-                color="secondary"
-              >
-                <div class="ellipsis"><span icon="edit"></span>Logout</div>
-              </q-btn>
+              <div class="center-button">
+                <q-btn
+                  data-test="sign-button"
+                  @click.prevent="onLogout()"
+                  color="negative"
+                  class="full-width"
+                >
+                  <q-icon name="logout" class="q-mr-sm" />
+                  Logout
+                </q-btn>
+              </div>
             </q-form>
           </div>
-          <br />
+
           <q-btn
             v-if="!walletAddress"
             @click.prevent="onSignIn()"
-            color="primary"
+            color="positive"
+            class="full-width"
           >
-            <div data-test="sign-button" class="ellipsis">Sign in</div>
+            <q-icon name="login" class="q-mr-sm" />
+            Sign in
           </q-btn>
         </q-card-section>
       </q-card>
@@ -115,3 +119,18 @@ if (appStore.getToken) {
   // }, 5000);
 }
 </script>
+<style scoped>
+.body {
+  background-image: url(./img/letter.jpg);
+}
+
+.white-label .q-field__label {
+  color: white;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+}
+
+</style>

@@ -41,7 +41,7 @@ const updatePoem = async () => {
   const { success, data, error } = await poemStore.updatetePoem(
     props.poem.id,
     poem.value.title,
-    poem.value.content
+    poem.value.content,
   );
   $q.loading.hide();
   if (success) {
@@ -57,6 +57,7 @@ const updatePoem = async () => {
 
 <template>
   <!-- Poems list on the left in a card with shadow -->
+  <div class="aa">
   <q-card flat class="my-card">
     <q-card-section class="text-h3">
       <div class="text-h5 text-weight-bold">Edit Poem</div>
@@ -86,6 +87,8 @@ const updatePoem = async () => {
       </q-form>
     </q-card-section>
   </q-card>
+</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>

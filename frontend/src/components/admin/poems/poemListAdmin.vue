@@ -242,6 +242,7 @@ async function loadPoems() {
 <template>
   <div class="q-pa-md">
     <q-table
+      class="my-table"
       :dense="$q.screen.lt.md"
       bordered
       title="Poems List"
@@ -379,22 +380,34 @@ async function loadPoems() {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap');
+
 
 .poem-title {
-  font-family: 'Playfair Display', serif;
+  font-family: Pirata One;
   font-weight: 700; /* Use a bold weight for titles */
   font-size: 1.5em; /* Larger font size for titles */
   margin-bottom: 0.5em; /* Spacing between title and content */
 }
 
 .poem-content {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Bilbo Swash Caps", cursive;;
   font-weight: 400; /* Normal weight for content */
   line-height: 1.6; /* Improve readability with increased line height */
   font-size: 1em; /* Standard font size for content */
   color: #333; /* Optional: a slightly softer color than black for the content */
   text-align: justify;
   text-justify: inter-word;
+}
+
+.my-table{
+  padding: 1.5em;
+  box-shadow: 2px 3px 20px black, 0 0 125px #8f5922 inset;
+  background: #fffef0;
+  filter: url(#wornEdges);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 /* Add any additional styling for other elements as needed */
