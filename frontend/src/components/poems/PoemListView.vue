@@ -25,6 +25,7 @@ interface Poem {
 const endpoint = import.meta.env.VITE_BACKEND_ENDPOINT;
 const $q = useQuasar();
 const poemStore = usePoemStore();
+const showPoemsList = ref(false);
 
 const selectedPoem = ref<Poem | null>(null);
 const poems = ref<Poem[]>([]); // Initialized as an empty array
@@ -207,13 +208,26 @@ async function loadPoems() {
   }
   $q.loading.hide();
 }
+
+function togglePoemsList() {
+  showPoemsList.value = !showPoemsList.value;
+}
 </script>
 
 <template>
-  <div class="q-pa-md row items-start q-gutter-md" data-text="poems_list">
+  <div class="q-pa-md row h-screen" data-text="poems_list">
     <!-- Poems list on the left in a card with shadow -->
-    <div class="col-4">
-      <q-card class="my-card">
+    <div
+      class="col-3 q-mr-xl Card"
+      @click="togglePoemsList"
+      style="position: relative"
+    >
+      <div v-if="!showPoemsList" class="my-card poem-button">
+        <q-card-section class="text-h6">
+          Poems List ({{ poems?.length }})
+        </q-card-section>
+      </div>
+      <q-card v-else class="my-card" style="position: relative; z-index: 1">
         <q-card-section class="text-h6">
           Poems List ({{ poems?.length }})
         </q-card-section>
@@ -236,73 +250,57 @@ async function loadPoems() {
     </div>
 
     <!-- Poem details on the right in a card with shadow -->
-    <div class="col-6" data-text="selected_poem">
-      <q-card class="my-card" v-if="selectedPoem">
-        <q-card-section class="flex justify-between items-center">
+    <div class="col-8 CardPoems" data-text="selected_poem">
+      <div class="parchment"></div>
+      <q-card class="poem-card"  v-if="selectedPoem">
+        <q-card-section class="flex justify-between w-full">
           <q-btn
+            class="action"
             icon="chevron_left"
             @click="selectPreviousPoem()"
-            label="Previous"
           />
-          <!-- Your poem content and other elements go here -->
-          <q-btn icon="chevron_right" @click="selectNextPoem()" label="Next" />
+          <div class="poem-title">{{ selectedPoem.title }}</div>
+          <q-btn
+            class="action"
+            icon="chevron_right"
+            @click="selectNextPoem()"
+          />
         </q-card-section>
         <q-card-section>
-          <div class="text-h5 poem-title" data-test="poem-heading">
-            {{ selectedPoem.title }}
-          </div>
           <div
-            class="overflow-auto poem-content"
+            class="poem-content text-negative"
             v-html="selectedPoem.content"
           ></div>
-          <div>
+          <div class="poem-date">
             {{ new Date(selectedPoem.created_at).toLocaleDateString() }}
           </div>
         </q-card-section>
-        <q-card-section class="flex justify-between">
+        <q-card-section class="actions-section">
           <q-btn @click="onCryptoPaymentDialog(selectedPoem)">
             <q-icon name="local_cafe"></q-icon>
+            <span>Support</span>
           </q-btn>
-          <q-btn
-            @click="onLike()"
-            flat
-            class="text-primary like-button"
-            :disabled="isLiked"
-          >
-            {{ selectedPoem.likes.length }}
-            <q-icon color="primary" name="thumb_up" class="cursor-pointer" />
-          </q-btn>
-          <q-btn
-            @click="onDisLike()"
-            flat
-            class="text-red dislike-button"
-            :disabled="isDisliked"
-          >
-            {{ selectedPoem.dislikes.length }}
-            <q-icon color="red" name="thumb_down" class="cursor-pointer" />
-          </q-btn>
+          <span
+            ><q-btn
+              @click="onLike()"
+              flat
+              class="text-primary like-button"
+              :disabled="isLiked"
+            >
+              {{ selectedPoem.likes.length }}
+              <q-icon color="primary" name="thumb_up" />
+            </q-btn>
+            <q-btn
+              @click="onDisLike()"
+              flat
+              class="text-red dislike-button"
+              :disabled="isDisliked"
+            >
+              {{ selectedPoem.dislikes.length }}
+              <q-icon color="red" name="thumb_down" /> </q-btn
+          ></span>
         </q-card-section>
-        <!-- <q-card-section class="flex justify-between">
-          <q-icon
-            name="chevron_left"
-            class="cursor-pointer"
-            @click="selectPreviousPoem()"
-          />
-          <q-icon
-            name="chevron_right"
-            class="cursor-pointer"
-            @click="selectNextPoem()"
-          />
-        </q-card-section> -->
       </q-card>
-
-      <div
-        v-else
-        class="flex justify-center items-center text-grey"
-        style="min-height: 200px"
-      >
-        Please select a poem to see the details.
-      </div>
     </div>
   </div>
   <q-dialog v-model="cryptoPaymentDialog.show">
@@ -315,32 +313,158 @@ async function loadPoems() {
         @hide-dialog="handleCloseDialog"
         :poem="cryptoPaymentDialog.poem"
       />
-      <!-- <q-card-actions align="right">
-        <q-btn color="primary" flat label="Cancel" v-close-popup />
-      </q-card-actions> -->
     </q-card>
   </q-dialog>
+
+  <svg>
+    <filter id="wavy2">
+      <feTurbulence x="0" y="0" baseFrequency="0.02" numOctaves="5" seed="1" />
+      <feDisplacementMap in="SourceGraphic" scale="20" />
+    </filter>
+  </svg>
 </template>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap');
+
+@font-face {
+  font-family: Morris;
+  src: url(https://cdn.statically.io/gh/EmmesCodes/Tipografias/dae9f5bb/MorrisInitials.ttf);
+}
+
+:root {
+  --fontSize: calc((1vw + 1vh) * 0.75);
+}
+
+.parchment {
+  padding: 1.5em;
+  box-shadow:
+    2px 3px 20px black,
+    0 0 125px #8f5922 inset;
+  background: #fffef0;
+  filter: url(#wornEdges);
+  border-radius: 10px;
+  overflow: hidden;
+  filter: url(#wavy2);
+}
+
+.poem-card{
+  background: rgba(0,0,0,0.5);
+  height: auto;
+}
+
+/* .parchment svg {
+
+} */
+
+.poem-card:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: conic-gradient(#fff3, #fff0 2% 24%, #fff2 25%, #4321 0, #0000 27% 48%, #9632 50%, #fff2 0, #fff0 52% 73%, #9632 75%, #fff3 0, #fff0 78% 97%, #9632);
+}
 
 .poem-title {
-  font-family: 'Playfair Display', serif;
-  font-weight: 700; /* Use a bold weight for titles */
-  font-size: 1.5em; /* Larger font size for titles */
-  margin-bottom: 0.5em; /* Spacing between title and content */
+  font-family: Pirata One;
+  font-weight: 700;
+  font-size: 1.8em;
+  margin: 0;
+  text-align: center;
 }
 
 .poem-content {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400; /* Normal weight for content */
-  line-height: 1.6; /* Improve readability with increased line height */
-  font-size: 1em; /* Standard font size for content */
-  color: #333; /* Optional: a slightly softer color than black for the content */
+  font-family: 'Bilbo Swash Caps', cursive;
+  font-weight: 600;
+  line-height: 2rem;
+  font-size: 2em;
+  margin-top: 1em;
   text-align: justify;
   text-justify: inter-word;
 }
 
-/* Add any additional styling for other elements as needed */
+.poema-content:not(:first-child)::first-letter {
+  float: left;
+  font: 1.7em/1em Morris;
+  /* a little relief for the first letter*/
+  text-shadow: 1px 1px 1px black;
+  margin: 0 0.5rem;
+}
+
+.poem-date {
+  text-align: right;
+  font-style: italic;
+  color: #777;
+  margin-top: 1em;
+}
+
+.actions-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5em;
+}
+
+.q-btn {
+  display: flex;
+  align-items: center;
+}
+
+.q-btn span {
+  margin-left: 0.5em;
+}
+
+.my-card {
+  box-shadow:
+    2px 3px 20px black,
+    0 0 125px #8f5922 inset;
+  background: #fffef0;
+}
+
+.poem-button {
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 8px;
+}
+
+.poem-button:hover {
+  background-color: #eee;
+}
+
+.icon {
+  position: absolute;
+  left: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 708px){
+  .action {
+    display: none;
+  }
+}
+
+/* Media queries */
+@media (max-width: 658px) {
+  .Card {
+    width: 98%;
+    margin: 3% auto;
+    border-radius: 20px;
+  }
+  .CardPoems {
+    width: 100%;
+    height: 100%;
+    margin: 3% auto;
+    margin-bottom: 3%;
+  }
+  .action {
+    display: none;
+  }
+  .poem-title{
+    font-size: x-large;
+  }
+}
 </style>
