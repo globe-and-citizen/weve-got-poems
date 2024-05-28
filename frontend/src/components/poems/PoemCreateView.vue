@@ -49,17 +49,17 @@ const submitPoem = async () => {
 </script>
 
 <template>
-  <div class="q-pa-md row items-start q-gutter-md">
+  <div class="row">
     <!-- Poems list on the left in a card with shadow -->
-    <div class="col-2"></div>
-    <div class="col-8">
+
+    <div class="col-8 q-mx-auto ">
       <br />
-      <q-card class="my-card">
+      <q-card class="my-card q-mx-auto">
         <q-card-section class="text-h3">
           <div class="text-h5 text-weight-bold">Poem Creation</div>
         </q-card-section>
         <q-card-section class="text-h6">
-          <q-form class="q-gutter-md" @submit="submitPoem()">
+          <q-form class="q-mx-auto" @submit="submitPoem()">
             <q-input
               filled
               label="Title *"
@@ -93,4 +93,9 @@ const submitPoem = async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.my-card{
+  box-shadow: 2px 3px 20px black, 0 0 125px #8f5922 inset;
+  background: #fffef0;
+}
+</style>
